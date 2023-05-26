@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { TestRecord } from '../interfaces/test-record';
 import { catchError, Observable, throwError } from 'rxjs';
 import { bff } from 'src/environments/environment';
+import { TestExecution } from '../interfaces/test-execution';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +19,12 @@ export class TestService {
     )
   }
 
+  execute(testId: number): Observable<TestExecution>{
+    const url = bff.protocol + bff.host + bff.execute.replace('{0}', testId+'');
+    let request = {};
+    return this.http.post<TestExecution>(url, request).pipe(
+      catchError(err => {return throwError(err);})
+    )
+  }
 
 }

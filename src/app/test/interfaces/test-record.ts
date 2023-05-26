@@ -9,4 +9,5 @@ export interface TestRecord {
     last_update:          Date;
     last_execution:       Date;
     last_execution_state: string;
+    is_running:           boolean;
 }

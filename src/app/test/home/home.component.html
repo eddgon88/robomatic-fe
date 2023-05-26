@@ -25,16 +25,12 @@
       <td mat-cell *matCellDef="let element">{{element.last_execution | date}}</td>
     </ng-container>
 
-    <ng-container matColumnDef="state">
-      <th mat-header-cell *matHeaderCellDef>State</th>
-      <td mat-cell *matCellDef="let element">{{element.last_execution_state}}</td>
-    </ng-container>
-
     <ng-container matColumnDef="execute">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let element">
         <div class="d-flex">
-          <button *ngIf="element.permissions === 'owner' || element.permissions === 'edit' || element.permissions === 'execute'"><i class="bi bi-play"></i></button>
+          <button *ngIf="(element.permissions === 'owner' || element.permissions === 'edit' || element.permissions === 'execute') && !element.is_running" (click)="execute(element)"><i class="bi bi-play"></i></button>
+          <button *ngIf="(element.permissions === 'owner' || element.permissions === 'edit' || element.permissions === 'execute') && element.is_running"><i class="bi bi-stop-btn"></i></button>
           <button *ngIf="element.permissions === 'owner' || element.permissions === 'edit'"><i class="bi bi-pencil"></i></button>
           <button><i class="bi bi-archive"></i></button>
           <button *ngIf="element.permissions === 'owner' || element.permissions === 'edit' || element.permissions === 'execute'"><i class="bi bi-stopwatch"></i></button>
@@ -42,8 +38,23 @@
         </div>
       </td>
     </ng-container>
+
+    <ng-container matColumnDef="state">
+      <th mat-header-cell *matHeaderCellDef>State</th>
+      <td mat-cell *matCellDef="let element">
+        <span *ngIf="element.is_running" class="spinner-border"></span>
+        <span *ngIf="!element.is_running && element.last_execution_state == 'success'"><i class="bi bi-check-circle-fill"></i></span>
+        <span *ngIf="!element.is_running && element.last_execution_state == 'failed'"><i class="bi bi-x-octagon-fill"></i></span>
+        <span *ngIf="!element.is_running && element.last_execution_state == 'stopped'"><i class="bi bi-exclamation-diamond-fill"></i></span>
+      </td>
+    </ng-container>
+    
   
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <img *ngIf="inLoad; else showTable" src="../../../assets/loader.svg">
+    <ng-template #showTable>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </ng-template>
   </table>
+  <span *ngIf="inLoad" class="spinner-border"></span>
   

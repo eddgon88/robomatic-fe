@@ -1,11 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { elementAt } from 'rxjs';
 import { TestRecord } from '../interfaces/test-record';
 import { TestService } from '../services/test.service';
-
-const ELEMENT_DATA: TestRecord[] = [
-  {id:1, record_id: "T86758757", name: "test", user: "test@test.com", folder_id: 0, type: "Test", permissions: "owner", last_update: new Date(), last_execution: new Date(), last_execution_state: "success"}
-];
 
 @Component({
   selector: 'app-home',
@@ -16,9 +13,10 @@ export class HomeComponent implements OnInit {
 
   constructor(private testService: TestService) { }
 
-  displayedColumns: string[] = ['name', 'user', 'type', 'lastUpdate', 'lastExecution', 'state', "execute"];
+  displayedColumns: string[] = ['name', 'user', 'type', 'lastUpdate', 'lastExecution',"execute", 'state'];
   dataSource = new MatTableDataSource<TestRecord>();
   folder: number = 0;
+  inLoad: boolean = false;
 
   ngOnInit(): void {
   
@@ -27,6 +25,7 @@ export class HomeComponent implements OnInit {
   }
 
   getRecords(): void {
+    this.inLoad = true;
     this.testService.getRecordList(this.folder).subscribe(
       resp=>{
         this.dataSource.data = resp;
@@ -34,5 +33,19 @@ export class HomeComponent implements OnInit {
         console.log(err)
       }
     )
+    this.inLoad = false;
   }
+
+  execute(test: TestRecord): void {
+    test.is_running = true;
+    this.testService.execute(test.id).subscribe(
+      resp=>{
+        
+      },(err)=>{
+        console.debug(err)
+        test.is_running = false;
+      }
+    )
+  }
+
 }

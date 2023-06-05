@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { ToastrService } from 'ngx-toastr';
 import { elementAt } from 'rxjs';
-import { TestRecord } from '../interfaces/test-record';
-import { TestService } from '../services/test.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
+import { TestRecord } from '../../interfaces/test-record';
+import { TestService } from '../../services/test.service';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +13,8 @@ import { TestService } from '../services/test.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private testService: TestService) { }
+  constructor(private testService: TestService,
+              private notificationService: NotificationService) { }
 
   displayedColumns: string[] = ['name', 'user', 'type', 'lastUpdate', 'lastExecution',"execute", 'state'];
   dataSource = new MatTableDataSource<TestRecord>();
@@ -40,8 +43,9 @@ export class HomeComponent implements OnInit {
     test.is_running = true;
     this.testService.execute(test.id).subscribe(
       resp=>{
-        
+        this.notificationService.showSuccess("Ejecutando Test")
       },(err)=>{
+        this.notificationService.showError("Error en ejecución")
         console.debug(err)
         test.is_running = false;
       }

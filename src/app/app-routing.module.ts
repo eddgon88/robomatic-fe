@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './test/home/home.component';
+import { HomeComponent } from './test/pages/home/home.component';
+import { TestRoutingModule } from './test/test-routing.module';
 
 const routes: Routes = [
 {
-  path: 'home',
-  component: HomeComponent
+  path: 'tests',
+  loadChildren: () => TestRoutingModule
 },
 {
   path: '**',
-  redirectTo: 'home'
+  redirectTo: 'tests'
 }
 ];
 

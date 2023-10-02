@@ -1,6 +1,6 @@
 <div class="d-flex flex-row-reverse mt-3 mb-3">
-  <button>New Test</button>
-  <button>New Folder</button>
+  <button routerLink="/tests/create" [queryParams]="{folderId: folder}">New Test</button>
+  <button (click)="createFolderModal()">New Folder</button>
 </div>
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
 
@@ -34,11 +34,11 @@
     <td mat-cell *matCellDef="let element">
       <div class="d-flex">
         <button *ngIf="(element.permissions === 'owner' || element.permissions === 'edit' || element.permissions === 'execute') && !element.is_running" (click)="execute(element)"><i class="bi bi-play"></i></button>
-        <button *ngIf="(element.permissions === 'owner' || element.permissions === 'edit' || element.permissions === 'execute') && element.is_running"><i class="bi bi-stop-btn"></i></button>
-        <button *ngIf="element.permissions === 'owner' || element.permissions === 'edit'"><i class="bi bi-pencil"></i></button>
-        <button><i class="bi bi-archive"></i></button>
+        <button *ngIf="(element.permissions === 'owner' || element.permissions === 'edit' || element.permissions === 'execute') && element.is_running" (click)="stop(element)"><i class="bi bi-stop-btn"></i></button>
+        <button *ngIf="(element.permissions === 'owner' || element.permissions === 'edit') && !element.is_running" [routerLink]="'/tests/edit/'+element.id" [queryParams]="{folderId: folder}"><i class="bi bi-pencil"></i></button>
+        <button *ngIf="(element.permissions === 'owner' || element.permissions === 'edit' || element.permissions === 'execute') && !element.is_running" [routerLink]="'/tests/evidence/'+element.id"><i class="bi bi-archive"></i></button>
         <button *ngIf="element.permissions === 'owner' || element.permissions === 'edit' || element.permissions === 'execute'"><i class="bi bi-stopwatch"></i></button>
-        <button *ngIf="element.permissions === 'owner' || element.permissions === 'edit'"><i class="bi bi-trash3"></i></button>
+        <button *ngIf="((element.permissions === 'owner' || element.permissions === 'edit') && !element.is_running) || element.type === 'folder'" (click)="deleteRecord(element)"><i class="bi bi-trash3"></i></button>
       </div>
     </td>
   </ng-container>

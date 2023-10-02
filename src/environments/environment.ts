@@ -14,7 +14,25 @@ export const bff = {
   /**Record List */
   getRecords: '/test/list/1/{0}',
   /**Execute test */
-  execute: '/test/execute/{0}'
+  execute: '/test/execute/{0}',
+  /**Stop test */
+  stop: '/test/stop/{0}',
+  /**Delete test */
+  delete: '/test/delete/{0}',
+  /**create folder */
+  createFolder: '/folder/create',
+  /**delete folder */
+  deleteFolder: '/folder/delete/{0}',
+  /**create folder */
+  createTest: '/test/create',
+  /**get test */
+  getTest: '/test/{0}',
+  /**create folder */
+  updateTest: '/test/update',
+  /**Record List */
+  getExecutionRecords: '/test-execution/list/{0}',
+  /**File List */
+  getFileEvidences: '/evidence/{0}'
 }
 
 /*

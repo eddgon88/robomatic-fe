@@ -1,0 +1,20 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Input modal</h4>
+    <button
+        type="button"
+        class="btn-close"
+        aria-describedby="modal-title"
+        (click)="modal.dismiss('Cross click')"
+    ></button>
+</div>
+<div class="modal-body">
+    <p>
+        <strong>insert <span class="text-primary">"folder name"</span> in the input</strong>
+    </p>
+    <input type="text" #name [(ngModel)]="input">
+    <label for="name">name</label>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close(input)" *ngIf="input!=='' && input!== undefined">Ok</button>
+</div>

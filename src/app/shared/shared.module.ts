@@ -5,17 +5,23 @@ import { TopbarComponent } from './components/topbar/topbar.component';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { ModalComponent, NgbdModalInput, NgbdModalCodeEditor } from './components/modal/modal.component';
+import { FormsModule } from '@angular/forms';
+import { CodeEditorModule } from '@ngstack/code-editor';
 
 
 
 @NgModule({
   declarations: [
     SidebarComponent,
-    TopbarComponent
+    TopbarComponent,
+    ModalComponent,
+    NgbdModalInput,
+    NgbdModalCodeEditor
   ],
   exports: [
     SidebarComponent,
-    TopbarComponent
+    TopbarComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -25,7 +31,9 @@ import { ToastrModule } from 'ngx-toastr';
       progressBar: true,
     }),
     CommonModule,
-    RouterModule
+    RouterModule,
+    FormsModule,
+    CodeEditorModule.forChild()
   ]
 })
 export class SharedModule { }

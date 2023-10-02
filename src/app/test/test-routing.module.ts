@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CreateComponent } from './pages/create/create.component';
+import { EvidenceDetailComponent } from './pages/evidence-detail/evidence-detail.component';
 import { EvidenceComponent } from './pages/evidence/evidence.component';
 import { HomeComponent } from './pages/home/home.component';
 
@@ -20,6 +21,10 @@ const routes: Routes = [
 {
     path: 'evidence/:testid',
     component: EvidenceComponent
+},
+{
+    path: 'evidence/:testid/:executionid',
+    component: EvidenceDetailComponent
 },
 {
     path: '**',

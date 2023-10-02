@@ -8,6 +8,9 @@ import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { ComponentsModule } from './components/components.module';
 import { TestModule } from './test/test.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
+import { CodeEditorModule } from '@ngstack/code-editor';
 
 @NgModule({
   declarations: [
@@ -20,7 +23,10 @@ import { TestModule } from './test/test.module';
     SharedModule,
     ComponentsModule,
     TestModule,
-    MatTableModule
+    MatTableModule,
+    NgbModule,
+    FormsModule,
+    CodeEditorModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

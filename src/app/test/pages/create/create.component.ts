@@ -14,9 +14,21 @@ export class CreateComponent implements OnInit {
 
   theme = 'vs-dark';
 
+  beforeScriptCodeModel: CodeModel = {
+    language: 'python',
+    uri: 'beforescript.py',
+    value: ''
+  };
+
   scriptCodeModel: CodeModel = {
     language: 'python',
     uri: 'main.py',
+    value: ''
+  };
+
+  afterScriptCodeModel: CodeModel = {
+    language: 'python',
+    uri: 'afterscript.py',
     value: ''
   };
 
@@ -62,6 +74,14 @@ export class CreateComponent implements OnInit {
     this.test.script = value;
   }
 
+  onBeforeScriptCodeChanged(value: string): void {
+    this.test.before_script = value;
+  }
+
+  onAfterScriptCodeChanged(value: string): void {
+    this.test.after_script = value;
+  }
+
   onTestCasesCodeChanged(value: string): void {
     this.test.test_cases = value;
   }
@@ -87,6 +107,8 @@ export class CreateComponent implements OnInit {
         this.test.test_cases = atob(this.test.test_cases);
         this.updateCasesModelValue(this.test.test_cases);
         this.updateScriptModelValue(this.test.script);
+        this.updateAfterScriptModelValue(this.test.after_script);
+        this.updateBeforeScriptModelValue(this.test.before_script);
       }, err => {
         console.debug(err)
         this.notificationService.showError("Error getting test")
@@ -101,6 +123,24 @@ export class CreateComponent implements OnInit {
       value: script
     };
     this.scriptCodeModel = JSON.parse(JSON.stringify(newModel));
+  }
+
+  updateBeforeScriptModelValue(script: string) {
+    var newModel = {
+      language: 'python',
+      uri: 'beforescript.py',
+      value: script
+    };
+    this.beforeScriptCodeModel = JSON.parse(JSON.stringify(newModel));
+  }
+
+  updateAfterScriptModelValue(script: string) {
+    var newModel = {
+      anguage: 'python',
+      uri: 'afterscript.py',
+      value: script
+    };
+    this.afterScriptCodeModel = JSON.parse(JSON.stringify(newModel));
   }
 
   updateCasesModelValue(cases: string) {

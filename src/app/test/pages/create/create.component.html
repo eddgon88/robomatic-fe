@@ -25,15 +25,33 @@
             <label for="description">Description</label>
             <br />
         </div>
+        <div class="form-row">
+            <ngs-code-editor #beforescript
+                [theme]="theme"
+                [codeModel]="beforeScriptCodeModel"
+                [options]="options"
+                (valueChanged)="onBeforeScriptCodeChanged($event)">
+            </ngs-code-editor>
+            <label for="beforescript">Before</label>
+        </div>
         <!--step2 script-->
         <div class="form-row">
-                <ngs-code-editor #script
-                    [theme]="theme"
-                    [codeModel]="scriptCodeModel"
-                    [options]="options"
-                    (valueChanged)="onScriptCodeChanged($event)">
-                </ngs-code-editor>
-                <label for="script">Script</label>
+            <ngs-code-editor #script
+                [theme]="theme"
+                [codeModel]="scriptCodeModel"
+                [options]="options"
+                (valueChanged)="onScriptCodeChanged($event)">
+            </ngs-code-editor>
+            <label for="script">Script</label>
+        </div>
+        <div class="form-row">
+            <ngs-code-editor #afterscript
+                [theme]="theme"
+                [codeModel]="afterScriptCodeModel"
+                [options]="options"
+                (valueChanged)="onAfterScriptCodeChanged($event)">
+            </ngs-code-editor>
+            <label for="afterscript">After</label>
         </div>
         <!--step2 cases-->
         <div class="form-row">

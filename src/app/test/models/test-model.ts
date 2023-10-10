@@ -5,6 +5,8 @@ export class TestModel {
     threads!:              number;
     folder_id!:            number;
     script:                string = "";
+    before_script:         string = "";
+    after_script:          string = "";
     permissions!:          string;
     web:                   boolean = false;
     test_cases_id!:        number;

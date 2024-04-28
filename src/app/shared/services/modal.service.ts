@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NgbdModalConfirm, NgbdModalInput, NgbdModalCodeEditor } from '../components/modal/modal.component';
+import { NgbActiveModal, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import { NgbdModalConfirm, NgbdModalInput, NgbdModalCodeEditor, NgbdModalWebWatcher } from '../components/modal/modal.component';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +39,20 @@ export class ModalService {
     
     const modalRef = this._modalService.open(NgbdModalCodeEditor);
     modalRef.componentInstance.content = mesagge;
+      
+   }
+
+   async modalWebWatcher(host: string, port: string): Promise<any> {
+
+    let modalOptions : NgbModalOptions = {
+      size: 'xl',
+      fullscreen: 'lg',
+      scrollable: true
+    };
+    
+    const modalRef = this._modalService.open(NgbdModalWebWatcher, modalOptions);
+    modalRef.componentInstance.host = host;
+    modalRef.componentInstance.port = port;
       
    }
 

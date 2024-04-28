@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CodeModel } from '@ngstack/code-editor';
+import RFB from "@novnc/novnc/core/rfb";
 
 @Component({
 	selector: 'ngbd-modal-confirm',
@@ -73,12 +74,32 @@ export class NgbdModalCodeEditor implements OnInit {
 	}
 }
 
+@Component({
+	selector: 'ngbd-modal-web-watcher',
+	//standalone: true,
+	templateUrl: 'modal-web-watcher.html',
+})
+export class NgbdModalWebWatcher implements OnInit {
+	constructor(public modal: NgbActiveModal) {}
+	@Input() public host: any;
+	@Input() public port: any;
+	input!: string;
+	ngOnInit(): void {
+		let element = document.getElementById('webView');
+		console.log(element);
+		const rfb = new RFB(<HTMLScriptElement>element, 'ws://'+this.host+':'+this.port+"/websockify");
+		let elementafter = document.getElementById('webView');
+		console.log(elementafter);
+	}
+}
+
 const MODALS: { [name: string]: any } = {
 	confirm: NgbdModalConfirm,
 	ok: NgbdModalOk,
 	error: NgbdModalError,
 	input: NgbdModalInput,
-	editor: NgbdModalCodeEditor
+	editor: NgbdModalCodeEditor,
+	vnc: NgbdModalWebWatcher
 };
 
 @Component({

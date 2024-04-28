@@ -1,13 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { ModalService } from 'src/app/shared/services/modal.service';
 
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { TestRecord } from '../../interfaces/test-record';
 import { FolderService } from '../../services/folder.service';
 import { TestService } from '../../services/test.service';
-import { Folder } from '../../interfaces/folder';
 
 @Component({
   selector: 'app-home',
@@ -141,6 +140,12 @@ export class HomeComponent implements OnInit {
     } else {
       this.deleteFolderModal(record);
     }
+  }
+
+  webWatcherModal(): void{
+    this.modalService.modalWebWatcher("localhost", "5901").then(value => {
+      console.log("resp:" + value);
+    });
   }
 
 }

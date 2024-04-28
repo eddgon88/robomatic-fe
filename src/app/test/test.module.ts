@@ -11,6 +11,8 @@ import { RouterModule } from '@angular/router';
 import { CodeEditorModule } from '@ngstack/code-editor';
 import { FormsModule } from '@angular/forms';
 import { EvidenceDetailComponent } from './pages/evidence-detail/evidence-detail.component';
+import { VncModalComponent } from './modal/vnc-modal/vnc-modal.component';
+import { NovncComponent } from './pages/novnc/novnc.component';
 
 
 
@@ -19,7 +21,9 @@ import { EvidenceDetailComponent } from './pages/evidence-detail/evidence-detail
     HomeComponent,
     CreateComponent,
     EvidenceComponent,
-    EvidenceDetailComponent
+    EvidenceDetailComponent,
+    VncModalComponent,
+    NovncComponent
   ],
   imports: [
     CommonModule,

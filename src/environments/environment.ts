@@ -32,7 +32,11 @@ export const bff = {
   /**Record List */
   getExecutionRecords: '/test-execution/list/{0}',
   /**File List */
-  getFileEvidences: '/evidence/{0}'
+  getFileEvidences: '/evidence/{0}',
+  /**login */
+  login: '/auth/login',
+  /**sing up */
+  singup: '/auth/singup'
 }
 
 /*

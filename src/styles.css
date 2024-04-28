@@ -2,14 +2,59 @@
     font-family: Helvetica, Arial, sans-serif;
     font-weight: 200;
   }
-  
-  html, body {
-    
-    background: white;
-    color: #3e4144;
+
+  :root {
+    --navigation-breakpoint: 900px;
+    --blue: #0071e2;
+    --blue-hover: #016dd9;
+    --red: #e74d4d;
+    --yellow: #d5d83b;
+    --pink: #e459d8;
+    --green: #06ad0c;
+    --darkred: #ff0707;
+    --orange: rgb(224, 137, 24);
+    --gold: #e7d000;
+    --lightgray: #e8e8e8;
+    --offwhite: #f2f2f2;
+    --grey: #9c9c9c;
+    --blue-grey-1: #9fa3af;
+    --blue-grey-2: #bbbec9be;
+    --secondary-grey-dark: #292929;
+    --secondary-grey-light: #dcdcdc;
+    --maindark: #171717;
+    --dark: #212121;
+    --darker: #111111;
+    --semidark: #2c2c2c;
+    --toastify-toast-width: 320px;
+    --border-radius: 8px;
+    --border-radius-large: 20px;
+    --button-border-radius: 200px;
+    --toastify-text-color-light: var(--maindark);
+    --gradient: linear-gradient( 141deg, rgba(191, 102, 255, 1) 0%, rgba(98, 72, 255, 1) 50%, rgba(0, 221, 235, 1) 100% );
+    --gradient-blue: linear-gradient(141deg, #188bfd, #0268ce);
+    --gradient-blue-hover: linear-gradient(141deg, #0f7ce9, #0360bd);
+    --gradient-green: linear-gradient(141deg, #06ad0c, #009105);
+    --gradient-green-hover: linear-gradient(141deg, #019c07, #017e05);
+    --toastify-color-progress-light: var(--gradient);
+    --toastify-color-dark: var(--dark);
+    --gradient-lighter: linear-gradient( 141deg, rgb(200, 124, 255) 0%, rgb(116, 92, 252) 50%, rgb(63, 241, 253) 100% );
+    --toastify-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+html, body {
+    margin: 0;
+    color: #f2f2f2;
+    overflow-x: hidden;
+    font-family: Arial,Helvetica,sans-serif;
     -webkit-font-smoothing: antialiased;
-    height: 100%;
-  }
+    -moz-osx-font-smoothing: grayscale;
+    font-family: Montserrat,sans-serif;
+    --regular: 400;
+    --semibold: 600;
+    --bold: 700;
+    background: var(--maindark);
+    -webkit-tap-highlight-color: transparent;
+}
   
   
   dd {
@@ -17,7 +62,7 @@
   }
   
   button {
-    background-color: black;
+    background: linear-gradient(144deg, #20aed1, #2b7a55 50%, #00ddeb);
     border-radius: 5px;
     border: 0px;
     color: white;
@@ -28,7 +73,7 @@
   }
   
   button:hover {
-    background-color: #3e4144;
+    background: #3e4144;
   }
   
   button:focus{ 
@@ -40,6 +85,7 @@
   }
 
   #sidebar {
+    background-color: #333;
     height: 100%;
     min-height: 100vh;
     min-width: 180px;

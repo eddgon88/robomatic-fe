@@ -142,10 +142,17 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  webWatcherModal(): void{
-    this.modalService.modalWebWatcher("localhost", "5901").then(value => {
-      console.log("resp:" + value);
-    });
+  webWatcherModal(test: TestRecord): void{
+    this.testService.getExecutionPorts(test.id).subscribe(
+      resp=>{
+        this.modalService.modalWebWatcher("localhost", resp.vnc_port).then(value => {
+          console.log("resp:" + value);
+        });
+      },(err)=>{
+        this.notificationService.showError("Error Watching execution")
+        console.debug(err)
+      }
+    )
   }
 
 }

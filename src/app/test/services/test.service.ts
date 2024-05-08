@@ -6,6 +6,7 @@ import { bff } from 'src/environments/environment';
 import { TestExecution } from '../interfaces/test-execution';
 import { Test } from '../interfaces/test';
 import { TestModel } from '../models/test-model';
+import { ExecutionPorts } from '../interfaces/execution-ports';
 
 @Injectable({
   providedIn: 'root'
@@ -67,6 +68,13 @@ export class TestService {
     headers.set('Content-Type', 'application/json; charset=utf-8');
     return this.http.post<any>(url, test, {headers: headers}).pipe(
       catchError(err => {return throwError(err);})
+    )
+  }
+
+  getExecutionPorts(testId: number): Observable<ExecutionPorts>{
+    const url = bff.protocol + bff.host + bff.getPorts.replace('{0}', testId+'');
+    return this.http.get<ExecutionPorts>(url).pipe(
+      catchError(err => {return throwError(err)})
     )
   }
 

@@ -68,10 +68,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "robomatic-fe:build:production"
+              "buildTarget": "robomatic-fe:build:production"
             },
             "development": {
-              "browserTarget": "robomatic-fe:build:development"
+              "buildTarget": "robomatic-fe:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -79,7 +79,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "robomatic-fe:build"
+            "buildTarget": "robomatic-fe:build"
           }
         },
         "test": {

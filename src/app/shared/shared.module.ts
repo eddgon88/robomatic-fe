@@ -8,6 +8,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { ModalComponent, NgbdModalInput, NgbdModalCodeEditor } from './components/modal/modal.component';
 import { FormsModule } from '@angular/forms';
 import { CodeEditorModule } from '@ngstack/code-editor';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 
@@ -33,6 +35,8 @@ import { CodeEditorModule } from '@ngstack/code-editor';
     CommonModule,
     RouterModule,
     FormsModule,
+    MatMenuModule,
+    MatToolbarModule,
     CodeEditorModule.forChild()
   ]
 })

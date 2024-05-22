@@ -3,7 +3,10 @@
       <div class="flex-grow-1">
         <a class="active" href="tests/home">Home</a>
       </div>
-      <div mdbDropdown class="btn-group dropdown">
+      <div>
+        <button (click)="logout()"> Log out</button>
+      </div>
+      <!--div mdbDropdown class="btn-group dropdown">
         <button 
           class="btn btn-default dropdown-toggle" 
           type="button" 
@@ -16,6 +19,6 @@
         <ul mdbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenu">
           <li><button class="dropdown-item" type="button" (click)="logout()">Log out</button></li>
         </ul>
-      </div>
+      </div-->
     </div>
   </div>

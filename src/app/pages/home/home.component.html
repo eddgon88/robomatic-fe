@@ -1,11 +1,17 @@
-<div class="d-flex">
-
+<div class="wrapper">
+  <!-- Sidebar -->
+  <div class="sidebar">
     <app-sidebar></app-sidebar>
-  
-    <div class="container-fluid">
-      <app-topbar class="topbar"></app-topbar>
-      <div class="container-fluid">
-        <router-outlet></router-outlet>
-      </div>
-    </div>
   </div>
+
+  <!-- Contenido principal -->
+  <div class="main-content">
+    <!-- Topbar -->
+    <div class="topnav">
+      <app-topbar></app-topbar>
+    </div>
+
+    <!-- Área de enrutamiento -->
+    <router-outlet></router-outlet>
+  </div>
+</div>

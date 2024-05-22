@@ -13,6 +13,8 @@ import { FormsModule } from '@angular/forms';
 import { EvidenceDetailComponent } from './pages/evidence-detail/evidence-detail.component';
 import { VncModalComponent } from './modal/vnc-modal/vnc-modal.component';
 import { NovncComponent } from './pages/novnc/novnc.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 
@@ -32,6 +34,8 @@ import { NovncComponent } from './pages/novnc/novnc.component';
     TestRoutingModule,
     RouterModule,
     FormsModule,
+    MatMenuModule,
+    MatToolbarModule,
     CodeEditorModule.forChild(),
   ]
 })

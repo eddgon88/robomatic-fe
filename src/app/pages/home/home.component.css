@@ -1,4 +1,25 @@
-.topbar {
-    position: relative;
-    z-index: 9999;
-}
+/* Estilos para el wrapper principal */
+.wrapper {
+    display: flex;
+    height: 100vh; /* Establece la altura al 100% del viewport */
+  }
+  
+  /* Estilos para la barra lateral */
+  .sidebar {
+    width: 250px; /* Ancho de la barra lateral */
+    /*background-color: #333; /* Color de fondo */
+    /*color: #fff; /* Color del texto */
+  }
+  
+  /* Estilos para el contenido principal */
+  .main-content {
+    flex: 1; /* Ocupa todo el espacio restante */
+    /*background-color: #f4f4f4; /* Color de fondo */
+  }
+  
+  /* Estilos para la barra superior */
+  .topnav {
+    height: 60px; /* Altura de la barra superior */
+    /*background-color: #222; /* Color de fondo */
+    /*color: #fff; /* Color del texto */
+  }

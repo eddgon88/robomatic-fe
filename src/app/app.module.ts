@@ -14,6 +14,8 @@ import { CodeEditorModule } from '@ngstack/code-editor';
 import { HomeComponent } from './pages/home/home.component';
 import { AuthInterceptor } from './interceptors/auth-interceptor';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,8 @@ import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
     MatTableModule,
     NgbModule,
     FormsModule,
+    MatMenuModule,
+    MatToolbarModule,
     CodeEditorModule.forRoot()
   ],
   providers: [

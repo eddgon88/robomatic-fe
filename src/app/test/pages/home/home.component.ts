@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ModalService } from 'src/app/shared/services/modal.service';
 
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { TestRecord } from '../../interfaces/test-record';
 import { FolderService } from '../../services/folder.service';
+import { NavigationTestService } from '../../services/navigation-test.service';
 import { TestService } from '../../services/test.service';
 
 @Component({
@@ -16,10 +17,12 @@ import { TestService } from '../../services/test.service';
 export class HomeComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
+              private router: Router,
               private testService: TestService,
               private notificationService: NotificationService,
               private modalService: ModalService,
-              private folderService: FolderService) { }
+              private folderService: FolderService,
+              private navigationTestService: NavigationTestService) { }
 
   displayedColumns: string[] = ['name', 'user', 'type', 'lastUpdate', 'lastExecution',"execute", 'state'];
   dataSource = new MatTableDataSource<TestRecord>();
@@ -28,14 +31,15 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.activatedRoute.queryParams.subscribe((params: Params) => {
-      if(params['folder'] === undefined) {
-        this.folder = 0;
-      } else {
-        this.folder = params['folder'];
-      }
-      console.log(`folder: ${this.folder}`)
-    })
+    //this.activatedRoute.queryParams.subscribe((params: Params) => {
+    //  if(params['folder'] === undefined) {
+    //    this.folder = 0;
+    //  } else {
+    //    this.folder = params['folder'];
+    //  }
+    //  console.log(`folder: ${this.folder}`)
+    //})
+
   
   this.getRecords();
 
@@ -43,6 +47,7 @@ export class HomeComponent implements OnInit {
 
   getRecords(): void {
     this.inLoad = true;
+    this.folder = this.navigationTestService.folderId ? this.navigationTestService.folderId : 0;
     this.testService.getRecordList(this.folder).subscribe(
       resp=>{
         this.dataSource.data = resp;
@@ -145,6 +150,7 @@ export class HomeComponent implements OnInit {
   webWatcherModal(test: TestRecord): void{
     this.testService.getExecutionPorts(test.id).subscribe(
       resp=>{
+        console.log("resp:" + resp);
         this.modalService.modalWebWatcher("localhost", resp.vnc_port).then(value => {
           console.log("resp:" + value);
         });
@@ -153,6 +159,16 @@ export class HomeComponent implements OnInit {
         console.debug(err)
       }
     )
+  }
+
+  viewRecord(record: TestRecord): void {
+    if( record.type === "folder") {
+      console.log(record);
+      this.navigationTestService.folderId = record.id;
+      this.getRecords();
+    } else {
+      this.router.navigate(['/tests/evidence/'+record.id])
+    }
   }
 
 }

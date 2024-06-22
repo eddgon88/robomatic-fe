@@ -12,7 +12,7 @@ export const bff = {
   host: 'localhost:8080/core/v1',
 
   /**Record List */
-  getRecords: '/test/list/1/{0}',
+  getRecords: '/test/list/{0}',
   /**Execute test */
   execute: '/test/execute/{0}',
   /**Stop test */

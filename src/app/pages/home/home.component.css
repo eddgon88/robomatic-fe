@@ -19,7 +19,10 @@
   
   /* Estilos para la barra superior */
   .topnav {
-    height: 60px; /* Altura de la barra superior */
-    /*background-color: #222; /* Color de fondo */
-    /*color: #fff; /* Color del texto */
+    z-index: 2;
+  }
+
+  .mat-toolbar-single-row {
+    height: auto;
+    display: block;
   }

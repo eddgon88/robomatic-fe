@@ -1,3 +1,7 @@
 i.i-header{
     font-size: x-large;
   }
+
+::ng-deep .mat-toolbar-single-row {
+  padding: 0;
+}

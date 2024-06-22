@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CodeModel } from '@ngstack/code-editor';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { TestModel } from '../../models/test-model';
+import { NavigationTestService } from '../../services/navigation-test.service';
 import { TestService } from '../../services/test.service';
 
 @Component({
@@ -48,7 +49,8 @@ export class CreateComponent implements OnInit {
   constructor(private testService: TestService,
               private notificationService: NotificationService,
               private router: Router,
-              private activatedRoute: ActivatedRoute) { }
+              private activatedRoute: ActivatedRoute,
+              private navigationTestService: NavigationTestService) { }
 
   test = new TestModel();
   folder!: number;
@@ -61,13 +63,15 @@ export class CreateComponent implements OnInit {
       this.path = url[0].path
       if (this.path === 'edit') this.testId = +url[1].path;
     })
-    this.activatedRoute.queryParams.subscribe(params => {
-      this.folder = params['folderId'];
-    });
+    //this.activatedRoute.queryParams.subscribe(params => {
+    //  this.folder = params['folderId'];
+    //});
+    this.folder = this.navigationTestService.folderId ? this.navigationTestService.folderId : 0;
     if (this.path === 'edit') {
       this.getTest();
     }
 
+    console.log(this.folder);
   }
 
   onScriptCodeChanged(value: string): void {

@@ -5,6 +5,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 
@@ -16,7 +18,9 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     SharedModule,
-    FormsModule
+    FormsModule,
+    MatMenuModule,
+    MatToolbarModule,
   ]
 })
 export class ComponentsModule { }

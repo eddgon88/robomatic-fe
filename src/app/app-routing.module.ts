@@ -5,6 +5,7 @@ import { AuthenticationGuard } from './guard/authentication-guard';
 import { HomeComponent } from './pages/home/home.component';
 import { NovncComponent } from './test/pages/novnc/novnc.component';
 import { TestRoutingModule } from './test/test-routing.module';
+import { ConfirmMailComponent } from './components/pages/confirm-mail/confirm-mail.component';
 
 const routes: Routes = [
 {
@@ -25,6 +26,10 @@ const routes: Routes = [
   {
     path: 'vnc',
     component: NovncComponent
+  },
+  {
+    path: 'confirm-mail/:token',
+    component: ConfirmMailComponent
   },
 {
   path: '**',

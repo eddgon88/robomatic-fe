@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-md-6 image-container">
+        <div class="container-fluid login-image">
+        </div>
+    </div>
+    <div class="col-md-6 login-form">
+        <p class="bounce">Are you already sing up? <button [routerLink]="'/login'">Login</button></p>
+        <div *ngIf="confirmSuccess" class="login wrap">
+            <div class="h1">Your account was confirmed</div>
+            <h3 class="bounce">Thank you for joining us</h3>
+            <p class="bounce">Now you are ready to automatize all you need</p>
+        </div>
+        <div *ngIf="!confirmSuccess" class="login wrap">
+            <div class="h1">Sorry, we couldn confirm your account</div>
+            <h3 class="bounce">please try again or contact us</h3>
+        </div>
+    </div>
+</div>

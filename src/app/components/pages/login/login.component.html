@@ -4,7 +4,7 @@
         </div>
     </div>
     <div class="col-md-6 login-form">
-        <p class="bounce" *ngIf="singupMode">Are you already sing in? <button (click)="changeMode('login')">Login</button></p>
+        <p class="bounce" *ngIf="singupMode">Are you already sing up? <button (click)="changeMode('login')">Login</button></p>
         <p class="bounce" *ngIf="loginMode">Don't have an account yet? <button (click)="changeMode('singup')">Sing up</button> with us</p>
         <div *ngIf="loginMode" class="login wrap">
             <div class="h1">Login</div>

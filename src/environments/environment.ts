@@ -38,7 +38,9 @@ export const bff = {
   /**sing up */
   singup: '/auth/singup',
   /**get ports */
-  getPorts: '/test-execution/ports/{0}'
+  getPorts: '/test-execution/ports/{0}',
+  /**Confirm User */
+  confirmUser: '/auth/confirm/{0}'
 }
 
 /*

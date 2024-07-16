@@ -4,6 +4,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, catchError, throwError } from 'rxjs';
 import { bff } from 'src/environments/environment';
 import { SingUpRequestModel } from '../models/sing-up-request-model';
+import { ConfirmUser } from '../interfaces/confirm-user';
 
 @Injectable({
   providedIn: 'root'
@@ -48,4 +49,12 @@ export class AuthService {
       catchError(err => {return throwError(err);})
     )
   }
+
+  confirmUser(token: string): Observable<ConfirmUser>{
+    const url = bff.protocol + bff.host + bff.confirmUser.replace('{0}', token);
+    return this.http.get<ConfirmUser>(url).pipe(
+      catchError(err => {return throwError(err)})
+    )
+  }
+
 }

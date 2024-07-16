@@ -7,11 +7,14 @@ import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
+import { ConfirmMailComponent } from './pages/confirm-mail/confirm-mail.component';
+import { RouterModule } from '@angular/router';
 
 
 
 @NgModule({
   declarations: [
+    ConfirmMailComponent,
     LoginComponent,
     RegisterComponent
   ],
@@ -21,6 +24,7 @@ import { MatMenuModule } from '@angular/material/menu';
     FormsModule,
     MatMenuModule,
     MatToolbarModule,
+    RouterModule,
   ]
 })
 export class ComponentsModule { }

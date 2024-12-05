@@ -4,12 +4,15 @@
 
 export const environment = {
   version: require('../../package.json').version,
-  production: false
+  //production: false
+  production: true
 };
 
 export const bff = {
   protocol: 'http://',
-  host: 'localhost:8080/core/v1',
+  host: 'robomatic.cloud:8080/core/v1',
+  //host: 'localhost:8080/core/v1',
+  //protocol: 'https://',
 
   /**Record List */
   getRecords: '/test/list/{0}',

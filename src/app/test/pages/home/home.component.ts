@@ -151,7 +151,7 @@ export class HomeComponent implements OnInit {
     this.testService.getExecutionPorts(test.id).subscribe(
       resp=>{
         console.log("resp:" + resp);
-        this.modalService.modalWebWatcher("localhost", resp.vnc_port).then(value => {
+        this.modalService.modalWebWatcher("robomatic.cloud", resp.vnc_port).then(value => {
           console.log("resp:" + value);
         });
       },(err)=>{

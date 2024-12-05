@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build --development
+RUN npm run build --production
 
 FROM nginx:1.23
 

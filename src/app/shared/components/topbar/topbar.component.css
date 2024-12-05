@@ -1,7 +1,17 @@
 i.i-header{
-    font-size: x-large;
+    font-size: xx-large;
   }
 
 ::ng-deep .mat-toolbar-single-row {
   padding: 0;
+}
+
+.sidebar-img {
+  width: 62,5px;
+  height: 50px;
+}
+
+.topnav-items {
+  margin-left: 5%;
+  margin-right: 5%;
 }

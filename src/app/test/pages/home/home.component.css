@@ -15,12 +15,3 @@
   .demo-row-is-clicked {
     font-weight: bold;
   }
-
-  .mat-mdc-header-row {
-    color: #f2f2f2;
-  }
-
-  .mat-mdc-row {
-    height: var(--mat-table-row-item-container-height, 52px);
-    color: #f2f2f2;
-}

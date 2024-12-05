@@ -25,8 +25,6 @@
             <label for="description">Description</label>
             <br />
         </div>
-       </div>
-        <!--step2 -->
         <div class="form-row">
             <ngs-code-editor #beforescript
                 [theme]="theme"
@@ -36,7 +34,7 @@
             </ngs-code-editor>
             <label for="beforescript">Before</label>
         </div>
-        <!--step3 -->
+        <!--step2 script-->
         <div class="form-row">
             <ngs-code-editor #script
                 [theme]="theme"
@@ -46,7 +44,6 @@
             </ngs-code-editor>
             <label for="script">Script</label>
         </div>
-        <!--step4 -->
         <div class="form-row">
             <ngs-code-editor #afterscript
                 [theme]="theme"
@@ -56,7 +53,7 @@
             </ngs-code-editor>
             <label for="afterscript">After</label>
         </div>
-        <!--step5 -->
+        <!--step2 cases-->
         <div class="form-row">
             <ngs-code-editor #testcase
                 [theme]="theme"
@@ -67,18 +64,6 @@
             <label for="testcase">Test Cases</label>
     </div>
         <div class="form-row">
-            <!--div class="form-row submit-btn">
-                <div class="input-data">
-                    <div class="inner"></div>
-                    <button (click)="back()">Back</button>
-                </div>
-            </div>
-            <div class="form-row submit-btn">
-                <div class="input-data">
-                    <div class="inner"></div>
-                    <button (click)="next()">Next</button>
-                </div>
-            </div-->
             <div class="form-row submit-btn">
                 <div class="input-data">
                     <div class="inner"></div>
@@ -87,4 +72,5 @@
                 </div>
             </div>
         </div>
+    </div>
 </div>

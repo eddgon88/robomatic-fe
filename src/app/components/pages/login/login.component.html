@@ -1,15 +1,17 @@
 <div class="row">
-    <div class="col-md-6 image-container">
+    <div class="col-lg-6 col-md-12 image-container">
         <div class="container-fluid login-image">
         </div>
     </div>
-    <div class="col-md-6 login-form">
-        <p class="bounce" *ngIf="singupMode">Are you already sing up? <button (click)="changeMode('login')">Login</button></p>
-        <p class="bounce" *ngIf="loginMode">Don't have an account yet? <button (click)="changeMode('singup')">Sing up</button> with us</p>
+    <div class="col-lg-6 col-md-12 login-form">
+        <div class="text-container">
+            <p class="bounce" *ngIf="singupMode">Are you already signed up? <button (click)="changeMode('login')">Login</button></p>
+            <p class="bounce" *ngIf="loginMode">Don't have an account yet? <button (click)="changeMode('singup')">Sign up</button> with us</p>
+          </div>
         <div *ngIf="loginMode" class="login wrap">
             <div class="h1">Login</div>
             <input [(ngModel)]="username" pattern="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$" placeholder="Email" id="email" name="email" type="text">
-            <input [(ngModel)]="password" placeholder="Password" id="password" name="password" type="password">
+            <input [(ngModel)]="password" placeholder="Password" id="password" name="password" type="password" (keyup.enter)="login()">
             <input value="Login" class="btn" type="submit" (click)="login()">
           </div>
         <div *ngIf="singupMode" class="login singup wrap">

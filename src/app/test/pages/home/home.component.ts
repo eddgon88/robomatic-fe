@@ -31,18 +31,19 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
 
-    //this.activatedRoute.queryParams.subscribe((params: Params) => {
-    //  if(params['folder'] === undefined) {
-    //    this.folder = 0;
-    //  } else {
-    //    this.folder = params['folder'];
-    //  }
-    //  console.log(`folder: ${this.folder}`)
-    //})
-
-  
+  this.updateDisplayedColumns()
   this.getRecords();
 
+  }
+
+  updateDisplayedColumns(): void {
+    const screenWidth = window.innerWidth;
+
+    if (screenWidth <= 768) {
+      this.displayedColumns = ['name', 'type', 'execute', 'state']; // Ocultar columnas
+    } else {
+      this.displayedColumns = ['name', 'user', 'type', 'lastUpdate', 'lastExecution', 'execute', 'state'];
+    }
   }
 
   getRecords(): void {

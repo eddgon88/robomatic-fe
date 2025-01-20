@@ -44,7 +44,7 @@
 html, body {
     margin: 0;
     color: #f2f2f2;
-    overflow-x: hidden;
+    overflow-x: scroll;
     font-family: Arial,Helvetica,sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -94,7 +94,7 @@ html, body {
   /* Add a black background color to the top navigation */
 .topnav {
   background-color: #333;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* Style the links inside the navigation bar */
@@ -112,3 +112,26 @@ html, body {
   background-color: #ddd;
   color: black;
 }
+
+.demo-table {
+    width: 100%;
+  }
+  
+  .mat-mdc-row .mat-mdc-cell {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    cursor: pointer;
+    color: white;
+  }
+
+  .mat-mdc-header-row .mat-mdc-header-cell {
+    color: white;
+  }
+  
+  .mat-mdc-row:hover .mat-mdc-cell {
+    border-color: currentColor;
+  }
+  
+  .demo-row-is-clicked {
+    font-weight: bold;
+  }

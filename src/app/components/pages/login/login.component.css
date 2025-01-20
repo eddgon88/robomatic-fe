@@ -1,3 +1,56 @@
+/* Pantallas pequeñas (teléfonos) */
+@media only screen and (max-width: 576px) {
+  .login {
+    width: 90%;
+    padding: 2em;
+    margin-top: 80px;
+  }
+  .login-image {
+    height: 30vh; /* Reducir la altura de la imagen en móviles */
+  }
+
+  .bounce {
+    font-size: 0.9em;
+  }
+}
+
+/* Pantallas medianas (tabletas) */
+@media only screen and (max-width: 768px) {
+  .login {
+    width: 80%;
+    padding: 3em;
+    margin-top: 80px;
+  }
+  .login-image {
+    height: 40vh;
+  }
+
+  .bounce {
+    font-size: 0.9em;
+  }
+}
+
+/* Pantallas grandes (escritorios) */
+@media only screen and (min-width: 992px) {
+  .login {
+    width: 340px;
+    padding: 4em;
+  }
+  .login-image {
+    height: 100vh;
+  }
+}
+
+.image-container {
+  height: auto; /* Ajustar altura automáticamente */
+  padding: 20px; /* Agregar espacio alrededor */
+}
+
+.login-form {
+  height: auto; /* Permitir ajuste dinámico */
+  padding: 20px;
+}
+
 .login-container {
     margin-top: 50px;
 }
@@ -18,7 +71,6 @@
     background-size: contain;
     background-position: center center;
     background-repeat: no-repeat;
-    height: 100vh;
 }
 
 .image-container {
@@ -34,7 +86,7 @@
 }
 
 .login {
-    position: absolute;
+    position: relative;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -87,6 +139,14 @@
   }
 
   .bounce {
+    position: absolute; /* Posiciona el texto encima */
+    z-index: 10; /* Asegura que esté encima de otros elementos */
+    top: 7%; /* Ajusta la posición desde la parte superior */
+    left: 50%; /* Centra horizontalmente */
+    transform: translateX(-50%); /* Ajusta para centrar perfectamente */
+    text-align: center; /* Centra el texto */
+    color: #fff; /* Asegura que el texto sea visible */
+    font-size: 1em; /* Ajusta el tamaño en pantallas pequeñas */
     animation: bounce2 1.6s;
   }
   

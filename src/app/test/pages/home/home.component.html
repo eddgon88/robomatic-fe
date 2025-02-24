@@ -1,3 +1,7 @@
+<div class="d-flex flex-row-reverse mt-3 mb-3">
+  <button routerLink="/tests/create">New Test</button>
+  <button (click)="createFolderModal()">New Folder</button>
+</div>
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table responsive-table">
 
   <ng-container matColumnDef="name">

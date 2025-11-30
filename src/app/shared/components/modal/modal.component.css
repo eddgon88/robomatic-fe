@@ -1,0 +1,66 @@
+/* Global Modal Styles for Dark Theme */
+
+.modal-content {
+    background-color: var(--semidark);
+    color: var(--offwhite);
+    border: 1px solid #444;
+}
+
+.modal-header {
+    border-bottom: 1px solid #444;
+}
+
+.modal-footer {
+    border-top: 1px solid #444;
+}
+
+.modal-title {
+    color: var(--offwhite);
+}
+
+.btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Input Styles within Modal */
+.modal-body input {
+    background-color: var(--dark);
+    color: var(--offwhite);
+    border: 1px solid #555;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
+    width: 100%;
+}
+
+.modal-body input:focus {
+    background-color: var(--dark);
+    color: var(--offwhite);
+    border-color: var(--blue);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.modal-body label {
+    color: var(--offwhite);
+    margin-top: 0.5rem;
+}
+
+/* Text Overrides */
+.text-primary {
+    color: var(--blue) !important;
+}
+
+.text-danger {
+    color: var(--red) !important;
+}
+
+/* Button Overrides */
+.btn-outline-secondary {
+    color: var(--offwhite);
+    border-color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+}

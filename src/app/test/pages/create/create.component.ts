@@ -6,6 +6,8 @@ import { TestModel } from '../../models/test-model';
 import { NavigationTestService } from '../../services/navigation-test.service';
 import { TestService } from '../../services/test.service';
 
+import { Location } from '@angular/common';
+
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -47,10 +49,11 @@ export class CreateComponent implements OnInit {
   };
 
   constructor(private testService: TestService,
-              private notificationService: NotificationService,
-              private router: Router,
-              private activatedRoute: ActivatedRoute,
-              private navigationTestService: NavigationTestService) { }
+    private notificationService: NotificationService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private navigationTestService: NavigationTestService,
+    private location: Location) { }
 
   test = new TestModel();
   folder!: number;
@@ -96,7 +99,7 @@ export class CreateComponent implements OnInit {
     this.testService.create(this.test).subscribe(
       response => {
         this.notificationService.showSuccess("Test created successfully");
-        this.router.navigate(['/test/home']);      
+        this.router.navigate(['/test/home']);
       }, (err) => {
         this.notificationService.showError("Error creating test")
         console.debug(err)
@@ -162,11 +165,15 @@ export class CreateComponent implements OnInit {
     this.testService.update(this.test).subscribe(
       response => {
         this.notificationService.showSuccess("Test updated successfully");
-        this.router.navigate(['/test/home']);      
+        this.router.navigate(['/test/home']);
       }, (err) => {
         this.notificationService.showError("Error updating test")
         console.debug(err)
       })
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
 }

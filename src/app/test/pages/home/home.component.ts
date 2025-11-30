@@ -17,22 +17,27 @@ import { TestService } from '../../services/test.service';
 export class HomeComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
-              private router: Router,
-              private testService: TestService,
-              private notificationService: NotificationService,
-              private modalService: ModalService,
-              private folderService: FolderService,
-              private navigationTestService: NavigationTestService) { }
+    private router: Router,
+    private testService: TestService,
+    private notificationService: NotificationService,
+    private modalService: ModalService,
+    private folderService: FolderService,
+    private navigationTestService: NavigationTestService) { }
 
-  displayedColumns: string[] = ['name', 'user', 'type', 'lastUpdate', 'lastExecution',"execute", 'state'];
+  displayedColumns: string[] = ['name', 'user', 'type', 'lastUpdate', 'lastExecution', "execute", 'state'];
   dataSource = new MatTableDataSource<TestRecord>();
   folder!: number;
   inLoad: boolean = false;
 
   ngOnInit(): void {
 
-  this.updateDisplayedColumns()
-  this.getRecords();
+    this.updateDisplayedColumns()
+    this.getRecords();
+
+    this.navigationTestService.suscribe(folderId => {
+      this.folder = folderId;
+      this.getRecords();
+    });
 
   }
 
@@ -50,9 +55,9 @@ export class HomeComponent implements OnInit {
     this.inLoad = true;
     this.folder = this.navigationTestService.folderId ? this.navigationTestService.folderId : 0;
     this.testService.getRecordList(this.folder).subscribe(
-      resp=>{
+      resp => {
         this.dataSource.data = resp;
-      },(err)=>{
+      }, (err) => {
         console.log(err)
       }
     )
@@ -62,9 +67,9 @@ export class HomeComponent implements OnInit {
   execute(test: TestRecord): void {
     test.is_running = true;
     this.testService.execute(test.id).subscribe(
-      resp=>{
+      resp => {
         this.notificationService.showSuccess("Executing Test")
-      },(err)=>{
+      }, (err) => {
         this.notificationService.showError("Error executing")
         console.debug(err)
         test.is_running = false;
@@ -74,10 +79,10 @@ export class HomeComponent implements OnInit {
 
   stop(test: TestRecord): void {
     this.testService.stop(test.id).subscribe(
-      resp=>{
+      resp => {
         test.is_running = false;
         this.notificationService.showWarning("Stoping Test")
-      },(err)=>{
+      }, (err) => {
         this.notificationService.showError("Error Stoping")
         console.debug(err)
       }
@@ -86,15 +91,15 @@ export class HomeComponent implements OnInit {
 
   async delete(test: TestRecord): Promise<void> {
     let bool = false;
-    await this.modalService.modalConfirm("confirm").then(value => {
+    await this.modalService.modalConfirm("test", test.name).then(value => {
       bool = value
     });
-    if(bool){
+    if (bool) {
       this.testService.delete(test.id).subscribe(
-        resp=>{
+        resp => {
           this.notificationService.showWarning("Test deleted");
           this.dataSource.data = this.dataSource.data.filter(row => row.id !== test.id);
-        },(err)=>{
+        }, (err) => {
           this.notificationService.showError("Error deleting")
           console.debug(err)
         }
@@ -109,7 +114,7 @@ export class HomeComponent implements OnInit {
         data.push(resp);
         this.dataSource.data = data;
         this.notificationService.showSuccess("Folder created successfully");
-      },(err)=>{
+      }, (err) => {
         this.notificationService.showError("Error creating folder")
         console.debug(err)
       }
@@ -119,7 +124,7 @@ export class HomeComponent implements OnInit {
   async createFolderModal(): Promise<void> {
     await this.modalService.modalInput("mesagge").then(value => {
       console.log("resp:" + value);
-      if(value != false) this.createFolder(value);
+      if (value != false) this.createFolder(value);
     });
   }
 
@@ -128,34 +133,34 @@ export class HomeComponent implements OnInit {
       resp => {
         this.notificationService.showWarning("Folder deleted");
         this.dataSource.data = this.dataSource.data.filter(row => row.id !== folder.id);
-    }, (err) => {
-      this.notificationService.showError("Error deleting folder")
-      console.debug(err)
-    })
+      }, (err) => {
+        this.notificationService.showError("Error deleting folder")
+        console.debug(err)
+      })
   }
 
   async deleteFolderModal(folder: TestRecord): Promise<void> {
-    this.modalService.modalConfirm("message").then(value => {
-      if(value) this.deleteFolder(folder);
+    this.modalService.modalConfirm("folder", folder.name).then(value => {
+      if (value) this.deleteFolder(folder);
     })
   }
 
   deleteRecord(record: TestRecord): void {
-    if(record.type === "test") {
+    if (record.type === "test") {
       this.delete(record);
     } else {
       this.deleteFolderModal(record);
     }
   }
 
-  webWatcherModal(test: TestRecord): void{
+  webWatcherModal(test: TestRecord): void {
     this.testService.getExecutionPorts(test.id).subscribe(
-      resp=>{
+      resp => {
         console.log("resp:" + resp);
         this.modalService.modalWebWatcher("robomatic.cloud", resp.vnc_port).then(value => {
           console.log("resp:" + value);
         });
-      },(err)=>{
+      }, (err) => {
         this.notificationService.showError("Error Watching execution")
         console.debug(err)
       }
@@ -163,12 +168,11 @@ export class HomeComponent implements OnInit {
   }
 
   viewRecord(record: TestRecord): void {
-    if( record.type === "folder") {
+    if (record.type === "folder") {
       console.log(record);
-      this.navigationTestService.folderId = record.id;
-      this.getRecords();
+      this.navigationTestService.publishFolder(record.id, record.name);
     } else {
-      this.router.navigate(['/tests/evidence/'+record.id])
+      this.router.navigate(['/tests/evidence/' + record.id])
     }
   }
 

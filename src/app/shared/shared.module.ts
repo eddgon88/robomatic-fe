@@ -13,17 +13,21 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 
+import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
+
 @NgModule({
   declarations: [
     SidebarComponent,
     TopbarComponent,
     ModalComponent,
     NgbdModalInput,
-    NgbdModalCodeEditor
+    NgbdModalCodeEditor,
+    BreadcrumbComponent
   ],
   exports: [
     SidebarComponent,
     TopbarComponent,
+    BreadcrumbComponent
   ],
   imports: [
     BrowserAnimationsModule,

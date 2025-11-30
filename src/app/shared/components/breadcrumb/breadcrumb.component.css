@@ -1,0 +1,15 @@
+.breadcrumb {
+  background-color: transparent;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+.breadcrumb-item a {
+  text-decoration: none;
+  color: #0d6efd;
+}
+
+.breadcrumb-item.active {
+  color: #6c757d;
+}

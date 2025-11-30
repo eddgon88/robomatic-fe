@@ -9,7 +9,8 @@ export const environment = {
 
 export const bff = {
   protocol: 'http://',
-  host: 'localhost:8080/core/v1',
+  host: 'robomatic.cloud:8080/core/v1',
+  //host: 'localhost:8080/core/v1',
 
   /**Record List */
   getRecords: '/test/list/{0}',

@@ -1,76 +1,67 @@
 <div class="container mt-3">
+
     <div class="form-group">
         <!--step1 form-->
-       <div class="form-row">
-          <div class="input-data">
-             <input #name type="text" required [(ngModel)]="test.name">
-             <div class="underline"></div>
-             <label for="name">Test Name</label>
-          </div>
-          <div class="input-data">
-             <input #threads type="number" [(ngModel)]="test.threads" required>
-             <div class="underline"></div>
-             <label for="threads">Threads</label>
-          </div>
-          <div class="input-data">
-            <input #isweb type="checkbox" [(ngModel)]="test.web">
-            <label for="isweb">WEB</label>
-          </div>
-       </div>
-       <div class="form-row">
-        <div class="input-data textarea">
-            <textarea #description rows="3" cols="50" [(ngModel)]="test.description"></textarea>
-            <br />
-            <div class="underline"></div>
-            <label for="description">Description</label>
-            <br />
+        <div class="form-row">
+            <div class="input-data">
+                <input #name type="text" required [(ngModel)]="test.name">
+                <div class="underline"></div>
+                <label for="name">Test Name</label>
+            </div>
+            <div class="input-data">
+                <input #threads type="number" [(ngModel)]="test.threads" required>
+                <div class="underline"></div>
+                <label for="threads">Threads</label>
+            </div>
+            <div class="input-data">
+                <input #isweb type="checkbox" [(ngModel)]="test.web">
+                <label for="isweb">WEB</label>
+            </div>
         </div>
         <div class="form-row">
-            <ngs-code-editor #beforescript
-                [theme]="theme"
-                [codeModel]="beforeScriptCodeModel"
-                [options]="options"
-                (valueChanged)="onBeforeScriptCodeChanged($event)">
-            </ngs-code-editor>
-            <label for="beforescript">Before</label>
-        </div>
-        <!--step2 script-->
-        <div class="form-row">
-            <ngs-code-editor #script
-                [theme]="theme"
-                [codeModel]="scriptCodeModel"
-                [options]="options"
-                (valueChanged)="onScriptCodeChanged($event)">
-            </ngs-code-editor>
-            <label for="script">Script</label>
-        </div>
-        <div class="form-row">
-            <ngs-code-editor #afterscript
-                [theme]="theme"
-                [codeModel]="afterScriptCodeModel"
-                [options]="options"
-                (valueChanged)="onAfterScriptCodeChanged($event)">
-            </ngs-code-editor>
-            <label for="afterscript">After</label>
-        </div>
-        <!--step2 cases-->
-        <div class="form-row">
-            <ngs-code-editor #testcase
-                [theme]="theme"
-                [codeModel]="casesCodeModel"
-                [options]="options"
-                (valueChanged)="onTestCasesCodeChanged($event)">
-            </ngs-code-editor>
-            <label for="testcase">Test Cases</label>
-    </div>
-        <div class="form-row">
-            <div class="form-row submit-btn">
-                <div class="input-data">
-                    <div class="inner"></div>
-                    <button (click)="create()" *ngIf="path != 'edit'">create</button>
-                    <button (click)="update()" *ngIf="path == 'edit'">edit</button>
+            <div class="input-data textarea">
+                <textarea #description rows="3" cols="50" [(ngModel)]="test.description"></textarea>
+                <br />
+                <div class="underline"></div>
+                <label for="description">Description</label>
+                <br />
+            </div>
+            <div class="form-row">
+                <ngs-code-editor #beforescript [theme]="theme" [codeModel]="beforeScriptCodeModel" [options]="options"
+                    (valueChanged)="onBeforeScriptCodeChanged($event)">
+                </ngs-code-editor>
+                <label for="beforescript">Before</label>
+            </div>
+            <!--step2 script-->
+            <div class="form-row">
+                <ngs-code-editor #script [theme]="theme" [codeModel]="scriptCodeModel" [options]="options"
+                    (valueChanged)="onScriptCodeChanged($event)">
+                </ngs-code-editor>
+                <label for="script">Script</label>
+            </div>
+            <div class="form-row">
+                <ngs-code-editor #afterscript [theme]="theme" [codeModel]="afterScriptCodeModel" [options]="options"
+                    (valueChanged)="onAfterScriptCodeChanged($event)">
+                </ngs-code-editor>
+                <label for="afterscript">After</label>
+            </div>
+            <!--step2 cases-->
+            <div class="form-row">
+                <ngs-code-editor #testcase [theme]="theme" [codeModel]="casesCodeModel" [options]="options"
+                    (valueChanged)="onTestCasesCodeChanged($event)">
+                </ngs-code-editor>
+                <label for="testcase">Test Cases</label>
+            </div>
+            <div class="form-row">
+                <div class="form-row submit-btn">
+                    <div class="input-data">
+                        <div class="inner"></div>
+                        <button (click)="create()" *ngIf="path != 'edit'">create</button>
+                        <button (click)="update()" *ngIf="path == 'edit'">edit</button>
+                        <button mat-icon-button (click)="goBack()" style="margin-left: 10px;"><i
+                                class="bi bi-arrow-left"></i> Back</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>

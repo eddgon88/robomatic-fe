@@ -8,16 +8,16 @@ import { TestRoutingModule } from './test/test-routing.module';
 import { ConfirmMailComponent } from './components/pages/confirm-mail/confirm-mail.component';
 
 const routes: Routes = [
-{
-  path: '',
-  component: HomeComponent,
-  children: [
-    {
-      path: 'tests',
-      loadChildren: () => TestRoutingModule,
-      canActivate: [AuthenticationGuard]
-    }
-  ]
+  {
+    path: '',
+    component: HomeComponent,
+    children: [
+      {
+        path: 'tests',
+        loadChildren: () => TestRoutingModule,
+        canActivate: [AuthenticationGuard]
+      }
+    ]
   },
   {
     path: 'login',
@@ -31,10 +31,10 @@ const routes: Routes = [
     path: 'confirm-mail/:token',
     component: ConfirmMailComponent
   },
-{
-  path: '**',
-  redirectTo: 'login'
-}
+  {
+    path: '**',
+    redirectTo: 'login'
+  }
 ];
 
 @NgModule({

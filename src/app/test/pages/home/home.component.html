@@ -39,7 +39,7 @@
         <button *ngIf="(element.permissions === 'owner' || element.permissions === 'edit' || element.permissions === 'execute') && !element.is_running" [routerLink]="'/tests/evidence/'+element.id"><i class="bi bi-archive"></i></button>
         <button *ngIf="element.permissions === 'owner' || element.permissions === 'edit' || element.permissions === 'execute'"><i class="bi bi-stopwatch"></i></button>
         <button *ngIf="((element.permissions === 'owner' || element.permissions === 'edit') && !element.is_running) || element.type === 'folder'" (click)="deleteRecord(element)"><i class="bi bi-trash3"></i></button>
-        <button *ngIf="((element.permissions === 'owner' || element.permissions === 'edit') && element.is_running)" (click)="webWatcherModal(element)"><i class="bi bi-binoculars"></i></button>
+        <button *ngIf="(element.is_running)" (click)="webWatcherModal(element)"><i class="bi bi-binoculars"></i></button>
       </div>
     </td>
   </ng-container>

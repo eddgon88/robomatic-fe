@@ -1,20 +1,39 @@
 <div class="modal-header">
-    <h4 class="modal-title" id="modal-title">Input modal</h4>
-    <button
-        type="button"
-        class="btn-close"
-        aria-describedby="modal-title"
-        (click)="modal.dismiss('Cross click')"
-    ></button>
+  <h4 class="modal-title">
+    <i class="bi bi-folder-plus"></i>
+    Create New Folder
+  </h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('cancel')"></button>
 </div>
 <div class="modal-body">
-    <p>
-        <strong>insert <span class="text-primary">"folder name"</span> in the input</strong>
-    </p>
-    <input type="text" #name [(ngModel)]="input">
-    <label for="name">name</label>
+  <div class="mb-3">
+    <label for="folderName" class="form-label">Folder Name</label>
+    <input 
+      type="text" 
+      class="form-control"
+      id="folderName"
+      [(ngModel)]="input"
+      placeholder="Enter folder name..."
+      autocomplete="off"
+      autofocus
+      (keyup.enter)="input && input.trim() !== '' && modal.close(input)">
+  </div>
+  <div class="alert alert-info mb-0" *ngIf="!input">
+    <i class="bi bi-lightbulb me-1"></i>
+    <small>Use descriptive names to organize your tests efficiently.</small>
+  </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
-    <button type="button" class="btn btn-danger" (click)="modal.close(input)" *ngIf="input!=='' && input!== undefined">Ok</button>
+  <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel')">
+    <i class="bi bi-x-lg"></i>
+    Cancel
+  </button>
+  <button 
+    type="button" 
+    class="btn btn-primary" 
+    (click)="modal.close(input)" 
+    [disabled]="!input || input.trim() === ''">
+    <i class="bi bi-check-lg"></i>
+    Create
+  </button>
 </div>

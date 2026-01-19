@@ -1,7 +1,25 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CodeModel } from '@ngstack/code-editor';
 import RFB from "@novnc/novnc/core/rfb";
+
+/**
+ * Interface para usuario en lista de compartir
+ */
+export interface UserForSharing {
+	id: number;
+	full_name: string;
+	email: string;
+}
+
+/**
+ * Interface para request de compartir
+ */
+export interface ShareResult {
+	userId: number;
+	permission: string;
+	isFolder: boolean;
+}
 
 @Component({
 	selector: 'ngbd-modal-confirm',
@@ -92,17 +110,124 @@ export class NgbdModalCodeEditor implements OnInit {
 	styleUrls: ['./modal.component.css'],
 	encapsulation: ViewEncapsulation.None
 })
-export class NgbdModalWebWatcher implements OnInit {
+export class NgbdModalWebWatcher implements AfterViewInit, OnDestroy {
 	constructor(public modal: NgbActiveModal) { }
 	@Input() public host: any;
 	@Input() public port: any;
-	input!: string;
+	private rfb: RFB | null = null;
+
+	ngAfterViewInit(): void {
+		// Wait for animation and DOM paint
+		setTimeout(() => {
+			this.initVNC();
+		}, 200);
+	}
+
+	private initVNC(): void {
+		const element = document.getElementById('webView');
+		if (element) {
+			try {
+				element.innerHTML = ''; // Clean previous content
+
+				let url = '';
+				if (window.location.protocol === 'https:') {
+					// Use Nginx proxy for HTTPS (WSS)
+					// Format: wss://domain/vnc/port/websockify
+					url = `wss://${this.host}/vnc/${this.port}/websockify`;
+				} else {
+					// Direct connection for HTTP (WS)
+					url = `ws://${this.host}:${this.port}/websockify`;
+				}
+
+				this.rfb = new RFB(element as HTMLElement, url);
+				this.rfb.scaleViewport = false; // Disable scaling to avoid 0px width on large images
+				this.rfb.background = "#000000";
+			} catch (error) {
+				console.error('Error connecting to VNC:', error);
+			}
+		} else {
+			console.error('webView element not found');
+		}
+	}
+
+	ngOnDestroy(): void {
+		if (this.rfb) {
+			try {
+				this.rfb.disconnect();
+			} catch (error) {
+				// Ignore disconnect errors
+			}
+			this.rfb = null;
+		}
+	}
+}
+
+@Component({
+	selector: 'ngbd-generic-confirm',
+	standalone: true,
+	template: `
+		<div class="modal-header">
+			<h4 class="modal-title">{{ title }}</h4>
+			<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+		</div>
+		<div class="modal-body">
+			<p>{{ message }}</p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">{{ cancelText }}</button>
+			<button type="button" class="btn btn-danger" (click)="modal.close(true)">{{ confirmText }}</button>
+		</div>
+	`,
+	styleUrls: ['./modal.component.css'],
+	encapsulation: ViewEncapsulation.None
+})
+export class NgbdGenericConfirm {
+	@Input() title: string = 'Confirm';
+	@Input() message: string = '';
+	@Input() confirmText: string = 'Confirm';
+	@Input() cancelText: string = 'Cancel';
+	constructor(public modal: NgbActiveModal) { }
+}
+
+@Component({
+	selector: 'ngbd-modal-share',
+	templateUrl: 'modal-share.html',
+	styleUrls: ['./modal.component.css'],
+	encapsulation: ViewEncapsulation.None
+})
+export class NgbdModalShare implements OnInit {
+	constructor(public modal: NgbActiveModal) { }
+
+	@Input() public itemId!: number;
+	@Input() public itemName: string = '';
+	@Input() public users: UserForSharing[] = [];
+	@Input() public loadingUsers: boolean = false;
+	@Input() public isFolder: boolean = false;
+
+	selectedUserId: number | null = null;
+	selectedPermission: string | null = null;
+	sharing: boolean = false;
+
 	ngOnInit(): void {
-		let element = document.getElementById('webView');
-		console.log(element);
-		const rfb = new RFB(<HTMLScriptElement>element, 'ws://' + this.host + ':' + this.port + "/websockify");
-		let elementafter = document.getElementById('webView');
-		console.log(elementafter);
+		// Para folders, el permiso es siempre 'view' por defecto
+		if (this.isFolder) {
+			this.selectedPermission = 'view';
+		}
+	}
+
+	share(): void {
+		// Para folders, siempre usar 'view'. Para tests, usar el permiso seleccionado
+		const permission = this.isFolder ? 'view' : this.selectedPermission;
+
+		if (this.selectedUserId && permission) {
+			this.sharing = true;
+			const result: ShareResult = {
+				userId: this.selectedUserId,
+				permission: permission,
+				isFolder: this.isFolder
+			};
+			this.modal.close(result);
+		}
 	}
 }
 
@@ -112,7 +237,9 @@ const MODALS: { [name: string]: any } = {
 	error: NgbdModalError,
 	input: NgbdModalInput,
 	editor: NgbdModalCodeEditor,
-	vnc: NgbdModalWebWatcher
+	vnc: NgbdModalWebWatcher,
+	share: NgbdModalShare,
+	genericConfirm: NgbdGenericConfirm
 };
 
 @Component({

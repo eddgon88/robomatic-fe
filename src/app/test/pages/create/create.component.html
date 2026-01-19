@@ -1,67 +1,449 @@
-<div class="container mt-3">
-
-    <div class="form-group">
-        <!--step1 form-->
-        <div class="form-row">
-            <div class="input-data">
-                <input #name type="text" required [(ngModel)]="test.name">
-                <div class="underline"></div>
-                <label for="name">Test Name</label>
-            </div>
-            <div class="input-data">
-                <input #threads type="number" [(ngModel)]="test.threads" required>
-                <div class="underline"></div>
-                <label for="threads">Threads</label>
-            </div>
-            <div class="input-data">
-                <input #isweb type="checkbox" [(ngModel)]="test.web">
-                <label for="isweb">WEB</label>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="input-data textarea">
-                <textarea #description rows="3" cols="50" [(ngModel)]="test.description"></textarea>
-                <br />
-                <div class="underline"></div>
-                <label for="description">Description</label>
-                <br />
-            </div>
-            <div class="form-row">
-                <ngs-code-editor #beforescript [theme]="theme" [codeModel]="beforeScriptCodeModel" [options]="options"
-                    (valueChanged)="onBeforeScriptCodeChanged($event)">
-                </ngs-code-editor>
-                <label for="beforescript">Before</label>
-            </div>
-            <!--step2 script-->
-            <div class="form-row">
-                <ngs-code-editor #script [theme]="theme" [codeModel]="scriptCodeModel" [options]="options"
-                    (valueChanged)="onScriptCodeChanged($event)">
-                </ngs-code-editor>
-                <label for="script">Script</label>
-            </div>
-            <div class="form-row">
-                <ngs-code-editor #afterscript [theme]="theme" [codeModel]="afterScriptCodeModel" [options]="options"
-                    (valueChanged)="onAfterScriptCodeChanged($event)">
-                </ngs-code-editor>
-                <label for="afterscript">After</label>
-            </div>
-            <!--step2 cases-->
-            <div class="form-row">
-                <ngs-code-editor #testcase [theme]="theme" [codeModel]="casesCodeModel" [options]="options"
-                    (valueChanged)="onTestCasesCodeChanged($event)">
-                </ngs-code-editor>
-                <label for="testcase">Test Cases</label>
-            </div>
-            <div class="form-row">
-                <div class="form-row submit-btn">
-                    <div class="input-data">
-                        <div class="inner"></div>
-                        <button (click)="create()" *ngIf="path != 'edit'">create</button>
-                        <button (click)="update()" *ngIf="path == 'edit'">edit</button>
-                        <button mat-icon-button (click)="goBack()" style="margin-left: 10px;"><i
-                                class="bi bi-arrow-left"></i> Back</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="create-container">
+  <!-- Header -->
+  <header class="page-header">
+    <div class="header-left">
+      <button class="btn-back" (click)="goBack()">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+      <div class="header-info">
+        <h1>{{ path === 'edit' ? 'Edit Test' : 'Create New Test' }}</h1>
+        <p>{{ path === 'edit' ? 'Modify your automated test configuration' : 'Set up your automated test step by step' }}</p>
+      </div>
     </div>
+  </header>
+
+  <!-- Stepper -->
+  <div class="stepper">
+    <div class="stepper-track">
+      <div class="stepper-progress" [style.width]="getProgressWidth()"></div>
+    </div>
+    <div class="stepper-steps">
+      <div *ngFor="let step of visibleSteps; let i = index" 
+           class="step" 
+           [class.active]="currentVisibleStep === i"
+           [class.completed]="currentVisibleStep > i"
+           (click)="goToStep(i)">
+        <div class="step-indicator">
+          <span class="step-number" *ngIf="currentVisibleStep <= i">{{ i + 1 }}</span>
+          <i class="bi bi-check-lg" *ngIf="currentVisibleStep > i"></i>
+        </div>
+        <div class="step-info">
+          <span class="step-title">{{ step.title }}</span>
+          <span class="step-subtitle">{{ step.subtitle }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step Content -->
+  <div class="step-content">
+    
+    <!-- Step 1: Test Info (index 0) -->
+    <div class="step-panel" *ngIf="currentStep === 0" [@fadeIn]>
+      <div class="panel-header">
+        <div class="panel-icon info">
+          <i class="bi bi-info-circle"></i>
+        </div>
+        <div class="panel-title">
+          <h2>Test Information</h2>
+          <p>Define the basic configuration for your test</p>
+        </div>
+      </div>
+
+      <!-- Aviso para ejecutores -->
+      <div class="executor-notice" *ngIf="isExecutorOnly">
+        <i class="bi bi-info-circle"></i>
+        <span>You have <strong>Executor</strong> permissions. You can only view test info, but you can edit credentials and test cases.</span>
+      </div>
+      
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label for="name">
+            <i class="bi bi-tag"></i>
+            Test Name <span class="required" *ngIf="!isExecutorOnly">*</span>
+          </label>
+          <input type="text" 
+                 id="name" 
+                 [(ngModel)]="test.name" 
+                 placeholder="Enter a descriptive name for your test"
+                 class="form-input"
+                 [disabled]="isExecutorOnly"
+                 [class.readonly]="isExecutorOnly"
+                 required>
+          <span class="form-hint" *ngIf="!isExecutorOnly">Use a clear name that describes what this test does</span>
+        </div>
+
+        <div class="form-group">
+          <label for="threads">
+            <i class="bi bi-cpu"></i>
+            Parallel Threads
+          </label>
+          <input type="number" 
+                 id="threads" 
+                 [(ngModel)]="test.threads" 
+                 placeholder="1"
+                 min="1"
+                 max="10"
+                 class="form-input"
+                 [disabled]="isExecutorOnly"
+                 [class.readonly]="isExecutorOnly">
+          <span class="form-hint" *ngIf="!isExecutorOnly">Number of parallel executions (1-10)</span>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <i class="bi bi-globe"></i>
+            Test Type
+          </label>
+          <div class="toggle-group">
+            <button class="toggle-btn" 
+                    [class.active]="!test.web" 
+                    (click)="!isExecutorOnly && (test.web = false)"
+                    [disabled]="isExecutorOnly"
+                    [class.disabled]="isExecutorOnly">
+              <i class="bi bi-terminal"></i>
+              API / Script
+            </button>
+            <button class="toggle-btn" 
+                    [class.active]="test.web" 
+                    (click)="!isExecutorOnly && (test.web = true)"
+                    [disabled]="isExecutorOnly"
+                    [class.disabled]="isExecutorOnly">
+              <i class="bi bi-browser-chrome"></i>
+              Web Browser
+            </button>
+          </div>
+          <span class="form-hint" *ngIf="!isExecutorOnly">Web tests run in a visible browser for UI automation</span>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="description">
+            <i class="bi bi-text-paragraph"></i>
+            Description
+          </label>
+          <textarea id="description" 
+                    [(ngModel)]="test.description" 
+                    placeholder="Describe what this test validates..."
+                    rows="3"
+                    class="form-input"
+                    [disabled]="isExecutorOnly"
+                    [class.readonly]="isExecutorOnly"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Credentials (index 1) -->
+    <div class="step-panel" *ngIf="currentStep === 1" [@fadeIn]>
+      <div class="panel-header">
+        <div class="panel-icon credentials">
+          <i class="bi bi-shield-lock"></i>
+        </div>
+        <div class="panel-title">
+          <h2>Credentials</h2>
+          <p>Manage passwords and certificates securely for your test</p>
+        </div>
+        <button class="btn-add-credential" (click)="openCredentialForm()">
+          <i class="bi bi-plus-lg"></i>
+          Add Credential
+        </button>
+      </div>
+
+      <!-- Credentials List -->
+      <div class="credentials-container">
+        <div class="credentials-empty" *ngIf="getDisplayCredentials().length === 0 && !showCredentialForm">
+          <div class="empty-icon">
+            <i class="bi bi-shield-lock"></i>
+          </div>
+          <h3>No credentials yet</h3>
+          <p>Add passwords or certificates that your test needs to access external services</p>
+          <button class="btn-primary" (click)="openCredentialForm()">
+            <i class="bi bi-plus-lg"></i>
+            Add First Credential
+          </button>
+        </div>
+
+        <div class="credentials-list" *ngIf="getDisplayCredentials().length > 0">
+          <div class="credential-item" *ngFor="let cred of getDisplayCredentials()">
+            <div class="credential-icon" [ngClass]="cred.credential_type_id === CredentialType.PASSWORD ? 'password' : 'certificate'">
+              <i class="bi" [ngClass]="cred.credential_type_id === CredentialType.PASSWORD ? 'bi-key-fill' : 'bi-file-earmark-lock-fill'"></i>
+            </div>
+            <div class="credential-info">
+              <span class="credential-name">{{ cred.name }}</span>
+              <span class="credential-type">{{ getCredentialTypeName(cred.credential_type_id) }}</span>
+              <span class="credential-file" *ngIf="cred.file_name">{{ cred.file_name }}</span>
+            </div>
+            <div class="credential-actions">
+              <button class="action-btn edit" (click)="openCredentialForm(cred)" title="Edit">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="action-btn delete" (click)="deleteCredential(cred)" title="Delete">
+                <i class="bi bi-trash3"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Credential Form Modal -->
+        <div class="credential-form-overlay" *ngIf="showCredentialForm" (click)="closeCredentialForm()">
+          <div class="credential-form" (click)="$event.stopPropagation()">
+            <div class="form-header">
+              <h3>{{ editingCredential ? 'Edit Credential' : 'Add Credential' }}</h3>
+              <button class="btn-close" (click)="closeCredentialForm()">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
+            
+            <div class="form-body">
+              <div class="form-group">
+                <label>
+                  <i class="bi bi-tag"></i>
+                  Credential Name <span class="required">*</span>
+                </label>
+                <input type="text" 
+                       [(ngModel)]="newCredential.name" 
+                       placeholder="e.g., db_password, api_key, ssl_cert"
+                       class="form-input">
+                <span class="form-hint">Use this name in your script: getCredential("{{ newCredential.name || 'name' }}")</span>
+              </div>
+
+              <div class="form-group">
+                <label>
+                  <i class="bi bi-collection"></i>
+                  Type
+                </label>
+                <div class="toggle-group">
+                  <button class="toggle-btn" 
+                          [class.active]="newCredential.credential_type_id === CredentialType.PASSWORD" 
+                          (click)="newCredential.credential_type_id = CredentialType.PASSWORD"
+                          [disabled]="editingCredential !== null">
+                    <i class="bi bi-key"></i>
+                    Password
+                  </button>
+                  <button class="toggle-btn" 
+                          [class.active]="newCredential.credential_type_id === CredentialType.CERTIFICATE" 
+                          (click)="newCredential.credential_type_id = CredentialType.CERTIFICATE"
+                          [disabled]="editingCredential !== null">
+                    <i class="bi bi-file-earmark-lock"></i>
+                    Certificate
+                  </button>
+                </div>
+              </div>
+
+              <!-- Password Field -->
+              <div class="form-group" *ngIf="newCredential.credential_type_id === CredentialType.PASSWORD">
+                <label>
+                  <i class="bi bi-lock"></i>
+                  Password Value <span class="required" *ngIf="!editingCredential">*</span>
+                </label>
+                <input type="password" 
+                       [(ngModel)]="newCredential.value" 
+                       [placeholder]="editingCredential ? '••••••• (leave empty to keep current)' : 'Enter password'"
+                       class="form-input">
+                <span class="form-hint">This value will be encrypted and stored securely</span>
+              </div>
+
+              <!-- Certificate File -->
+              <div class="form-group" *ngIf="newCredential.credential_type_id === CredentialType.CERTIFICATE">
+                <label>
+                  <i class="bi bi-file-earmark-arrow-up"></i>
+                  Certificate File <span class="required" *ngIf="!editingCredential">*</span>
+                </label>
+                <div class="file-upload">
+                  <input type="file" 
+                         id="certFile" 
+                         (change)="onFileSelected($event)"
+                         accept=".pem,.crt,.key,.p12,.pfx,.cer,.der">
+                  <label for="certFile" class="file-upload-label">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                    <span *ngIf="!newCredential.file_name">Choose file or drag & drop</span>
+                    <span *ngIf="newCredential.file_name">{{ newCredential.file_name }}</span>
+                  </label>
+                </div>
+                <span class="form-hint">Supported: .pem, .crt, .key, .p12, .pfx, .cer, .der</span>
+              </div>
+            </div>
+
+            <div class="form-footer">
+              <button class="btn-secondary" (click)="closeCredentialForm()">Cancel</button>
+              <button class="btn-primary" (click)="saveCredential()">
+                <i class="bi bi-check-lg"></i>
+                {{ editingCredential ? 'Update' : 'Add' }} Credential
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="code-hint">
+        <i class="bi bi-lightbulb"></i>
+        <span>Use <code>getCredential("name")</code> in your scripts to access these credentials securely.</span>
+      </div>
+    </div>
+
+    <!-- Step 3: Before Script (index 2) - Solo visible para owner/edit -->
+    <div class="step-panel" *ngIf="currentStep === 2 && !isExecutorOnly" [@fadeIn]>
+      <div class="panel-header">
+        <div class="panel-icon before">
+          <i class="bi bi-box-arrow-in-right"></i>
+        </div>
+        <div class="panel-title">
+          <h2>Before Script</h2>
+          <p>Code that runs once before all test cases (setup, initialization)</p>
+        </div>
+      </div>
+      
+      <div class="code-editor-wrapper">
+        <div class="editor-header">
+          <div class="editor-file">
+            <i class="bi bi-file-earmark-code"></i>
+            <span>before_script.py</span>
+          </div>
+          <div class="editor-lang">Python</div>
+        </div>
+        <ngs-code-editor 
+          [theme]="theme" 
+          [codeModel]="beforeScriptCodeModel" 
+          [options]="editorOptions"
+          (valueChanged)="onBeforeScriptCodeChanged($event)">
+        </ngs-code-editor>
+      </div>
+      
+      <div class="code-hint">
+        <i class="bi bi-lightbulb"></i>
+        <span>Use this for database connections, API authentication, or any setup logic that should run once.</span>
+      </div>
+    </div>
+
+    <!-- Step 4: Main Script (index 3) - Solo visible para owner/edit -->
+    <div class="step-panel" *ngIf="currentStep === 3 && !isExecutorOnly" [@fadeIn]>
+      <div class="panel-header">
+        <div class="panel-icon main">
+          <i class="bi bi-code-slash"></i>
+        </div>
+        <div class="panel-title">
+          <h2>Main Script</h2>
+          <p>The core test logic that runs for each test case</p>
+        </div>
+      </div>
+      
+      <div class="code-editor-wrapper">
+        <div class="editor-header">
+          <div class="editor-file">
+            <i class="bi bi-file-earmark-code"></i>
+            <span>main.py</span>
+          </div>
+          <div class="editor-lang">Python</div>
+        </div>
+        <ngs-code-editor 
+          [theme]="theme" 
+          [codeModel]="scriptCodeModel" 
+          [options]="editorOptions"
+          (valueChanged)="onScriptCodeChanged($event)">
+        </ngs-code-editor>
+      </div>
+      
+      <div class="code-hint">
+        <i class="bi bi-lightbulb"></i>
+        <span>This script will be executed for each row in your test cases. Access case data with <code>caseData.column_name</code></span>
+      </div>
+    </div>
+
+    <!-- Step 5: After Script (index 4) - Solo visible para owner/edit -->
+    <div class="step-panel" *ngIf="currentStep === 4 && !isExecutorOnly" [@fadeIn]>
+      <div class="panel-header">
+        <div class="panel-icon after">
+          <i class="bi bi-box-arrow-right"></i>
+        </div>
+        <div class="panel-title">
+          <h2>After Script</h2>
+          <p>Cleanup code that runs once after all test cases complete</p>
+        </div>
+      </div>
+      
+      <div class="code-editor-wrapper">
+        <div class="editor-header">
+          <div class="editor-file">
+            <i class="bi bi-file-earmark-code"></i>
+            <span>after_script.py</span>
+          </div>
+          <div class="editor-lang">Python</div>
+        </div>
+        <ngs-code-editor 
+          [theme]="theme" 
+          [codeModel]="afterScriptCodeModel" 
+          [options]="editorOptions"
+          (valueChanged)="onAfterScriptCodeChanged($event)">
+        </ngs-code-editor>
+      </div>
+      
+      <div class="code-hint">
+        <i class="bi bi-lightbulb"></i>
+        <span>Use this for cleanup: closing connections, generating reports, or sending notifications.</span>
+      </div>
+    </div>
+
+    <!-- Step 6: Test Cases (index 5) -->
+    <div class="step-panel" *ngIf="currentStep === 5" [@fadeIn]>
+      <div class="panel-header">
+        <div class="panel-icon cases">
+          <i class="bi bi-table"></i>
+        </div>
+        <div class="panel-title">
+          <h2>Test Cases</h2>
+          <p>Define your test data in CSV format (first row = headers)</p>
+        </div>
+      </div>
+
+      <div class="code-editor-wrapper">
+        <div class="editor-header">
+          <div class="editor-file">
+            <i class="bi bi-filetype-csv"></i>
+            <span>test_cases.csv</span>
+          </div>
+          <div class="editor-lang">CSV</div>
+        </div>
+        <ngs-code-editor 
+          [theme]="theme" 
+          [codeModel]="casesCodeModel" 
+          [options]="editorOptions"
+          (valueChanged)="onTestCasesCodeChanged($event)">
+        </ngs-code-editor>
+      </div>
+      
+      <div class="code-hint">
+        <i class="bi bi-lightbulb"></i>
+        <span>Example: <code>username,password,expected</code> on first line, then <code>user1,pass123,success</code> on following lines.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Footer -->
+  <footer class="step-footer">
+    <div class="footer-left">
+      <button class="btn-secondary" (click)="previousStep()" *ngIf="currentVisibleStep > 0">
+        <i class="bi bi-arrow-left"></i>
+        Previous
+      </button>
+    </div>
+    
+    <div class="footer-center">
+      <span class="step-counter">Step {{ currentVisibleStep + 1 }} of {{ visibleSteps.length }}</span>
+    </div>
+    
+    <div class="footer-right">
+      <button class="btn-secondary" (click)="goBack()">
+        Cancel
+      </button>
+      
+      <button class="btn-primary" (click)="nextStep()" *ngIf="!isLastStep()">
+        Next
+        <i class="bi bi-arrow-right"></i>
+      </button>
+      
+      <button class="btn-success" (click)="path === 'edit' ? update() : create()" *ngIf="isLastStep()">
+        <i class="bi bi-check-lg"></i>
+        {{ path === 'edit' ? 'Save Changes' : 'Create Test' }}
+      </button>
+    </div>
+  </footer>
+</div>

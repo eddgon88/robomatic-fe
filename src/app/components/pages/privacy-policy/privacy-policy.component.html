@@ -1,0 +1,260 @@
+<div class="legal-container">
+    <!-- Header -->
+    <div class="legal-header">
+        <button class="back-btn" (click)="goBack()">
+            <i class="bi bi-arrow-left"></i>
+            Volver
+        </button>
+        <div class="header-content">
+            <div class="icon-circle">
+                <i class="bi bi-shield-lock"></i>
+            </div>
+            <h1>Política de Privacidad</h1>
+            <p class="last-updated">Última actualización: {{ lastUpdated }}</p>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="legal-content">
+        <!-- Introducción -->
+        <section class="legal-section">
+            <h2><i class="bi bi-info-circle"></i> 1. Introducción</h2>
+            <p>
+                En <strong>Robomatic RPA</strong>, nos comprometemos a proteger su privacidad y garantizar la
+                seguridad de sus datos personales. Esta Política de Privacidad describe cómo recopilamos,
+                utilizamos, almacenamos y protegemos la información que nos proporciona al usar nuestra
+                plataforma de automatización robótica de procesos.
+            </p>
+            <p>
+                Al utilizar nuestros servicios, usted acepta las prácticas descritas en esta política.
+                Le recomendamos leerla detenidamente para comprender cómo manejamos su información.
+            </p>
+        </section>
+
+        <!-- Información que Recopilamos -->
+        <section class="legal-section">
+            <h2><i class="bi bi-collection"></i> 2. Información que Recopilamos</h2>
+
+            <h3>2.1 Información de Registro</h3>
+            <p>Cuando crea una cuenta, recopilamos:</p>
+            <ul>
+                <li>Nombre completo</li>
+                <li>Dirección de correo electrónico</li>
+                <li>Número de teléfono (opcional)</li>
+                <li>Contraseña (almacenada de forma encriptada)</li>
+            </ul>
+
+            <h3>2.2 Información de Uso</h3>
+            <p>Durante el uso de la Plataforma, recopilamos:</p>
+            <ul>
+                <li>Registros de actividad y acciones realizadas en la Plataforma</li>
+                <li>Configuraciones de automatizaciones y tests creados</li>
+                <li>Logs de ejecución de bots</li>
+                <li>Métricas de rendimiento y estadísticas de uso</li>
+            </ul>
+
+            <h3>2.3 Credenciales y Datos Sensibles</h3>
+            <p>Para el funcionamiento de las automatizaciones, puede almacenar:</p>
+            <ul>
+                <li>Contraseñas de acceso a sistemas externos (encriptadas con AES-256-GCM)</li>
+                <li>Certificados digitales para autenticación</li>
+                <li>Tokens de API y claves de acceso</li>
+            </ul>
+            <div class="highlight-box">
+                <i class="bi bi-shield-check"></i>
+                <p>
+                    <strong>Importante:</strong> Todas las credenciales sensibles son encriptadas antes de
+                    almacenarse y solo se desencriptan durante la ejecución de los bots en un entorno seguro.
+                </p>
+            </div>
+
+            <h3>2.4 Información Técnica</h3>
+            <p>Automáticamente recopilamos:</p>
+            <ul>
+                <li>Dirección IP y ubicación aproximada</li>
+                <li>Tipo de navegador y sistema operativo</li>
+                <li>Información del dispositivo</li>
+                <li>Cookies y tecnologías similares de seguimiento</li>
+            </ul>
+        </section>
+
+        <!-- Uso de la Información -->
+        <section class="legal-section">
+            <h2><i class="bi bi-gear"></i> 3. Uso de la Información</h2>
+            <p>Utilizamos su información para:</p>
+            <ul>
+                <li>Proporcionar, mantener y mejorar nuestros servicios de automatización</li>
+                <li>Procesar y ejecutar las automatizaciones que usted configura</li>
+                <li>Autenticar su identidad y gestionar su cuenta</li>
+                <li>Enviar notificaciones sobre ejecuciones, alertas y actualizaciones del servicio</li>
+                <li>Proporcionar soporte técnico y responder a sus consultas</li>
+                <li>Analizar patrones de uso para mejorar la experiencia del usuario</li>
+                <li>Prevenir fraudes y actividades no autorizadas</li>
+                <li>Cumplir con obligaciones legales y regulatorias</li>
+            </ul>
+        </section>
+
+        <!-- Almacenamiento y Seguridad -->
+        <section class="legal-section">
+            <h2><i class="bi bi-database-lock"></i> 4. Almacenamiento y Seguridad</h2>
+
+            <h3>4.1 Medidas de Seguridad</h3>
+            <p>Implementamos múltiples capas de seguridad para proteger sus datos:</p>
+            <ul>
+                <li><strong>Encriptación en tránsito:</strong> Todas las comunicaciones utilizan HTTPS/TLS</li>
+                <li><strong>Encriptación en reposo:</strong> Datos sensibles encriptados con AES-256-GCM</li>
+                <li><strong>Control de acceso:</strong> Sistema de roles y permisos granular</li>
+                <li><strong>Auditoría:</strong> Registro de todas las acciones críticas</li>
+                <li><strong>Aislamiento:</strong> Separación de datos entre usuarios y organizaciones</li>
+            </ul>
+
+            <h3>4.2 Retención de Datos</h3>
+            <p>
+                Conservamos su información mientras su cuenta esté activa o según sea necesario para
+                proporcionarle servicios. Los registros de ejecución y logs se mantienen por un período
+                definido según su plan de servicio.
+            </p>
+            <p>
+                Puede solicitar la eliminación de su cuenta y datos asociados en cualquier momento,
+                sujeto a nuestras obligaciones legales de retención.
+            </p>
+        </section>
+
+        <!-- Compartir Información -->
+        <section class="legal-section">
+            <h2><i class="bi bi-share"></i> 5. Compartir Información</h2>
+            <p>
+                <strong>No vendemos ni alquilamos su información personal a terceros.</strong>
+                Solo compartimos información en las siguientes circunstancias:
+            </p>
+            <ul>
+                <li>
+                    <strong>Proveedores de servicios:</strong> Con empresas que nos ayudan a operar
+                    la Plataforma (hosting, correo electrónico, análisis), bajo estrictos acuerdos
+                    de confidencialidad.
+                </li>
+                <li>
+                    <strong>Requisitos legales:</strong> Cuando sea requerido por ley, orden judicial
+                    o proceso legal válido.
+                </li>
+                <li>
+                    <strong>Protección de derechos:</strong> Para proteger nuestros derechos, propiedad
+                    o seguridad, o los de nuestros usuarios.
+                </li>
+                <li>
+                    <strong>Con su consentimiento:</strong> En cualquier otra situación, solo con su
+                    autorización expresa.
+                </li>
+            </ul>
+        </section>
+
+        <!-- Derechos del Usuario -->
+        <section class="legal-section">
+            <h2><i class="bi bi-person-check"></i> 6. Sus Derechos</h2>
+            <p>Usted tiene derecho a:</p>
+            <ul>
+                <li>
+                    <strong>Acceso:</strong> Solicitar una copia de la información personal que
+                    tenemos sobre usted.
+                </li>
+                <li>
+                    <strong>Rectificación:</strong> Corregir información inexacta o incompleta
+                    en su perfil.
+                </li>
+                <li>
+                    <strong>Eliminación:</strong> Solicitar la eliminación de su cuenta y datos
+                    personales asociados.
+                </li>
+                <li>
+                    <strong>Portabilidad:</strong> Recibir sus datos en un formato estructurado
+                    y de uso común.
+                </li>
+                <li>
+                    <strong>Oposición:</strong> Oponerse al procesamiento de sus datos para
+                    ciertos fines.
+                </li>
+                <li>
+                    <strong>Limitación:</strong> Solicitar la restricción del procesamiento de
+                    sus datos en ciertas circunstancias.
+                </li>
+            </ul>
+            <p>
+                Para ejercer estos derechos, contáctenos a través de los canales indicados al
+                final de esta política.
+            </p>
+        </section>
+
+        <!-- Cookies -->
+        <section class="legal-section">
+            <h2><i class="bi bi-cookie"></i> 7. Cookies y Tecnologías Similares</h2>
+            <p>Utilizamos cookies y tecnologías similares para:</p>
+            <ul>
+                <li>Mantener su sesión activa y preferencias</li>
+                <li>Recordar sus configuraciones y personalizaciones</li>
+                <li>Analizar el uso de la Plataforma y mejorar la experiencia</li>
+                <li>Proporcionar funcionalidades de seguridad</li>
+            </ul>
+            <p>
+                Puede gestionar las cookies a través de la configuración de su navegador. Sin embargo,
+                desactivar ciertas cookies puede afectar la funcionalidad de la Plataforma.
+            </p>
+        </section>
+
+        <!-- Transferencias Internacionales -->
+        <section class="legal-section">
+            <h2><i class="bi bi-globe2"></i> 8. Transferencias Internacionales</h2>
+            <p>
+                Sus datos pueden ser procesados en servidores ubicados fuera de su país de residencia.
+                En tales casos, nos aseguramos de que existan las salvaguardas adecuadas para proteger
+                su información según las leyes aplicables de protección de datos.
+            </p>
+        </section>
+
+        <!-- Menores de Edad -->
+        <section class="legal-section">
+            <h2><i class="bi bi-person-x"></i> 9. Menores de Edad</h2>
+            <p>
+                Nuestros servicios no están dirigidos a personas menores de 18 años. No recopilamos
+                intencionalmente información de menores. Si descubrimos que hemos recopilado información
+                de un menor, tomaremos medidas para eliminarla.
+            </p>
+        </section>
+
+        <!-- Cambios en la Política -->
+        <section class="legal-section">
+            <h2><i class="bi bi-arrow-repeat"></i> 10. Cambios en esta Política</h2>
+            <p>
+                Podemos actualizar esta Política de Privacidad periódicamente. Los cambios significativos
+                serán notificados a través de la Plataforma o por correo electrónico antes de entrar en vigor.
+            </p>
+            <p>
+                Le recomendamos revisar esta política regularmente para estar informado sobre cómo
+                protegemos su información.
+            </p>
+        </section>
+
+        <!-- Contacto -->
+        <section class="legal-section contact-section">
+            <h2><i class="bi bi-envelope"></i> 11. Contacto</h2>
+            <p>
+                Si tiene preguntas sobre esta Política de Privacidad o desea ejercer sus derechos,
+                puede contactarnos en:
+            </p>
+            <div class="contact-card">
+                <div class="contact-item">
+                    <i class="bi bi-envelope-fill"></i>
+                    <a href="mailto:contacto@robomatic.cloud">contacto&#64;robomatic.cloud</a>
+                </div>
+                <div class="contact-item">
+                    <i class="bi bi-building"></i>
+                    <span>Robomatic RPA - Santiago, Chile</span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <div class="legal-footer">
+        <p>© 2025 Robomatic RPA. Todos los derechos reservados.</p>
+    </div>
+</div>

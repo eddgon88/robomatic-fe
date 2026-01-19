@@ -1,18 +1,27 @@
 <div class="modal-header">
-    <h4 class="modal-title" id="modal-title">Profile deletion</h4>
-    <button type="button" class="btn-close" aria-describedby="modal-title"
-        (click)="modal.dismiss('Cross click')"></button>
+  <h4 class="modal-title">
+    <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+    Confirm Deletion
+  </h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('cancel')"></button>
 </div>
 <div class="modal-body">
-    <p>
-        <strong>Are you sure you want to delete <span class="text-primary">"{{name}}"</span> {{type}}?</strong>
-    </p>
-    <p>
-        All information associated to this {{type}} will be permanently deleted.
-        <span class="text-danger">This operation can not be undone.</span>
-    </p>
+  <p>
+    Are you sure you want to delete the {{type}} <span class="text-primary"><strong>"{{name}}"</strong></span>?
+  </p>
+  <p class="mb-0">
+    <i class="bi bi-info-circle me-1"></i>
+    All information associated with this {{type}} will be permanently deleted.
+    <span class="text-danger">This action cannot be undone.</span>
+  </p>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
-    <button type="button" class="btn btn-danger" (click)="modal.close(true)">Ok</button>
+  <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel')">
+    <i class="bi bi-x-lg"></i>
+    Cancel
+  </button>
+  <button type="button" class="btn btn-danger" (click)="modal.close(true)">
+    <i class="bi bi-trash3"></i>
+    Delete
+  </button>
 </div>

@@ -1,4 +1,231 @@
-.sidebar-img {
-    width: 150px;
-    height: 100px;
+/* ========================================
+   SIDEBAR STYLES - Professional Dark Theme
+   ======================================== */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 220px;
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Logo Section */
+.sidebar-logo {
+  padding: 1.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.logo-link:hover {
+  transform: scale(1.02);
+}
+
+.logo-img {
+  width: 150px;
+  height: auto;
+  filter: drop-shadow(0 2px 8px rgba(0, 221, 235, 0.2));
+  transition: filter 0.3s ease;
+}
+
+.logo-link:hover .logo-img {
+  filter: drop-shadow(0 4px 12px rgba(0, 221, 235, 0.4));
+}
+
+/* Navigation */
+.sidebar-nav {
+  flex: 1;
+  padding: 1rem 0;
+  overflow-y: auto;
+}
+
+.nav-section {
+  margin-bottom: 1.5rem;
+  padding: 0 0.75rem;
+}
+
+.nav-section-title {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: rgba(255, 255, 255, 0.35);
+  padding: 0 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Navigation Items */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin: 0.25rem 0;
+  border-radius: 10px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  font-weight: 400;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: linear-gradient(180deg, #00ddeb, #2b7a55);
+  border-radius: 0 3px 3px 0;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.nav-item.active {
+  background: linear-gradient(90deg, rgba(0, 221, 235, 0.15), rgba(43, 122, 85, 0.1));
+  color: #00ddeb;
+}
+
+.nav-item.active::before {
+  opacity: 1;
+}
+
+.nav-item.active .nav-icon {
+  color: #00ddeb;
+}
+
+/* Disabled state */
+.nav-item.disabled {
+  color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.nav-item.disabled:hover {
+  background: transparent;
+}
+
+/* Icons */
+.nav-icon {
+  font-size: 1.1rem;
+  width: 20px;
+  text-align: center;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.nav-item:hover .nav-icon {
+  transform: scale(1.1);
+}
+
+.nav-text {
+  flex: 1;
+  white-space: nowrap;
+}
+
+/* Badge "Soon" */
+.badge-soon {
+  font-size: 0.6rem;
+  padding: 0.15rem 0.4rem;
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.2));
+  color: #ffc107;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+/* Footer */
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: auto;
+}
+
+.version-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.version-info i {
+  font-size: 0.85rem;
+}
+
+/* Scrollbar */
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 70px;
+  }
+
+  .sidebar-logo {
+    padding: 1rem 0.5rem;
+  }
+
+  .logo-img {
+    width: 40px;
+  }
+
+  .nav-section-title,
+  .nav-text,
+  .badge-soon,
+  .version-info span {
+    display: none;
+  }
+
+  .nav-item {
+    justify-content: center;
+    padding: 0.75rem;
+  }
+
+  .nav-icon {
+    font-size: 1.25rem;
+    margin: 0;
+  }
 }

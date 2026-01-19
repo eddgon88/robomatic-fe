@@ -1,33 +1,386 @@
-<div class="row">
-    <div class="col-lg-6 col-md-12 image-container">
-        <div class="container-fluid login-image">
+<div class="auth-container">
+    <!-- Lado izquierdo - Branding -->
+    <div class="branding-side">
+        <div class="branding-content">
+            <div class="logo-container">
+                <img src="assets/images/logo_ROBOMATIC.png" alt="Robomatic" class="logo">
+            </div>
+            <div class="branding-text">
+                <h2 *ngIf="loginMode">Welcome Back</h2>
+                <h2 *ngIf="singupMode">Join Robomatic</h2>
+                <h2 *ngIf="singUpSuccess">Almost There!</h2>
+                <p *ngIf="loginMode">Automate your processes with the power of RPA</p>
+                <p *ngIf="singupMode">Start automating your workflows today</p>
+                <p *ngIf="singUpSuccess">Check your email to complete registration</p>
+            </div>
+            <div class="features-list" *ngIf="singupMode">
+                <div class="feature-item">
+                    <i class="bi bi-robot"></i>
+                    <span>Intelligent Automation</span>
+                </div>
+                <div class="feature-item">
+                    <i class="bi bi-graph-up-arrow"></i>
+                    <span>Boost Productivity</span>
+                </div>
+                <div class="feature-item">
+                    <i class="bi bi-shield-check"></i>
+                    <span>Secure & Reliable</span>
+                </div>
+            </div>
+            <div class="security-badge">
+                <i class="bi bi-lock-fill"></i>
+                <span>Secure Connection</span>
+            </div>
         </div>
     </div>
-    <div class="col-lg-6 col-md-12 login-form">
-        <div class="text-container">
-            <p class="bounce" *ngIf="singupMode">Are you already signed up? <button (click)="changeMode('login')">Login</button></p>
-            <p class="bounce" *ngIf="loginMode">Don't have an account yet? <button (click)="changeMode('singup')">Sign up</button> with us</p>
-          </div>
-        <div *ngIf="loginMode" class="login wrap">
-            <div class="h1">Login</div>
-            <input [(ngModel)]="username" pattern="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$" placeholder="Email" id="email" name="email" type="text">
-            <input [(ngModel)]="password" placeholder="Password" id="password" name="password" type="password" (keyup.enter)="login()">
-            <input value="Login" class="btn" type="submit" (click)="login()">
-          </div>
-        <div *ngIf="singupMode" class="login singup wrap">
-            <!--div class="h1">Sing Up</div-->
-            <input [(ngModel)]="singUpRequest.email" pattern="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$" placeholder="Email" id="email" name="email" type="text">
-            <input [(ngModel)]="singUpRequest.fist_name" placeholder="First Name" id="firstName" required name="firstName" type="text">
-            <input [(ngModel)]="singUpRequest.last_name" placeholder="Last Name" id="lastName" required name="lastName" type="text">
-            <input [(ngModel)]="singUpRequest.phone" placeholder="Phone Number" id="phone" name="phone" type="text">
-            <input [(ngModel)]="singUpRequest.pass" placeholder="Password" id="password" name="password" type="password" required>
-            <input [(ngModel)]="confirmPassword" placeholder="Confirm Password" id="password" name="confirmPassword" type="password" required>
-            <input value="Singup" class="btn" type="submit" (click)="singup()">
+
+    <!-- Lado derecho - Formularios -->
+    <div class="form-side">
+        <div class="form-container">
+            <!-- Toggle entre Login y Signup -->
+            <div class="mode-toggle" *ngIf="!singUpSuccess">
+                <p *ngIf="singupMode">
+                    Already have an account?
+                    <button class="link-btn" (click)="changeMode('login')">Sign In</button>
+                </p>
+                <p *ngIf="loginMode">
+                    Don't have an account?
+                    <button class="link-btn" (click)="changeMode('singup')">Sign Up</button>
+                </p>
+            </div>
+
+            <!-- Formulario Login -->
+            <div *ngIf="loginMode" class="form-content">
+                <div class="form-header">
+                    <div class="icon-circle">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <h1>Sign In</h1>
+                    <p class="subtitle">Enter your credentials to continue</p>
+                </div>
+
+                <div class="form-body">
+                    <div class="input-group" [class.focused]="emailFocused">
+                        <label for="email">
+                            <i class="bi bi-envelope"></i>
+                            Email Address
+                        </label>
+                        <input [(ngModel)]="username" id="email" name="email" type="email"
+                            placeholder="Enter your email" autocomplete="email" (focus)="emailFocused = true"
+                            (blur)="emailFocused = false">
+                    </div>
+
+                    <div class="input-group" [class.focused]="passwordFocused">
+                        <label for="password">
+                            <i class="bi bi-key"></i>
+                            Password
+                        </label>
+                        <div class="password-input-wrapper">
+                            <input [(ngModel)]="password" id="password" name="password"
+                                [type]="showPassword ? 'text' : 'password'" placeholder="Enter your password"
+                                autocomplete="current-password" (focus)="passwordFocused = true"
+                                (blur)="passwordFocused = false" (keyup.enter)="login()">
+                            <button type="button" class="toggle-password" (click)="showPassword = !showPassword">
+                                <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="forgot-link">
+                        <a routerLink="/forgot-password">Forgot your password?</a>
+                    </div>
+
+                    <button class="btn-primary" [disabled]="loading || !username || !password" (click)="login()">
+                        <span *ngIf="!loading">
+                            <i class="bi bi-box-arrow-in-right"></i>
+                            Sign In
+                        </span>
+                        <span *ngIf="loading" class="loading-state">
+                            <span class="spinner"></span>
+                            Signing in...
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Formulario Signup -->
+            <div *ngIf="singupMode" class="form-content signup-form">
+                <div class="form-header">
+                    <div class="icon-circle">
+                        <i class="bi bi-person-plus"></i>
+                    </div>
+                    <h1>Create Account</h1>
+                    <p class="subtitle">Fill in your details to get started</p>
+                </div>
+
+                <div class="form-body">
+                    <div class="input-group" [class.focused]="signupEmailFocused">
+                        <label for="signupEmail">
+                            <i class="bi bi-envelope"></i>
+                            Email Address
+                        </label>
+                        <input [(ngModel)]="singUpRequest.email" id="signupEmail" name="signupEmail" type="email"
+                            placeholder="Enter your email" autocomplete="email" (focus)="signupEmailFocused = true"
+                            (blur)="signupEmailFocused = false">
+                    </div>
+
+                    <div class="input-row">
+                        <div class="input-group" [class.focused]="firstNameFocused">
+                            <label for="firstName">
+                                <i class="bi bi-person"></i>
+                                First Name
+                            </label>
+                            <input [(ngModel)]="singUpRequest.fist_name" id="firstName" name="firstName" type="text"
+                                placeholder="First name" autocomplete="given-name" (focus)="firstNameFocused = true"
+                                (blur)="firstNameFocused = false">
+                        </div>
+
+                        <div class="input-group" [class.focused]="lastNameFocused">
+                            <label for="lastName">
+                                <i class="bi bi-person"></i>
+                                Last Name
+                            </label>
+                            <input [(ngModel)]="singUpRequest.last_name" id="lastName" name="lastName" type="text"
+                                placeholder="Last name" autocomplete="family-name" (focus)="lastNameFocused = true"
+                                (blur)="lastNameFocused = false">
+                        </div>
+                    </div>
+
+                    <div class="input-group" [class.focused]="phoneFocused">
+                        <label for="phone">
+                            <i class="bi bi-telephone"></i>
+                            Phone Number
+                            <span class="optional">(optional)</span>
+                        </label>
+                        <input [(ngModel)]="singUpRequest.phone" id="phone" name="phone" type="tel"
+                            placeholder="Enter your phone number" autocomplete="tel" (focus)="phoneFocused = true"
+                            (blur)="phoneFocused = false">
+                    </div>
+
+                    <div class="input-group" [class.focused]="signupPasswordFocused">
+                        <label for="signupPassword">
+                            <i class="bi bi-key"></i>
+                            Password
+                        </label>
+                        <div class="password-input-wrapper">
+                            <input [(ngModel)]="singUpRequest.pass" id="signupPassword" name="signupPassword"
+                                [type]="showSignupPassword ? 'text' : 'password'" placeholder="Create a password"
+                                autocomplete="new-password" (focus)="signupPasswordFocused = true"
+                                (blur)="signupPasswordFocused = false">
+                            <button type="button" class="toggle-password"
+                                (click)="showSignupPassword = !showSignupPassword">
+                                <i class="bi" [ngClass]="showSignupPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="input-group" [class.focused]="confirmPasswordFocused">
+                        <label for="confirmPass">
+                            <i class="bi bi-key-fill"></i>
+                            Confirm Password
+                        </label>
+                        <div class="password-input-wrapper">
+                            <input [(ngModel)]="confirmPassword" id="confirmPass" name="confirmPass"
+                                [type]="showConfirmPassword ? 'text' : 'password'" placeholder="Confirm your password"
+                                autocomplete="new-password" (focus)="confirmPasswordFocused = true"
+                                (blur)="confirmPasswordFocused = false" (keyup.enter)="singup()">
+                            <button type="button" class="toggle-password"
+                                (click)="showConfirmPassword = !showConfirmPassword">
+                                <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Password requirements -->
+                    <div class="password-requirements">
+                        <div class="requirement" [class.met]="singUpRequest.pass && singUpRequest.pass.length >= 6">
+                            <i class="bi"
+                                [ngClass]="singUpRequest.pass && singUpRequest.pass.length >= 6 ? 'bi-check-circle-fill' : 'bi-circle'"></i>
+                            <span>At least 6 characters</span>
+                        </div>
+                        <div class="requirement"
+                            [class.met]="singUpRequest.pass && singUpRequest.pass === confirmPassword">
+                            <i class="bi"
+                                [ngClass]="singUpRequest.pass && singUpRequest.pass === confirmPassword ? 'bi-check-circle-fill' : 'bi-circle'"></i>
+                            <span>Passwords match</span>
+                        </div>
+                    </div>
+
+                    <!-- Terms and Conditions Checkbox -->
+                    <div class="terms-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" [(ngModel)]="acceptedTerms" name="acceptedTerms"
+                                [disabled]="loading">
+                            <span class="checkmark"></span>
+                            <span class="terms-text">
+                                I accept the <a class="terms-link"
+                                    (click)="openTermsModal(); $event.preventDefault()">Terms and Conditions</a>
+                            </span>
+                        </label>
+                    </div>
+
+                    <button class="btn-primary"
+                        [disabled]="loading || !singUpRequest.email || !singUpRequest.fist_name || !singUpRequest.last_name || !singUpRequest.pass || singUpRequest.pass !== confirmPassword || !acceptedTerms"
+                        (click)="singup()">
+                        <span *ngIf="!loading">
+                            <i class="bi bi-person-plus"></i>
+                            Create Account
+                        </span>
+                        <span *ngIf="loading" class="loading-state">
+                            <span class="spinner"></span>
+                            Creating account...
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Signup Success -->
+            <div *ngIf="singUpSuccess" class="success-content">
+                <div class="success-animation">
+                    <div class="checkmark-circle">
+                        <i class="bi bi-envelope-check"></i>
+                    </div>
+                    <div class="success-ripple"></div>
+                </div>
+
+                <h1>Check Your Email!</h1>
+                <p class="success-message">
+                    We've sent a confirmation link to your email address.<br>
+                    Please click the link to activate your account.
+                </p>
+
+                <div class="info-card">
+                    <div class="info-item">
+                        <i class="bi bi-clock-history"></i>
+                        <span>The link will expire in <strong>24 hours</strong></span>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-envelope-exclamation"></i>
+                        <span>Check your <strong>spam folder</strong> if you don't see it</span>
+                    </div>
+                </div>
+
+                <button class="btn-primary" (click)="changeMode('login')">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Back to Sign In
+                </button>
+            </div>
         </div>
-        <div *ngIf="singUpSuccess" class="login wrap">
-            <div class="h1">Sing Up Successfull</div>
-            <h3 >One more step left!!</h3>
-            <p >We sent you an email with instructions to complete your registration. Thank you for joining us</p>
+    </div>
+</div>
+
+<!-- Terms and Conditions Modal -->
+<div class="modal-overlay" *ngIf="showTermsModal" (click)="closeTermsModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>
+                <i class="bi bi-file-text"></i>
+                Terms and Conditions
+            </h2>
+            <button class="modal-close" (click)="closeTermsModal()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="modal-content">
+            <!-- Introduction -->
+            <section class="terms-section">
+                <h3>1. Introduction</h3>
+                <p>
+                    Welcome to <strong>Robomatic RPA</strong>. These Terms and Conditions govern your use of our
+                    robotic process automation (RPA) platform and all related services.
+                    By accessing or using our services, you agree to be bound by these terms.
+                </p>
+            </section>
+
+            <!-- Definitions -->
+            <section class="terms-section">
+                <h3>2. Definitions</h3>
+                <ul>
+                    <li><strong>"Platform":</strong> Refers to the Robomatic RPA software, including all its features.
+                    </li>
+                    <li><strong>"User":</strong> Any person or entity that accesses or uses the Platform.</li>
+                    <li><strong>"Bot" or "Robot":</strong> An automated program created within the Platform.</li>
+                    <li><strong>"Credentials":</strong> Sensitive information such as passwords and digital
+                        certificates.</li>
+                </ul>
+            </section>
+
+            <!-- Use of Service -->
+            <section class="terms-section">
+                <h3>3. Use of Service</h3>
+                <p>By using Robomatic, you agree to:</p>
+                <ul>
+                    <li>Use the Platform only for legitimate and legal purposes.</li>
+                    <li>Not automate processes that violate laws, regulations, or third-party rights.</li>
+                    <li>Not attempt to access systems or data without authorization.</li>
+                    <li>Not use the Platform for fraudulent or malicious activities.</li>
+                </ul>
+            </section>
+
+            <!-- Intellectual Property -->
+            <section class="terms-section">
+                <h3>4. Intellectual Property</h3>
+                <p>
+                    Robomatic RPA, including its source code, design, logos, and documentation, are the exclusive
+                    property of Robomatic and are protected by intellectual property laws.
+                </p>
+            </section>
+
+            <!-- Security -->
+            <section class="terms-section">
+                <h3>5. Security and Credential Management</h3>
+                <p>Robomatic implements advanced security measures to protect your data:</p>
+                <ul>
+                    <li>Passwords are encrypted using AES-256-GCM encryption algorithms.</li>
+                    <li>Digital certificates are stored securely in isolated systems.</li>
+                    <li>Communications are protected using HTTPS/TLS protocols.</li>
+                </ul>
+            </section>
+
+            <!-- Limitation of Liability -->
+            <section class="terms-section">
+                <h3>6. Limitation of Liability</h3>
+                <p>
+                    Robomatic is provided "as is" and "as available". We do not guarantee that the Platform
+                    will meet all your specific requirements or operate without errors.
+                </p>
+            </section>
+
+            <!-- Privacy -->
+            <section class="terms-section">
+                <h3>7. Privacy</h3>
+                <p>
+                    We collect and process your personal data in accordance with our Privacy Policy.
+                    By accepting these terms, you also agree to our privacy practices.
+                </p>
+            </section>
+
+            <!-- Applicable Law -->
+            <section class="terms-section">
+                <h3>8. Applicable Law</h3>
+                <p>
+                    These Terms and Conditions are governed by the laws of the Republic of Chile. Any
+                    dispute will be submitted to the ordinary courts of Santiago, Chile.
+                </p>
+            </section>
+
+            <!-- Contact -->
+            <section class="terms-section">
+                <h3>9. Contact</h3>
+                <p>
+                    If you have questions about these Terms and Conditions, contact us at:
+                    <a href="mailto:contacto@robomatic.cloud">contacto&#64;robomatic.cloud</a>
+                </p>
+            </section>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-cancel" (click)="closeTermsModal()">Close</button>
+            <button class="btn-accept" (click)="acceptTermsFromModal()">
+                <i class="bi bi-check-lg"></i>
+                Accept Terms
+            </button>
         </div>
     </div>
 </div>

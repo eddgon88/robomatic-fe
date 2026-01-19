@@ -1,10 +1,30 @@
-<nav aria-label="breadcrumb" *ngIf="breadcrumbs.length > 0">
+<nav class="breadcrumb-nav" aria-label="breadcrumb" *ngIf="breadcrumbs.length > 0">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item" *ngFor="let breadcrumb of breadcrumbs; let last = last" [ngClass]="{ 'active': last }">
-      <a *ngIf="!last && !breadcrumb.action" [routerLink]="breadcrumb.url">{{ breadcrumb.label }}</a>
-      <a *ngIf="!last && breadcrumb.action" href="javascript:void(0)" (click)="breadcrumb.action()">{{ breadcrumb.label
-        }}</a>
-      <span *ngIf="last">{{ breadcrumb.label }}</span>
+    <!-- Home icon -->
+    <li class="breadcrumb-item home-item">
+      <a routerLink="/tests/home" title="Home">
+        <i class="bi bi-house-fill"></i>
+      </a>
+    </li>
+    
+    <!-- Breadcrumb items -->
+    <li 
+      class="breadcrumb-item" 
+      *ngFor="let breadcrumb of breadcrumbs; let last = last" 
+      [class.active]="last">
+      
+      <!-- Link (not last) -->
+      <a *ngIf="!last && !breadcrumb.action" [routerLink]="breadcrumb.url">
+        {{ breadcrumb.label }}
+      </a>
+      
+      <!-- Action link (not last) -->
+      <a *ngIf="!last && breadcrumb.action" href="javascript:void(0)" (click)="breadcrumb.action()">
+        {{ breadcrumb.label }}
+      </a>
+      
+      <!-- Current page (last) -->
+      <span *ngIf="last" class="current-page">{{ breadcrumb.label }}</span>
     </li>
   </ol>
 </nav>

@@ -1,0 +1,161 @@
+<div class="support-container">
+    <!-- Header -->
+    <div class="support-header">
+        <button class="back-btn" (click)="goBack()">
+            <i class="bi bi-arrow-left"></i>
+            Volver
+        </button>
+        <div class="header-content">
+            <div class="icon-circle">
+                <i class="bi bi-headset"></i>
+            </div>
+            <h1>Centro de Soporte</h1>
+            <p class="subtitle">Estamos aquí para ayudarte. Contáctanos a través de cualquiera de nuestros canales.</p>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="support-content">
+        <!-- Sección Principal de Contacto -->
+        <section class="contact-hero">
+            <div class="hero-text">
+                <h2>¿Necesitas ayuda?</h2>
+                <p>
+                    Nuestro equipo de soporte está disponible para resolver tus dudas sobre automatización, 
+                    configuración de bots, o cualquier aspecto técnico de la plataforma.
+                </p>
+            </div>
+        </section>
+
+        <!-- Canales de Contacto -->
+        <div class="contact-channels">
+            <!-- Email -->
+            <div class="channel-card email-card" (click)="copyEmail()">
+                <div class="channel-icon">
+                    <i class="bi bi-envelope-fill"></i>
+                </div>
+                <div class="channel-info">
+                    <h3>Correo Electrónico</h3>
+                    <p class="channel-value">{{ email }}</p>
+                    <span class="channel-action">
+                        <i class="bi bi-clipboard"></i>
+                        Click para copiar
+                    </span>
+                </div>
+                <div class="channel-arrow">
+                    <i class="bi bi-arrow-right"></i>
+                </div>
+            </div>
+
+            <!-- WhatsApp -->
+            <div class="channel-card whatsapp-card" (click)="openLink(whatsappUrl)">
+                <div class="channel-icon">
+                    <i class="bi bi-whatsapp"></i>
+                </div>
+                <div class="channel-info">
+                    <h3>WhatsApp</h3>
+                    <p class="channel-value">+56 9 2982 7325</p>
+                    <span class="channel-action">
+                        <i class="bi bi-chat-dots"></i>
+                        Iniciar conversación
+                    </span>
+                </div>
+                <div class="channel-arrow">
+                    <i class="bi bi-arrow-right"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Redes Sociales -->
+        <section class="social-section">
+            <h2>
+                <i class="bi bi-share"></i>
+                Síguenos en Redes Sociales
+            </h2>
+            <p>Mantente actualizado con las últimas novedades, tips de automatización y más.</p>
+            
+            <div class="social-grid">
+                <!-- Instagram -->
+                <div class="social-card instagram" (click)="openLink(instagramUrl)">
+                    <div class="social-icon">
+                        <i class="bi bi-instagram"></i>
+                    </div>
+                    <div class="social-info">
+                        <h4>Instagram</h4>
+                        <span>&#64;robomatic.bot</span>
+                    </div>
+                </div>
+
+                <!-- Facebook -->
+                <div class="social-card facebook" (click)="openLink(facebookUrl)">
+                    <div class="social-icon">
+                        <i class="bi bi-facebook"></i>
+                    </div>
+                    <div class="social-info">
+                        <h4>Facebook</h4>
+                        <span>Robomatic RPA</span>
+                    </div>
+                </div>
+
+                <!-- LinkedIn -->
+                <div class="social-card linkedin" (click)="openLink(linkedinUrl)">
+                    <div class="social-icon">
+                        <i class="bi bi-linkedin"></i>
+                    </div>
+                    <div class="social-info">
+                        <h4>LinkedIn</h4>
+                        <span>Robomatic RPA</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Información Adicional -->
+        <section class="info-section">
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+                <div class="info-content">
+                    <h3>Horario de Atención</h3>
+                    <p>Lunes a Viernes: 9:00 - 18:00 hrs (GMT-3)</p>
+                    <p>Respondemos consultas en un máximo de 24 horas hábiles</p>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="bi bi-lightbulb"></i>
+                </div>
+                <div class="info-content">
+                    <h3>Tips para una mejor atención</h3>
+                    <ul>
+                        <li>Describe tu problema de forma clara y detallada</li>
+                        <li>Incluye capturas de pantalla si es posible</li>
+                        <li>Menciona el nombre del test o automatización afectada</li>
+                        <li>Indica los pasos para reproducir el problema</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Final -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <i class="bi bi-robot"></i>
+                <h3>¿Listo para automatizar tus procesos?</h3>
+                <p>Contáctanos y descubre cómo Robomatic puede transformar tu negocio.</p>
+                <a [href]="'mailto:' + email" class="cta-button">
+                    <i class="bi bi-envelope-paper"></i>
+                    Enviar correo
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <div class="support-footer">
+        <p>© 2025 Robomatic RPA. Todos los derechos reservados.</p>
+    </div>
+</div>
+

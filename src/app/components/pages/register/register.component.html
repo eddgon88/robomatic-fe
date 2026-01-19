@@ -8,82 +8,54 @@
     <form class="register-form" (ngSubmit)="register()">
       <div class="form-group">
         <label for="firstName">Nombre *</label>
-        <input 
-          type="text" 
-          id="firstName" 
-          name="firstName"
-          [(ngModel)]="singUpRequest.fist_name"
-          placeholder="Ingresa tu nombre"
-          required
-          [disabled]="loading">
+        <input type="text" id="firstName" name="firstName" [(ngModel)]="singUpRequest.fist_name"
+          placeholder="Ingresa tu nombre" required [disabled]="loading">
       </div>
 
       <div class="form-group">
         <label for="lastName">Apellido *</label>
-        <input 
-          type="text" 
-          id="lastName" 
-          name="lastName"
-          [(ngModel)]="singUpRequest.last_name"
-          placeholder="Ingresa tu apellido"
-          required
-          [disabled]="loading">
+        <input type="text" id="lastName" name="lastName" [(ngModel)]="singUpRequest.last_name"
+          placeholder="Ingresa tu apellido" required [disabled]="loading">
       </div>
 
       <div class="form-group">
         <label for="email">Email *</label>
-        <input 
-          type="email" 
-          id="email" 
-          name="email"
-          [(ngModel)]="singUpRequest.email"
-          pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-          placeholder="tu@email.com"
-          required
+        <input type="email" id="email" name="email" [(ngModel)]="singUpRequest.email"
+          pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" placeholder="tu@email.com" required
           [disabled]="loading">
       </div>
 
       <div class="form-group">
         <label for="phone">Teléfono</label>
-        <input 
-          type="tel" 
-          id="phone" 
-          name="phone"
-          [(ngModel)]="singUpRequest.phone"
-          placeholder="+1234567890"
+        <input type="tel" id="phone" name="phone" [(ngModel)]="singUpRequest.phone" placeholder="+1234567890"
           [disabled]="loading">
       </div>
 
       <div class="form-group">
         <label for="password">Contraseña *</label>
-        <input 
-          type="password" 
-          id="password" 
-          name="password"
-          [(ngModel)]="singUpRequest.pass"
-          placeholder="Mínimo 8 caracteres"
-          minlength="8"
-          required
-          [disabled]="loading">
+        <input type="password" id="password" name="password" [(ngModel)]="singUpRequest.pass"
+          placeholder="Mínimo 8 caracteres" minlength="8" required [disabled]="loading">
       </div>
 
       <div class="form-group">
         <label for="confirmPassword">Confirmar Contraseña *</label>
-        <input 
-          type="password" 
-          id="confirmPassword" 
-          name="confirmPassword"
-          [(ngModel)]="confirmPassword"
-          placeholder="Repite tu contraseña"
-          minlength="8"
-          required
-          [disabled]="loading">
+        <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="confirmPassword"
+          placeholder="Repite tu contraseña" minlength="8" required [disabled]="loading">
       </div>
 
-      <button 
-        type="submit" 
-        class="btn-register"
-        [disabled]="loading">
+      <!-- Terms and Conditions Checkbox -->
+      <div class="terms-group">
+        <label class="checkbox-container">
+          <input type="checkbox" [(ngModel)]="acceptedTerms" name="acceptedTerms" [disabled]="loading">
+          <span class="checkmark"></span>
+          <span class="terms-text">
+            Acepto los <a class="terms-link" (click)="openTermsModal(); $event.preventDefault()">Términos y
+              Condiciones</a>
+          </span>
+        </label>
+      </div>
+
+      <button type="submit" class="btn-register" [disabled]="loading || !acceptedTerms">
         <span *ngIf="!loading">Registrarse</span>
         <span *ngIf="loading">Registrando...</span>
       </button>
@@ -100,5 +72,120 @@
     <p>Te hemos enviado un email de confirmación.</p>
     <p>Por favor revisa tu bandeja de entrada y sigue las instrucciones para activar tu cuenta.</p>
     <button class="btn-login" (click)="goToLogin()">Ir al Login</button>
+  </div>
+</div>
+
+<!-- Terms and Conditions Modal -->
+<div class="modal-overlay" *ngIf="showTermsModal" (click)="closeTermsModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>
+        <i class="bi bi-file-text"></i>
+        Términos y Condiciones
+      </h2>
+      <button class="modal-close" (click)="closeTermsModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-content">
+      <!-- Introducción -->
+      <section class="terms-section">
+        <h3>1. Introducción</h3>
+        <p>
+          Bienvenido a <strong>Robomatic RPA</strong>. Estos Términos y Condiciones regulan el uso de nuestra
+          plataforma de automatización robótica de procesos (RPA) y todos los servicios relacionados.
+          Al acceder o utilizar nuestros servicios, usted acepta estar sujeto a estos términos.
+        </p>
+      </section>
+
+      <!-- Definiciones -->
+      <section class="terms-section">
+        <h3>2. Definiciones</h3>
+        <ul>
+          <li><strong>"Plataforma":</strong> Se refiere al software Robomatic RPA, incluyendo todas sus funcionalidades.
+          </li>
+          <li><strong>"Usuario":</strong> Cualquier persona o entidad que acceda o utilice la Plataforma.</li>
+          <li><strong>"Bot" o "Robot":</strong> Programa automatizado creado dentro de la Plataforma.</li>
+          <li><strong>"Credenciales":</strong> Información sensible como contraseñas y certificados digitales.</li>
+        </ul>
+      </section>
+
+      <!-- Uso del Servicio -->
+      <section class="terms-section">
+        <h3>3. Uso del Servicio</h3>
+        <p>Al utilizar Robomatic, usted se compromete a:</p>
+        <ul>
+          <li>Utilizar la Plataforma únicamente para fines legítimos y legales.</li>
+          <li>No automatizar procesos que violen leyes, regulaciones o derechos de terceros.</li>
+          <li>No intentar acceder a sistemas o datos sin autorización.</li>
+          <li>No utilizar la Plataforma para realizar actividades fraudulentas o maliciosas.</li>
+        </ul>
+      </section>
+
+      <!-- Propiedad Intelectual -->
+      <section class="terms-section">
+        <h3>4. Propiedad Intelectual</h3>
+        <p>
+          Robomatic RPA, incluyendo su código fuente, diseño, logotipos y documentación, son propiedad
+          exclusiva de Robomatic y están protegidos por las leyes de propiedad intelectual.
+        </p>
+      </section>
+
+      <!-- Seguridad -->
+      <section class="terms-section">
+        <h3>5. Seguridad y Manejo de Credenciales</h3>
+        <p>Robomatic implementa medidas de seguridad avanzadas para proteger sus datos:</p>
+        <ul>
+          <li>Las contraseñas son encriptadas utilizando algoritmos de cifrado AES-256-GCM.</li>
+          <li>Los certificados digitales se almacenan de forma segura en sistemas aislados.</li>
+          <li>Las comunicaciones están protegidas mediante protocolos HTTPS/TLS.</li>
+        </ul>
+      </section>
+
+      <!-- Limitación de Responsabilidad -->
+      <section class="terms-section">
+        <h3>6. Limitación de Responsabilidad</h3>
+        <p>
+          Robomatic se proporciona "tal cual" y "según disponibilidad". No garantizamos que la Plataforma
+          cumpla con todos sus requisitos específicos o que funcione sin errores.
+        </p>
+      </section>
+
+      <!-- Privacidad -->
+      <section class="terms-section">
+        <h3>7. Privacidad</h3>
+        <p>
+          Recopilamos y procesamos sus datos personales de acuerdo con nuestra Política de Privacidad.
+          Al aceptar estos términos, también acepta nuestras prácticas de privacidad.
+        </p>
+      </section>
+
+      <!-- Ley Aplicable -->
+      <section class="terms-section">
+        <h3>8. Ley Aplicable</h3>
+        <p>
+          Estos Términos y Condiciones se rigen por las leyes de la República de Chile. Cualquier
+          disputa será sometida a los tribunales ordinarios de justicia de Santiago, Chile.
+        </p>
+      </section>
+
+      <!-- Contacto -->
+      <section class="terms-section">
+        <h3>9. Contacto</h3>
+        <p>
+          Si tiene preguntas sobre estos Términos y Condiciones, puede contactarnos en:
+          <a href="mailto:contacto@robomatic.cloud">contacto&#64;robomatic.cloud</a>
+        </p>
+      </section>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeTermsModal()">Cerrar</button>
+      <button class="btn-accept" (click)="acceptTermsFromModal()">
+        <i class="bi bi-check-lg"></i>
+        Aceptar Términos
+      </button>
+    </div>
   </div>
 </div>

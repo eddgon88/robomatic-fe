@@ -8,8 +8,9 @@ export const environment = {
 };
 
 export const bff = {
-  protocol: 'http://',
-  host: 'robomatic.cloud:8080/core/v1',
+  protocol: '',
+  host: '/core/v1',
+  //protocol: 'http://',
   //host: 'localhost:8080/core/v1',
 
   /**Record List */
@@ -41,7 +42,49 @@ export const bff = {
   /**get ports */
   getPorts: '/test-execution/ports/{0}',
   /**Confirm User */
-  confirmUser: '/auth/confirm/{0}'
+  confirmUser: '/auth/confirm/{0}',
+  /**Get users for sharing (requires testId) */
+  getUsersForSharing: '/user/list/{0}',
+  /**Get users for sharing folder (requires folderId) */
+  getUsersForSharingFolder: '/user/list/folder/{0}',
+  /**Share test or folder with user */
+  shareTest: '/action/share',
+  /**Request password recovery */
+  forgotPassword: '/auth/forgot-password',
+  /**Validate reset token */
+  validateResetToken: '/auth/validate-reset-token/{0}',
+  /**Reset password with token */
+  resetPassword: '/auth/reset-password',
+
+  /** Credentials */
+  /**Get credentials by test id */
+  getCredentials: '/credential/test/{0}',
+  /**Create credential */
+  createCredential: '/credential/create',
+  /**Update credential */
+  updateCredential: '/credential/update',
+  /**Delete credential */
+  deleteCredential: '/credential/{0}',
+
+  /** Schedules */
+  /**Get schedulable tests (owner or editor) */
+  getSchedulableTests: '/test/schedulable',
+  /**Get all schedules for user */
+  getSchedules: '/schedules',
+  /**Get schedule by ID */
+  getScheduleById: '/schedules/{0}',
+  /**Get schedule by test ID */
+  getScheduleByTestId: '/schedules/test/{0}',
+  /**Create schedule */
+  createSchedule: '/schedules',
+  /**Update schedule */
+  updateSchedule: '/schedules/{0}',
+  /**Delete schedule */
+  deleteSchedule: '/schedules/{0}',
+  /**Pause schedule */
+  pauseSchedule: '/schedules/{0}/pause',
+  /**Resume schedule */
+  resumeSchedule: '/schedules/{0}/resume'
 }
 
 /*

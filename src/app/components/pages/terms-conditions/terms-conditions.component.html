@@ -1,0 +1,213 @@
+<div class="legal-container">
+    <!-- Header -->
+    <div class="legal-header">
+        <button class="back-btn" (click)="goBack()">
+            <i class="bi bi-arrow-left"></i>
+            Volver
+        </button>
+        <div class="header-content">
+            <div class="icon-circle">
+                <i class="bi bi-file-text"></i>
+            </div>
+            <h1>Términos y Condiciones</h1>
+            <p class="last-updated">Última actualización: {{ lastUpdated }}</p>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="legal-content">
+        <!-- Introducción -->
+        <section class="legal-section">
+            <h2><i class="bi bi-info-circle"></i> 1. Introducción</h2>
+            <p>
+                Bienvenido a <strong>Robomatic RPA</strong>. Estos Términos y Condiciones regulan el uso de nuestra
+                plataforma de automatización robótica de procesos (RPA) y todos los servicios relacionados.
+                Al acceder o utilizar nuestros servicios, usted acepta estar sujeto a estos términos.
+            </p>
+            <p>
+                Robomatic es una plataforma de software diseñada para automatizar procesos empresariales mediante
+                la creación, gestión y ejecución de robots de software (bots) que realizan tareas repetitivas
+                de manera eficiente y precisa.
+            </p>
+        </section>
+
+        <!-- Definiciones -->
+        <section class="legal-section">
+            <h2><i class="bi bi-book"></i> 2. Definiciones</h2>
+            <ul class="definition-list">
+                <li>
+                    <strong>"Plataforma"</strong>: Se refiere al software Robomatic RPA, incluyendo todas sus
+                    funcionalidades, interfaces y servicios asociados.
+                </li>
+                <li>
+                    <strong>"Usuario"</strong>: Cualquier persona o entidad que acceda o utilice la Plataforma.
+                </li>
+                <li>
+                    <strong>"Bot" o "Robot"</strong>: Programa automatizado creado dentro de la Plataforma para
+                    ejecutar tareas específicas.
+                </li>
+                <li>
+                    <strong>"Test" o "Automatización"</strong>: Conjunto de instrucciones y scripts que definen
+                    el comportamiento de un Bot.
+                </li>
+                <li>
+                    <strong>"Credenciales"</strong>: Información sensible como contraseñas y certificados digitales
+                    almacenados de forma segura en la Plataforma.
+                </li>
+            </ul>
+        </section>
+
+        <!-- Uso del Servicio -->
+        <section class="legal-section">
+            <h2><i class="bi bi-gear"></i> 3. Uso del Servicio</h2>
+            <h3>3.1 Registro y Cuenta</h3>
+            <p>
+                Para utilizar la Plataforma, debe crear una cuenta proporcionando información veraz y actualizada.
+                Usted es responsable de mantener la confidencialidad de sus credenciales de acceso y de todas
+                las actividades realizadas bajo su cuenta.
+            </p>
+
+            <h3>3.2 Uso Aceptable</h3>
+            <p>Al utilizar Robomatic, usted se compromete a:</p>
+            <ul>
+                <li>Utilizar la Plataforma únicamente para fines legítimos y legales.</li>
+                <li>No automatizar procesos que violen leyes, regulaciones o derechos de terceros.</li>
+                <li>No intentar acceder a sistemas o datos sin autorización.</li>
+                <li>No utilizar la Plataforma para realizar actividades fraudulentas o maliciosas.</li>
+                <li>Cumplir con las políticas de uso de los sitios web y servicios que automatice.</li>
+            </ul>
+
+            <h3>3.3 Restricciones</h3>
+            <p>Está expresamente prohibido:</p>
+            <ul>
+                <li>Realizar ingeniería inversa, descompilar o desensamblar el software.</li>
+                <li>Compartir, sublicenciar o transferir su acceso a terceros sin autorización.</li>
+                <li>Utilizar la Plataforma para distribuir malware, spam o contenido dañino.</li>
+                <li>Sobrecargar intencionalmente los servidores o infraestructura de la Plataforma.</li>
+            </ul>
+        </section>
+
+        <!-- Propiedad Intelectual -->
+        <section class="legal-section">
+            <h2><i class="bi bi-shield-check"></i> 4. Propiedad Intelectual</h2>
+            <p>
+                Robomatic RPA, incluyendo su código fuente, diseño, logotipos, documentación y todos los
+                elementos visuales y funcionales, son propiedad exclusiva de Robomatic y están protegidos
+                por las leyes de propiedad intelectual.
+            </p>
+            <p>
+                Los scripts, automatizaciones y configuraciones que usted cree dentro de la Plataforma
+                permanecen bajo su propiedad. Sin embargo, nos reservamos el derecho de utilizar información
+                agregada y anonimizada para mejorar nuestros servicios.
+            </p>
+        </section>
+
+        <!-- Seguridad y Credenciales -->
+        <section class="legal-section">
+            <h2><i class="bi bi-lock"></i> 5. Seguridad y Manejo de Credenciales</h2>
+            <p>
+                Robomatic implementa medidas de seguridad avanzadas para proteger sus datos y credenciales:
+            </p>
+            <ul>
+                <li>Las contraseñas son encriptadas utilizando algoritmos de cifrado AES-256-GCM.</li>
+                <li>Los certificados digitales se almacenan de forma segura en sistemas aislados.</li>
+                <li>Las comunicaciones están protegidas mediante protocolos HTTPS/TLS.</li>
+            </ul>
+            <p>
+                <strong>Importante:</strong> Usted es responsable de asegurar que las credenciales que proporciona
+                para automatizar procesos cuenten con los permisos necesarios y no violen políticas de terceros.
+            </p>
+        </section>
+
+        <!-- Disponibilidad del Servicio -->
+        <section class="legal-section">
+            <h2><i class="bi bi-cloud-check"></i> 6. Disponibilidad del Servicio</h2>
+            <p>
+                Nos esforzamos por mantener la Plataforma disponible las 24 horas del día, los 7 días de la semana.
+                Sin embargo, no garantizamos disponibilidad ininterrumpida y podemos realizar mantenimientos
+                programados o de emergencia cuando sea necesario.
+            </p>
+            <p>
+                No seremos responsables por pérdidas derivadas de interrupciones del servicio, fallos técnicos
+                o eventos fuera de nuestro control razonable.
+            </p>
+        </section>
+
+        <!-- Limitación de Responsabilidad -->
+        <section class="legal-section">
+            <h2><i class="bi bi-exclamation-triangle"></i> 7. Limitación de Responsabilidad</h2>
+            <p>
+                Robomatic se proporciona "tal cual" y "según disponibilidad". No garantizamos que la Plataforma
+                cumpla con todos sus requisitos específicos o que funcione sin errores.
+            </p>
+            <p>
+                En ningún caso seremos responsables por:
+            </p>
+            <ul>
+                <li>Daños indirectos, incidentales, especiales o consecuentes.</li>
+                <li>Pérdida de datos, beneficios o interrupción del negocio.</li>
+                <li>Acciones tomadas por los bots que resulten en violaciones a sitios de terceros.</li>
+                <li>Uso indebido de la Plataforma por parte del Usuario.</li>
+            </ul>
+        </section>
+
+        <!-- Terminación -->
+        <section class="legal-section">
+            <h2><i class="bi bi-x-circle"></i> 8. Terminación</h2>
+            <p>
+                Podemos suspender o terminar su acceso a la Plataforma en cualquier momento si:
+            </p>
+            <ul>
+                <li>Viola estos Términos y Condiciones.</li>
+                <li>Utiliza la Plataforma de manera que pueda causar daño a nosotros o a terceros.</li>
+                <li>No cumple con sus obligaciones de pago (si aplica).</li>
+            </ul>
+            <p>
+                Usted puede cancelar su cuenta en cualquier momento. Tras la terminación, perderá acceso
+                a sus datos y automatizaciones almacenadas en la Plataforma.
+            </p>
+        </section>
+
+        <!-- Modificaciones -->
+        <section class="legal-section">
+            <h2><i class="bi bi-pencil-square"></i> 9. Modificaciones</h2>
+            <p>
+                Nos reservamos el derecho de modificar estos Términos y Condiciones en cualquier momento.
+                Los cambios significativos serán notificados a través de la Plataforma o por correo electrónico.
+            </p>
+            <p>
+                El uso continuado de la Plataforma después de cualquier modificación constituye su aceptación
+                de los nuevos términos.
+            </p>
+        </section>
+
+        <!-- Ley Aplicable -->
+        <section class="legal-section">
+            <h2><i class="bi bi-globe"></i> 10. Ley Aplicable y Jurisdicción</h2>
+            <p>
+                Estos Términos y Condiciones se rigen por las leyes de la República de Chile. Cualquier
+                disputa relacionada con estos términos será sometida a los tribunales ordinarios de justicia
+                de la ciudad de Santiago, Chile.
+            </p>
+        </section>
+
+        <!-- Contacto -->
+        <section class="legal-section contact-section">
+            <h2><i class="bi bi-envelope"></i> 11. Contacto</h2>
+            <p>
+                Si tiene preguntas sobre estos Términos y Condiciones, puede contactarnos en:
+            </p>
+            <div class="contact-card">
+                <div class="contact-item">
+                    <i class="bi bi-envelope-fill"></i>
+                    <a href="mailto:contacto@robomatic.cloud">contacto&#64;robomatic.cloud</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <div class="legal-footer">
+        <p>© 2025 Robomatic RPA. Todos los derechos reservados.</p>
+    </div>
+</div>

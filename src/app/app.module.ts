@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { ComponentsModule } from './components/components.module';
 import { TestModule } from './test/test.module';
+import { SchedulerModule } from './scheduler/scheduler.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { CodeEditorModule } from '@ngstack/code-editor';
@@ -29,6 +30,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     SharedModule,
     ComponentsModule,
     TestModule,
+    SchedulerModule,
     MatTableModule,
     NgbModule,
     FormsModule,

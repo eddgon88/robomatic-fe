@@ -5,15 +5,14 @@ import { TopbarComponent } from './components/topbar/topbar.component';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
-import { ModalComponent, NgbdModalInput, NgbdModalCodeEditor } from './components/modal/modal.component';
+import { ModalComponent, NgbdModalInput, NgbdModalCodeEditor, NgbdModalShare } from './components/modal/modal.component';
 import { FormsModule } from '@angular/forms';
 import { CodeEditorModule } from '@ngstack/code-editor';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
-
-
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
+import { HasPermissionDirective } from './directives/has-permission.directive';
 
 @NgModule({
   declarations: [
@@ -22,12 +21,15 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
     ModalComponent,
     NgbdModalInput,
     NgbdModalCodeEditor,
-    BreadcrumbComponent
+    NgbdModalShare,
+    BreadcrumbComponent,
+    HasPermissionDirective
   ],
   exports: [
     SidebarComponent,
     TopbarComponent,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    HasPermissionDirective
   ],
   imports: [
     BrowserAnimationsModule,

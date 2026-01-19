@@ -1,0 +1,117 @@
+<div class="scheduler-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-title">
+        <i class="bi bi-calendar-event"></i>
+        <h1>Scheduled Tests</h1>
+      </div>
+      <p class="header-subtitle">Manage your automated test schedules</p>
+    </div>
+    <button class="btn-create" (click)="createSchedule()">
+      <i class="bi bi-plus-lg"></i>
+      New Schedule
+    </button>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <i class="bi bi-search"></i>
+    <input 
+      type="text" 
+      [(ngModel)]="searchTerm" 
+      placeholder="Search schedules by name or test..."
+      class="search-input">
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading schedules...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!loading && schedules.length === 0">
+    <i class="bi bi-calendar-x"></i>
+    <h3>No Scheduled Tests</h3>
+    <p>Create your first schedule to automate test executions</p>
+    <button class="btn-create-empty" (click)="createSchedule()">
+      <i class="bi bi-plus-lg"></i>
+      Create Schedule
+    </button>
+  </div>
+
+  <!-- Schedules Grid -->
+  <div class="schedules-grid" *ngIf="!loading && filteredSchedules.length > 0">
+    <div class="schedule-card" *ngFor="let schedule of filteredSchedules">
+      <!-- Card Header -->
+      <div class="card-header">
+        <div class="card-title-section">
+          <div class="trigger-badge" [ngClass]="'trigger-' + schedule.trigger_type">
+            <i class="bi" [ngClass]="getTriggerTypeIcon(schedule.trigger_type)"></i>
+            {{ getTriggerTypeLabel(schedule.trigger_type) }}
+          </div>
+          <h3 class="card-title">{{ schedule.name }}</h3>
+        </div>
+        <div class="status-badge" [ngClass]="getStatusClass(schedule.status)">
+          <span class="status-dot"></span>
+          {{ schedule.status | titlecase }}
+        </div>
+      </div>
+
+      <!-- Card Body -->
+      <div class="card-body">
+        <div class="info-row">
+          <i class="bi bi-robot"></i>
+          <span class="info-label">Test:</span>
+          <span class="info-value">{{ schedule.test_name }}</span>
+        </div>
+
+        <div class="info-row">
+          <i class="bi bi-clock-history"></i>
+          <span class="info-label">Schedule:</span>
+          <span class="info-value">{{ formatExpression(schedule) }}</span>
+        </div>
+
+        <div class="info-row" *ngIf="schedule.next_run_time">
+          <i class="bi bi-calendar-plus"></i>
+          <span class="info-label">Next Run:</span>
+          <span class="info-value next-run">{{ formatDateTime(schedule.next_run_time) }}</span>
+        </div>
+
+        <div class="info-row" *ngIf="schedule.last_run_time">
+          <i class="bi bi-calendar-check"></i>
+          <span class="info-label">Last Run:</span>
+          <span class="info-value">{{ formatDateTime(schedule.last_run_time) }}</span>
+        </div>
+
+        <p class="description" *ngIf="schedule.description">{{ schedule.description }}</p>
+      </div>
+
+      <!-- Card Footer -->
+      <div class="card-footer">
+        <button 
+          class="btn-action" 
+          [ngClass]="schedule.status === 'active' ? 'btn-pause' : 'btn-resume'"
+          (click)="toggleStatus(schedule)"
+          [title]="schedule.status === 'active' ? 'Pause' : 'Resume'">
+          <i class="bi" [ngClass]="schedule.status === 'active' ? 'bi-pause-fill' : 'bi-play-fill'"></i>
+        </button>
+        <button class="btn-action btn-edit" (click)="editSchedule(schedule)" title="Edit">
+          <i class="bi bi-pencil-fill"></i>
+        </button>
+        <button class="btn-action btn-delete" (click)="confirmDelete(schedule)" title="Delete">
+          <i class="bi bi-trash-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Results -->
+  <div class="no-results" *ngIf="!loading && schedules.length > 0 && filteredSchedules.length === 0">
+    <i class="bi bi-search"></i>
+    <p>No schedules found matching "{{ searchTerm }}"</p>
+  </div>
+</div>
+
+

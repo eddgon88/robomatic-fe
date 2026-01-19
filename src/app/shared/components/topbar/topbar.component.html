@@ -1,36 +1,75 @@
-<div class="topnav">
-    <div class="d-flex">
-      <div class="flex-grow-1">
-        <a class="active" href="tests/home">Home</a>
-      </div>
-      <div>
-        <button (click)="logout()"> Log out</button>
-      </div>
-      <!--div mdbDropdown class="btn-group dropdown">
-        <button 
-          class="btn btn-default dropdown-toggle" 
-          type="button" 
-          data-bs-toggle="dropdown" 
-          aria-expanded="false" 
-          id="dropdownMenu" 
-          mdbDropdownToggle>
-          <i class="bi bi-person-circle i-header"></i>
-        </button>
-        <ul mdbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenu">
-          <li><button class="dropdown-item" type="button" (click)="logout()">Log out</button></li>
-        </ul>
-      </div-->
-      <!--mat-menu #menu="matMenu" xPosition="before" yPosition="below">
-        <button mat-menu-item>Item 1</button>
-        <button mat-menu-item>Item 2</button>
-        <button mat-menu-item>Item 3</button>
-      </mat-menu>
+<header class="topbar">
+  <div class="topbar-content">
+    <!-- Left side - Breadcrumb area -->
+    <div class="topbar-left">
+      <app-breadcrumb></app-breadcrumb>
+    </div>
 
-      <mat-toolbar color="primary">
-        <span>My App</span>
-        <button mat-icon-button [matMenuTriggerFor]="menu">
-          <i class="bi bi-person-circle i-header"></i>
+    <!-- Right side - Actions & User -->
+    <div class="topbar-right">
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <button class="action-btn" title="Notifications" disabled>
+          <i class="bi bi-bell"></i>
+          <!-- <span class="notification-badge">3</span> -->
         </button>
-      </mat-toolbar-->
+        
+        <button class="action-btn" title="Help" disabled>
+          <i class="bi bi-question-circle"></i>
+        </button>
+      </div>
+
+      <!-- Divider -->
+      <div class="topbar-divider"></div>
+
+      <!-- User Menu -->
+      <div class="user-menu" [class.open]="userMenuOpen" (click)="toggleUserMenu()">
+        <div class="user-avatar">
+          <i class="bi bi-person-fill"></i>
+        </div>
+        <div class="user-info">
+          <span class="user-name">{{ userName }}</span>
+          <span class="user-role">{{ userRole }}</span>
+        </div>
+        <i class="bi bi-chevron-down dropdown-arrow"></i>
+
+        <!-- Dropdown -->
+        <div class="user-dropdown" *ngIf="userMenuOpen">
+          <div class="dropdown-header">
+            <div class="dropdown-avatar">
+              <i class="bi bi-person-fill"></i>
+            </div>
+            <div class="dropdown-user-info">
+              <span class="dropdown-name">{{ userName }}</span>
+              <span class="dropdown-email">{{ userEmail }}</span>
+            </div>
+          </div>
+          
+          <div class="dropdown-divider"></div>
+          
+          <a href="javascript:void(0)" class="dropdown-item disabled">
+            <i class="bi bi-person-gear"></i>
+            <span>My Profile</span>
+            <span class="item-badge">Soon</span>
+          </a>
+          
+          <a href="javascript:void(0)" class="dropdown-item disabled">
+            <i class="bi bi-gear"></i>
+            <span>Settings</span>
+            <span class="item-badge">Soon</span>
+          </a>
+          
+          <div class="dropdown-divider"></div>
+          
+          <a href="javascript:void(0)" class="dropdown-item logout" (click)="logout()">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Log Out</span>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
+</header>
+
+<!-- Overlay to close menu when clicking outside -->
+<div class="menu-overlay" *ngIf="userMenuOpen" (click)="closeUserMenu()"></div>

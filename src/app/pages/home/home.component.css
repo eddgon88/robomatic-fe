@@ -1,33 +1,39 @@
-/* Estilos para el wrapper principal */
-.wrapper {
-    display: flex;
-    height: 100vh; /* Establece la altura al 100% del viewport */
-  }
-  
-  /* Estilos para la barra lateral */
-  .sidebar {
-    width: 250px; /* Ancho de la barra lateral */
-    /*background-color: #333; /* Color de fondo */
-    /*color: #fff; /* Color del texto */
-  }
-  
-  /* Estilos para el contenido principal */
+/* ========================================
+   APP LAYOUT - Main Layout Structure
+   ======================================== */
+
+.app-layout {
+  min-height: 100vh;
+  background: var(--maindark, #171717);
+}
+
+/* Main Content Area */
+.main-content {
+  margin-left: 220px;
+  margin-top: 64px;
+  min-height: calc(100vh - 64px);
+  background: var(--maindark, #171717);
+}
+
+.content-wrapper {
+  padding: 1.5rem;
+  max-width: 1600px;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 768px) {
   .main-content {
-    flex: 1; /* Ocupa todo el espacio restante */
-    /*background-color: #f4f4f4; /* Color de fondo */
-  }
-  
-  /* Estilos para la barra superior */
-  .topnav {
-    z-index: 2;
+    margin-left: 70px;
   }
 
-  .mat-toolbar-single-row {
-    height: auto;
-    display: block;
+  .content-wrapper {
+    padding: 1rem;
   }
+}
 
-  .router {
-    margin: 3%;
-    margin-top: 1%;
+/* Responsive - Mobile */
+@media (max-width: 576px) {
+  .content-wrapper {
+    padding: 0.75rem;
   }
+}

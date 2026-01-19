@@ -1,0 +1,83 @@
+<div class="modal-header">
+  <h4 class="modal-title">
+    <i class="bi bi-share"></i>
+    Share {{ isFolder ? 'Folder' : 'Test' }}
+  </h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('cancel')"></button>
+</div>
+<div class="modal-body">
+  <!-- Item name -->
+  <div class="mb-3" *ngIf="itemName">
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi" [ngClass]="isFolder ? 'bi-folder-fill' : 'bi-file-earmark-code'" style="color: #00ddeb;"></i>
+      <span><strong>{{ itemName }}</strong></span>
+    </div>
+  </div>
+  
+  <!-- User selector -->
+  <div class="mb-3">
+    <label for="userSelect" class="form-label">Select User</label>
+    
+    <!-- Loading state -->
+    <div *ngIf="loadingUsers" class="loading-users">
+      <span class="spinner-border spinner-border-sm"></span>
+      <span>Loading users...</span>
+    </div>
+    
+    <!-- Select -->
+    <select 
+      *ngIf="!loadingUsers"
+      class="form-select" 
+      id="userSelect" 
+      [(ngModel)]="selectedUserId">
+      <option [ngValue]="null" disabled>Choose a user...</option>
+      <option *ngFor="let user of users" [ngValue]="user.id">
+        {{ user.full_name }} ({{ user.email }})
+      </option>
+    </select>
+    
+    <!-- No users message -->
+    <div *ngIf="users.length === 0 && !loadingUsers" class="alert alert-warning mt-2 mb-0">
+      <i class="bi bi-exclamation-triangle me-1"></i>
+      <small>No users available to share with.</small>
+    </div>
+  </div>
+
+  <!-- Permission selector (only for tests) -->
+  <div class="mb-3" *ngIf="!isFolder">
+    <label for="permissionSelect" class="form-label">Permission Level</label>
+    <select class="form-select" id="permissionSelect" [(ngModel)]="selectedPermission">
+      <option [ngValue]="null" disabled>Select permission...</option>
+      <option value="view">
+        👁️ Viewer - Can view test and evidences
+      </option>
+      <option value="execute">
+        ▶️ Executor - Can view and run the test
+      </option>
+      <option value="edit">
+        ✏️ Editor - Full access (view, run, edit)
+      </option>
+    </select>
+  </div>
+
+  <!-- Info for folders -->
+  <div *ngIf="isFolder" class="alert alert-info mb-0">
+    <i class="bi bi-info-circle me-1"></i>
+    <small>The user will have <strong>Viewer</strong> access to this folder and its contents.</small>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel')">
+    <i class="bi bi-x-lg"></i>
+    Cancel
+  </button>
+  <button 
+    type="button" 
+    class="btn btn-primary" 
+    [disabled]="!selectedUserId || (!isFolder && !selectedPermission) || sharing"
+    (click)="share()">
+    <span *ngIf="sharing" class="spinner-border spinner-border-sm"></span>
+    <i *ngIf="!sharing" class="bi bi-send"></i>
+    {{ sharing ? 'Sharing...' : 'Share' }}
+  </button>
+</div>

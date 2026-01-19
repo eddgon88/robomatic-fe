@@ -15,6 +15,8 @@ export class RegisterComponent implements OnInit {
   confirmPassword: string = '';
   loading: boolean = false;
   registrationSuccess: boolean = false;
+  acceptedTerms: boolean = false;
+  showTermsModal: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -47,6 +49,11 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
+    if (!this.acceptedTerms) {
+      this.notificationService.showError('Debes aceptar los Términos y Condiciones para continuar');
+      return;
+    }
+
     this.loading = true;
 
     this.authService.singup(this.singUpRequest).subscribe(
@@ -69,6 +76,21 @@ export class RegisterComponent implements OnInit {
 
   goToLogin(): void {
     this.router.navigate(['/login']);
+  }
+
+  openTermsModal(): void {
+    this.showTermsModal = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeTermsModal(): void {
+    this.showTermsModal = false;
+    document.body.style.overflow = 'auto';
+  }
+
+  acceptTermsFromModal(): void {
+    this.acceptedTerms = true;
+    this.closeTermsModal();
   }
 
 }

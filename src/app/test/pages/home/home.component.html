@@ -1,62 +1,294 @@
-<div class="d-flex flex-row-reverse mt-3 mb-3">
-  <button routerLink="/tests/create">New Test</button>
-  <button (click)="createFolderModal()">New Folder</button>
-</div>
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table responsive-table">
-
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let element" (click)="viewRecord(element)">{{element.name}}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="user" class="hide-on-small">
-    <th mat-header-cell *matHeaderCellDef>User</th>
-    <td mat-cell *matCellDef="let element">{{element.user}}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="type">
-    <th mat-header-cell *matHeaderCellDef>Type</th>
-    <td mat-cell *matCellDef="let element">{{element.type}}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="lastUpdate" class="hide-on-small">
-    <th mat-header-cell *matHeaderCellDef>Last Update</th>
-    <td mat-cell *matCellDef="let element">{{element.last_update | date}}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="lastExecution" class="hide-on-small">
-    <th mat-header-cell *matHeaderCellDef>Last Execution</th>
-    <td mat-cell *matCellDef="let element">{{element.last_execution | date}}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="execute">
-    <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element">
-      <div class="d-flex">
-        <button *ngIf="(element.permissions === 'owner' || element.permissions === 'edit' || element.permissions === 'execute') && !element.is_running" (click)="execute(element)"><i class="bi bi-play"></i></button>
-        <button *ngIf="(element.permissions === 'owner' || element.permissions === 'edit' || element.permissions === 'execute') && element.is_running" (click)="stop(element)"><i class="bi bi-stop-btn"></i></button>
-        <button *ngIf="(element.permissions === 'owner' || element.permissions === 'edit') && !element.is_running" [routerLink]="'/tests/edit/'+element.id"><i class="bi bi-pencil"></i></button>
-        <button *ngIf="(element.permissions === 'owner' || element.permissions === 'edit' || element.permissions === 'execute') && !element.is_running" [routerLink]="'/tests/evidence/'+element.id"><i class="bi bi-archive"></i></button>
-        <button *ngIf="element.permissions === 'owner' || element.permissions === 'edit' || element.permissions === 'execute'"><i class="bi bi-stopwatch"></i></button>
-        <button *ngIf="((element.permissions === 'owner' || element.permissions === 'edit') && !element.is_running) || element.type === 'folder'" (click)="deleteRecord(element)"><i class="bi bi-trash3"></i></button>
-        <button *ngIf="(element.is_running)" (click)="webWatcherModal(element)"><i class="bi bi-binoculars"></i></button>
+<div class="home-container">
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="header-content">
+      <div class="header-title">
+        <h1>
+          <i class="bi bi-robot"></i>
+          Test Dashboard
+        </h1>
+        <p class="header-subtitle">Manage and execute your automated tests</p>
       </div>
-    </td>
-  </ng-container>
+      
+      <div class="header-actions">
+        <button class="btn-secondary" (click)="createFolderModal()">
+          <i class="bi bi-folder-plus"></i>
+          <span>New Folder</span>
+        </button>
+        <button *ngIf="canCreateTest" class="btn-primary" routerLink="/tests/create">
+          <i class="bi bi-plus-lg"></i>
+          <span>New Test</span>
+        </button>
+      </div>
+    </div>
 
-  <ng-container matColumnDef="state">
-    <th mat-header-cell *matHeaderCellDef>State</th>
-    <td mat-cell *matCellDef="let element">
-      <span *ngIf="element.is_running" class="spinner-border"></span>
-      <span *ngIf="!element.is_running && element.last_execution_state == 'success'"><i class="bi bi-check-circle-fill"></i></span>
-      <span *ngIf="!element.is_running && element.last_execution_state == 'failed'"><i class="bi bi-x-octagon-fill"></i></span>
-      <span *ngIf="!element.is_running && element.last_execution_state == 'stopped'"><i class="bi bi-exclamation-diamond-fill"></i></span>
-    </td>
-  </ng-container>
-  
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <img *ngIf="inLoad; else showTable" src="../../../assets/loader.svg">
-  <ng-template #showTable>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </ng-template>
-</table>
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-icon tests">
+          <i class="bi bi-file-earmark-code"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ getTestCount() }}</span>
+          <span class="stat-label">Tests</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon folders">
+          <i class="bi bi-folder"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ getFolderCount() }}</span>
+          <span class="stat-label">Folders</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon running">
+          <i class="bi bi-play-circle"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ getRunningCount() }}</span>
+          <span class="stat-label">Running</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon success">
+          <i class="bi bi-check-circle"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ getSuccessCount() }}</span>
+          <span class="stat-label">Passed</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="inLoad">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <span>Loading tests...</span>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!inLoad && dataSource.data.length === 0">
+    <div class="empty-icon">
+      <i class="bi bi-inbox"></i>
+    </div>
+    <h3>No tests yet</h3>
+    <p>Create your first automated test to get started</p>
+    <button *ngIf="canCreateTest" class="btn-primary" routerLink="/tests/create">
+      <i class="bi bi-plus-lg"></i>
+      Create Test
+    </button>
+  </div>
+
+  <!-- Data Table -->
+  <div class="table-container" *ngIf="!inLoad && dataSource.data.length > 0">
+    <table mat-table [dataSource]="dataSource" class="data-table">
+      
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="name-cell" (click)="viewRecord(element)">
+            <div class="name-icon" [ngClass]="element.type">
+              <i class="bi" [ngClass]="element.type === 'folder' ? 'bi-folder-fill' : 'bi-diagram-3-fill'"></i>
+            </div>
+            <div class="name-info">
+              <span class="name-text">{{ element.name }}</span>
+              <span class="name-meta" *ngIf="element.type === 'test' && element.web">
+                <i class="bi bi-globe"></i> Web Test
+              </span>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- User Column -->
+      <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef>Owner</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="user-cell">
+            <div class="user-avatar">
+              {{ getInitials(element.user) }}
+            </div>
+            <span class="user-name">{{ element.user }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Type Column -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let element">
+          <span class="type-badge" [ngClass]="element.type">
+            <i class="bi" [ngClass]="element.type === 'folder' ? 'bi-folder' : 'bi-code-slash'"></i>
+            {{ element.type | titlecase }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Last Update Column -->
+      <ng-container matColumnDef="lastUpdate">
+        <th mat-header-cell *matHeaderCellDef>Last Update</th>
+        <td mat-cell *matCellDef="let element">
+          <span class="date-cell" *ngIf="element.last_update">
+            {{ element.last_update | date:'MMM d, y' }}
+          </span>
+          <span class="date-cell empty" *ngIf="!element.last_update">—</span>
+        </td>
+      </ng-container>
+
+      <!-- Last Execution Column -->
+      <ng-container matColumnDef="lastExecution">
+        <th mat-header-cell *matHeaderCellDef>Last Run</th>
+        <td mat-cell *matCellDef="let element">
+          <span class="date-cell" *ngIf="element.last_execution">
+            {{ element.last_execution | date:'MMM d, y' }}
+          </span>
+          <span class="date-cell empty" *ngIf="!element.last_execution">—</span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="execute">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="actions-cell">
+            <!-- ========== TEST ACTIONS ========== -->
+            <ng-container *ngIf="element.type === 'test'">
+              <!-- Execute (visible en mobile) -->
+              <button *hasPermission="executePermissions; for: element; whenRunning: false" 
+                      class="action-btn execute"
+                      (click)="execute(element)"
+                      title="Execute test">
+                <i class="bi bi-play-fill"></i>
+              </button>
+              
+              <!-- Stop (visible en mobile) -->
+              <button *hasPermission="executePermissions; for: element; whenRunning: true" 
+                      class="action-btn stop"
+                      (click)="stop(element)"
+                      title="Stop execution">
+                <i class="bi bi-stop-fill"></i>
+              </button>
+              
+              <!-- Edit (oculto en mobile) - Visible para owner, edit y execute -->
+              <button *hasPermission="executePermissions; for: element; whenRunning: false" 
+                      class="action-btn edit hide-mobile"
+                      [routerLink]="'/tests/edit/'+element.id"
+                      title="Edit test">
+                <i class="bi bi-pencil-fill"></i>
+              </button>
+              
+              <!-- Evidences (oculto en mobile) -->
+              <button *hasPermission="viewPermissions; for: element; whenRunning: false" 
+                      class="action-btn evidence hide-mobile"
+                      [routerLink]="'/tests/evidence/'+element.id"
+                      title="View evidences">
+                <i class="bi bi-archive-fill"></i>
+              </button>
+              
+              <!-- Schedule (oculto en mobile) -->
+              <button *ngIf="canSchedule"
+                      class="action-btn schedule hide-mobile"
+                      title="Schedule (coming soon)"
+                      disabled>
+                <i class="bi bi-clock-fill"></i>
+              </button>
+              
+              <!-- Delete (oculto en mobile) -->
+              <button *hasPermission="editPermissions; for: element; whenRunning: false" 
+                      class="action-btn delete hide-mobile"
+                      (click)="deleteRecord(element)"
+                      title="Delete test">
+                <i class="bi bi-trash3-fill"></i>
+              </button>
+              
+              <!-- VNC Watcher (Web tests only - visible en mobile) -->
+              <ng-container *ngIf="element.web">
+                <button *hasPermission="executePermissions; for: element; whenRunning: true" 
+                        class="action-btn vnc"
+                        (click)="webWatcherModal(element)"
+                        title="Watch live execution">
+                  <i class="bi bi-eye-fill"></i>
+                </button>
+              </ng-container>
+            </ng-container>
+            
+            <!-- ========== FOLDER ACTIONS ========== -->
+            <ng-container *ngIf="element.type === 'folder'">
+              <!-- Delete (oculto en mobile) -->
+              <button *hasPermission="ownerPermission; for: element" 
+                      class="action-btn delete hide-mobile"
+                      (click)="deleteRecord(element)"
+                      title="Delete folder">
+                <i class="bi bi-trash3-fill"></i>
+              </button>
+            </ng-container>
+            
+            <!-- ========== SHARED ACTIONS ========== -->
+            <!-- Share (visible en mobile para owners) -->
+            <button *hasPermission="ownerPermission; for: element; whenRunning: false" 
+                    class="action-btn share"
+                    (click)="shareWithPreload(element)"
+                    [title]="element.type === 'folder' ? 'Share folder' : 'Share test'">
+              <i class="bi bi-share-fill"></i>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- State Column -->
+      <ng-container matColumnDef="state">
+        <th mat-header-cell *matHeaderCellDef class="text-center">Status</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="state-cell">
+            <!-- Folder -->
+            <span *ngIf="element.type === 'folder'" class="state-badge folder" title="Folder">
+              <i class="bi bi-folder-fill"></i>
+            </span>
+            
+            <!-- Running -->
+            <span *ngIf="element.type === 'test' && element.is_running" class="state-badge running" title="Running">
+              <span class="pulse-ring"></span>
+              <i class="bi bi-activity"></i>
+            </span>
+            
+            <!-- Success -->
+            <span *ngIf="element.type === 'test' && !element.is_running && element.last_execution_state === 'success'" 
+                  class="state-badge success" title="Passed">
+              <i class="bi bi-check-lg"></i>
+            </span>
+            
+            <!-- Failed -->
+            <span *ngIf="element.type === 'test' && !element.is_running && element.last_execution_state === 'failed'" 
+                  class="state-badge failed" title="Failed">
+              <i class="bi bi-x-lg"></i>
+            </span>
+            
+            <!-- Stopped -->
+            <span *ngIf="element.type === 'test' && !element.is_running && element.last_execution_state === 'stopped'" 
+                  class="state-badge stopped" title="Stopped">
+              <i class="bi bi-dash-lg"></i>
+            </span>
+            
+            <!-- No execution yet -->
+            <span *ngIf="element.type === 'test' && !element.is_running && !element.last_execution_state" 
+                  class="state-badge pending" title="Not executed yet">
+              <i class="bi bi-circle"></i>
+            </span>
+          </div>
+        </td>
+      </ng-container>
+      
+      <!-- Header & Rows -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" 
+          [class.running]="row.is_running"
+          [class.folder-row]="row.type === 'folder'"></tr>
+    </table>
+  </div>
+</div>

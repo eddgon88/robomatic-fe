@@ -78,4 +78,15 @@ export class TestService {
     )
   }
 
+  /**
+   * Obtiene los tests a los que el usuario tiene permisos de owner o editor.
+   * Usado para el selector del scheduler.
+   */
+  getSchedulableTests(): Observable<TestRecord[]> {
+    const url = bff.protocol + bff.host + bff.getSchedulableTests;
+    return this.http.get<TestRecord[]>(url).pipe(
+      catchError(err => {return throwError(err)})
+    )
+  }
+
 }

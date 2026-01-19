@@ -1,5 +1,12 @@
-<div>
-    <div id="webView">
-        <!-- This is where the remote screen will appear -->
-    </div>
+<div class="modal-header">
+  <h4 class="modal-title">
+    <i class="bi bi-display"></i>
+    Live Execution View
+  </h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('close')"></button>
+</div>
+<div class="modal-body p-0">
+  <div id="webView">
+    <!-- VNC remote screen will appear here -->
+  </div>
 </div>

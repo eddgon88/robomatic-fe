@@ -1,25 +1,69 @@
-<div class="border-right p-3" id="sidebar">
-  <a href="tests/home">
-    <img class="sidebar-img" src="../../../../assets/images/logo_ROBOMATIC.png" alt="">
-  </a>
-    <hr class="text-white">
-
-    <div class="list-group list-reset p-2">
-      <a href="#" class=" list-group-item list-group-item-action">Something</a>
-    </div>
-    <div class="list-group list-reset p-2">
-      <a href="#" class="list-group-item list-group-item-action">Something</a>
-    </div>
-    <!--div class="list-group list-reset p-2">
-      <a href="#" class="list-group-item list-group-item-action">Something</a>
-    </div>
-    <div class="list-group list-reset p-2">
-      <a href="#" class="list-group-item list-group-item-action">Something</a>
-    </div>
-    <div class="list-group list-reset p-2">
-      <a href="#" class="list-group-item list-group-item-action">Something</a>
-    </div>
-    <div class="list-group list-reset p-2">
-      <a href="#" class="list-group-item list-group-item-action">Something</a>
-    </div-->
+<aside class="sidebar">
+  <!-- Logo Section -->
+  <div class="sidebar-logo">
+    <a routerLink="/tests/home" class="logo-link">
+      <img src="../../../../assets/images/logo_ROBOMATIC.png" alt="Robomatic" class="logo-img">
+    </a>
   </div>
+
+  <!-- Navigation -->
+  <nav class="sidebar-nav">
+    <div class="nav-section">
+      <span class="nav-section-title">Main</span>
+      
+      <a routerLink="/tests/home" routerLinkActive="active" class="nav-item">
+        <i class="bi bi-grid-1x2-fill nav-icon"></i>
+        <span class="nav-text">Dashboard</span>
+      </a>
+      
+      <a *ngIf="canCreateTest" routerLink="/tests/create" routerLinkActive="active" class="nav-item">
+        <i class="bi bi-plus-circle-fill nav-icon"></i>
+        <span class="nav-text">New Test</span>
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <span class="nav-section-title">Automation</span>
+      
+      <a routerLink="/tests/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+        <i class="bi bi-robot nav-icon"></i>
+        <span class="nav-text">Tests</span>
+      </a>
+      
+      <a *ngIf="canSchedule" routerLink="/scheduler" routerLinkActive="active" class="nav-item">
+        <i class="bi bi-calendar-event nav-icon"></i>
+        <span class="nav-text">Scheduler</span>
+      </a>
+      
+      <a href="javascript:void(0)" class="nav-item disabled">
+        <i class="bi bi-bar-chart-fill nav-icon"></i>
+        <span class="nav-text">Reports</span>
+        <span class="badge-soon">Soon</span>
+      </a>
+    </div>
+
+    <div class="nav-section" *ngIf="isAdmin">
+      <span class="nav-section-title">Settings</span>
+      
+      <a href="javascript:void(0)" class="nav-item disabled">
+        <i class="bi bi-gear-fill nav-icon"></i>
+        <span class="nav-text">Configuration</span>
+        <span class="badge-soon">Soon</span>
+      </a>
+      
+      <a href="javascript:void(0)" class="nav-item disabled">
+        <i class="bi bi-people-fill nav-icon"></i>
+        <span class="nav-text">Users</span>
+        <span class="badge-soon">Soon</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Footer -->
+  <div class="sidebar-footer">
+    <div class="version-info">
+      <i class="bi bi-code-slash"></i>
+      <span>v2.0.0</span>
+    </div>
+  </div>
+</aside>

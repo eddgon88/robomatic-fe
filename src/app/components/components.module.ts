@@ -8,6 +8,11 @@ import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { ConfirmMailComponent } from './pages/confirm-mail/confirm-mail.component';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { TermsConditionsComponent } from './pages/terms-conditions/terms-conditions.component';
+import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
+import { SupportComponent } from './pages/support/support.component';
 import { RouterModule } from '@angular/router';
 
 
@@ -16,7 +21,12 @@ import { RouterModule } from '@angular/router';
   declarations: [
     ConfirmMailComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+    TermsConditionsComponent,
+    PrivacyPolicyComponent,
+    SupportComponent
   ],
   imports: [
     CommonModule,

@@ -64,6 +64,14 @@ const routes: Routes = [
     component: SupportComponent
   },
   {
+    path: 'landing',
+    loadChildren: () => import('./landing-page/landing-page.module').then(m => m.LandingPageModule)
+  },
+  {
+    path: 'pricing',
+    loadChildren: () => import('./pricing/pricing.module').then(m => m.PricingModule)
+  },
+  {
     path: '**',
     redirectTo: 'login'
   }

@@ -1,0 +1,51 @@
+<div class="pricing-card" [class.highlighted]="plan.highlighted">
+  <!-- Badge destacado -->
+  <div *ngIf="plan.highlighted" class="featured-badge">
+    <span>RECOMENDADO</span>
+  </div>
+
+  <!-- Header -->
+  <div class="card-header">
+    <h3 class="plan-name">{{ plan.name }}</h3>
+    <p class="plan-description">{{ plan.description }}</p>
+  </div>
+
+  <!-- Precio -->
+  <div class="pricing-section">
+    <div class="price-display">
+      <span class="currency">{{ plan.currency }}</span>
+      <span class="amount">{{ plan.price | number: '1.0-0' }}</span>
+      <span class="period">{{ plan.period }}</span>
+    </div>
+    <p class="price-note" *ngIf="plan.name === 'Básico' || plan.name === 'Empresarial'">+ IVA</p>
+  </div>
+
+  <!-- Documentos incluidos -->
+  <div class="documents-section">
+    <div class="documents-box">
+      <p class="documents-label">Documentos incluidos</p>
+      <p class="documents-value">{{ plan.documents }}</p>
+    </div>
+  </div>
+
+  <!-- Características -->
+  <div class="features-section">
+    <ul class="features-list">
+      <li *ngFor="let feature of plan.features" class="feature-item">
+        <i class="bi bi-check-circle-fill"></i>
+        <span>{{ feature }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- CTA Button -->
+  <div class="cta-section" *ngIf="plan.ctaText">
+    <button 
+      class="cta-button" 
+      [class.primary]="plan.highlighted"
+      (click)="handleCTA()"
+    >
+      {{ plan.ctaText }}
+    </button>
+  </div>
+</div>

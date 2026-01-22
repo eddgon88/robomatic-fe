@@ -1,0 +1,160 @@
+<div class="landing-container">
+
+    <!-- Navigation Bar -->
+    <nav class="landing-nav">
+        <div class="nav-brand">
+            <img src="/assets/images/logo_ROBOMATIC.png" alt="Robomatic Logo" class="nav-logo">
+        </div>
+        <div class="nav-links">
+            <a (click)="scrollToSection('about')">Qué Somos</a>
+            <a (click)="scrollToSection('process')">Cómo lo Hacemos</a>
+            <a (click)="scrollToSection('scenarios')">Escenarios</a>
+            <a (click)="scrollToSection('benefits')">Beneficios</a>
+            <a (click)="scrollToSection('services')">Servicios</a>
+            <a (click)="scrollToSection('contact')">Contacto</a>
+            <a routerLink="/login" class="btn-login">Iniciar Sesión</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Haz que tu empresa avance a la velocidad de la automatización</h1>
+            <p>Simplifica hoy para crecer mañana con Robomatic.</p>
+            <button class="btn-lg" (click)="scrollToContact()">
+                COMUNÍCATE CON NOSOTROS <i class="bi bi-arrow-right-circle-fill"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <h2 class="section-title">¿QUÉ SOMOS?</h2>
+        <div class="about-content">
+            <div class="about-image-container">
+                <img src="/assets/images/avatar02_ROBOMATIC.jpg" alt="Robomatic Avatar" class="about-image">
+            </div>
+            <p class="about-text">
+                En ROBOMATIC nos especializamos en automatizar procesos empresariales mediante RPA (Robotic Process
+                Automation).
+                <br><br>
+                Desarrollamos soluciones que eliminan tareas repetitivas, optimizan operaciones y permiten a las
+                empresas enfocarse en actividades estratégicas, impulsando así su eficiencia y productividad.
+            </p>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section class="process-section" id="process">
+        <h2 class="section-title">¿CÓMO LO HACEMOS?</h2>
+        <div class="process-steps">
+            <div class="process-step">
+                <span class="step-number">1</span>
+                <h3>Análisis</h3>
+                <p>Analizamos tu flujo de negocio y detectamos los procesos que pueden ser automatizados.</p>
+            </div>
+            <div class="process-step">
+                <span class="step-number">2</span>
+                <h3>Estructura</h3>
+                <p>Estructuramos un diagrama de flujo para cada proceso identificado.</p>
+            </div>
+            <div class="process-step">
+                <span class="step-number">3</span>
+                <h3>Aplicación</h3>
+                <p>Aplicamos nuestra tecnología sobre dichos procesos para ser automatizados.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scenarios Section -->
+    <section class="scenarios-section" id="scenarios">
+        <h2 class="section-title">ESCENARIOS DE AUTOMATIZACIÓN</h2>
+        <div class="about-content">
+            <p class="about-text">
+                Automatizamos cualquier proceso basado en reglas, repetitivo y de alto volumen. Desde la gestión de
+                facturas hasta la migración de datos y reportes automatizados.
+            </p>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits-section" id="benefits">
+        <h2 class="section-title">BENEFICIOS</h2>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <i class="bi bi-graph-up-arrow benefit-icon"></i>
+                <h3>Aumento de la Productividad</h3>
+            </div>
+            <div class="benefit-card">
+                <i class="bi bi-check-circle benefit-icon"></i>
+                <h3>Reducción de Errores</h3>
+            </div>
+            <div class="benefit-card">
+                <i class="bi bi-cash-coin benefit-icon"></i>
+                <h3>Ahorro de Costos</h3>
+            </div>
+            <div class="benefit-card">
+                <i class="bi bi-emoji-smile benefit-icon"></i>
+                <h3>Mejora Experiencia Cliente</h3>
+            </div>
+            <div class="benefit-card">
+                <i class="bi bi-arrows-fullscreen benefit-icon"></i>
+                <h3>Escalabilidad</h3>
+            </div>
+            <div class="benefit-card">
+                <i class="bi bi-file-earmark-check benefit-icon"></i>
+                <h3>Cumplimiento Normativo</h3>
+            </div>
+            <div class="benefit-card">
+                <i class="bi bi-clock-history benefit-icon"></i>
+                <h3>Datos en Tiempo Real</h3>
+            </div>
+            <div class="benefit-card">
+                <i class="bi bi-people benefit-icon"></i>
+                <h3>Mejor Gestión de Recursos</h3>
+            </div>
+            <div class="benefit-card">
+                <i class="bi bi-shield-lock benefit-icon"></i>
+                <h3>Incremento de Seguridad</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services-section" id="services">
+        <h2 class="section-title">OTROS SERVICIOS</h2>
+        <div class="process-steps">
+            <div class="process-step">
+                <i class="bi bi-bar-chart-line-fill benefit-icon"></i>
+                <h3>Business Intelligence</h3>
+                <p>Transformamos tus datos en información accionable para la toma de decisiones.</p>
+            </div>
+            <div class="process-step">
+                <i class="bi bi-globe benefit-icon"></i>
+                <h3>Web Scraping</h3>
+                <p>Extracción automatizada de datos de sitios web para análisis y monitoreo.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <h2 class="section-title text-white">CONTÁCTANOS</h2>
+        <div class="contact-links">
+            <div class="contact-item">
+                <i class="bi bi-whatsapp"></i>
+                <a href="https://wa.me/56929827325" target="_blank">+56 9 2982 7325</a>
+            </div>
+            <div class="contact-item">
+                <i class="bi bi-envelope"></i>
+                <a href="mailto:contacto@robomatic.cloud">contacto&#64;robomatic.cloud</a>
+            </div>
+            <div class="contact-item">
+                <i class="bi bi-instagram"></i>
+                <a href="https://www.instagram.com/robomatic.bot?igsh=ZHk5OHRjaWUyYjQy"
+                    target="_blank">&#64;robomatic.bot</a>
+            </div>
+        </div>
+    </section>
+
+</div>

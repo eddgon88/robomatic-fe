@@ -1,0 +1,54 @@
+<div class="pricing-container">
+  <!-- Header Section -->
+  <div class="pricing-header">
+    <h1 class="pricing-title">PLANES DE PRECIOS</h1>
+    <p class="pricing-subtitle">Elige el plan perfecto para tu empresa con nuestro servicio de emisión automática de boletas y facturas</p>
+  </div>
+
+  <!-- Pricing Grid -->
+  <div class="pricing-grid">
+    <app-pricing-card 
+      *ngFor="let plan of pricingPlans" 
+      [plan]="plan">
+    </app-pricing-card>
+  </div>
+
+  <!-- Additional Info Section -->
+  <div class="additional-info">
+    <h2>¿Qué incluye cada plan?</h2>
+    <div class="info-grid">
+      <div class="info-item">
+        <i class="bi bi-file-earmark-text"></i>
+        <h3>Reportes por Ejecución</h3>
+        <p>Obtén reportes detallados de cada emisión automática de documentos</p>
+      </div>
+      <div class="info-item">
+        <i class="bi bi-clock-history"></i>
+        <h3>Emisión Automática</h3>
+        <p>Automatiza completamente el proceso de emisión de boletas y facturas</p>
+      </div>
+      <div class="info-item">
+        <i class="bi bi-shield-check"></i>
+        <h3>Seguridad Garantizada</h3>
+        <p>Cumple con normativas de seguridad y autenticidad de documentos</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ Section (opcional) -->
+  <div class="faq-section">
+    <h2>Preguntas Frecuentes</h2>
+    <div class="faq-item">
+      <h4>¿Puedo cambiar de plan en cualquier momento?</h4>
+      <p>Sí, puedes cambiar o cancelar tu suscripción en cualquier momento sin penalizaciones.</p>
+    </div>
+    <div class="faq-item">
+      <h4>¿Qué pasa si necesito más documentos?</h4>
+      <p>Puedes actualizar a un plan superior o contactar a nuestro equipo de ventas para una solución personalizada.</p>
+    </div>
+    <div class="faq-item">
+      <h4>¿Incluye soporte técnico?</h4>
+      <p>Sí, cada plan incluye soporte técnico. Los planes Profesional y Empresarial tienen soporte prioritario.</p>
+    </div>
+  </div>
+</div>

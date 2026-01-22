@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {MatTableModule } from '@angular/material/table';
-import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
+import { MatTableModule } from '@angular/material/table';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,6 +27,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 150000, // 15 seconds
+      closeButton: true,
+      progressBar: true,
+    }),
     HttpClientModule,
     AppRoutingModule,
     SharedModule,
@@ -44,9 +52,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
       useClass: AuthInterceptor,
       multi: true
     },
-    { provide: JWT_OPTIONS, 
-      useValue: JWT_OPTIONS },
-        JwtHelperService
+    {
+      provide: JWT_OPTIONS,
+      useValue: JWT_OPTIONS
+    },
+    JwtHelperService
   ],
   bootstrap: [AppComponent]
 })

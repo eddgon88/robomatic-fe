@@ -1,0 +1,229 @@
+.pricing-card {
+  background: linear-gradient(135deg, var(--semidark) 0%, var(--dark) 100%);
+  border: 1px solid rgba(0, 221, 235, 0.15);
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  transition: all 0.3s ease;
+  color: var(--offwhite);
+}
+
+.pricing-card:hover {
+  border-color: rgba(0, 221, 235, 0.35);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 221, 235, 0.1);
+}
+
+.pricing-card.highlighted {
+  border-color: var(--primary);
+  background: linear-gradient(135deg, rgba(0, 221, 235, 0.1) 0%, rgba(43, 122, 85, 0.1) 100%);
+  box-shadow: 0 0 30px rgba(0, 221, 235, 0.15);
+}
+
+.pricing-card.highlighted:hover {
+  box-shadow: 0 12px 40px rgba(0, 221, 235, 0.25);
+}
+
+/* Featured Badge */
+.featured-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.featured-badge span {
+  display: inline-block;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+  color: var(--dark);
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Card Header */
+.card-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.plan-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.plan-description {
+  font-size: 0.85rem;
+  color: var(--grey);
+  margin: 0;
+}
+
+/* Pricing Section */
+.pricing-section {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid rgba(0, 221, 235, 0.1);
+}
+
+.price-display {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.currency {
+  font-size: 0.9rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.amount {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--offwhite);
+}
+
+.period {
+  font-size: 0.9rem;
+  color: var(--grey);
+  font-weight: 500;
+}
+
+.price-note {
+  font-size: 0.8rem;
+  color: var(--grey);
+  margin: 0.5rem 0 0 0;
+}
+
+/* Documents Section */
+.documents-section {
+  margin-bottom: 2rem;
+}
+
+.documents-box {
+  background: rgba(0, 221, 235, 0.05);
+  border: 1px solid rgba(0, 221, 235, 0.15);
+  border-radius: 8px;
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.documents-label {
+  font-size: 0.8rem;
+  color: var(--grey);
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.documents-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0;
+}
+
+/* Features Section */
+.features-section {
+  flex-grow: 1;
+  margin-bottom: 2rem;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: var(--offwhite);
+}
+
+.feature-item:last-child {
+  margin-bottom: 0;
+}
+
+.feature-item i {
+  color: var(--primary);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.feature-item span {
+  line-height: 1.4;
+}
+
+/* CTA Section */
+.cta-section {
+  display: flex;
+}
+
+.cta-button {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid rgba(0, 221, 235, 0.3);
+  background: transparent;
+  color: var(--primary);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.cta-button:hover {
+  border-color: var(--primary);
+  background: rgba(0, 221, 235, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 221, 235, 0.15);
+}
+
+.cta-button.primary {
+  background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+  color: var(--dark);
+  border-color: transparent;
+  font-weight: 700;
+}
+
+.cta-button.primary:hover {
+  box-shadow: 0 6px 20px rgba(0, 221, 235, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pricing-card {
+    padding: 1.5rem;
+  }
+
+  .plan-name {
+    font-size: 1.2rem;
+  }
+
+  .amount {
+    font-size: 2.2rem;
+  }
+
+  .documents-value {
+    font-size: 1.5rem;
+  }
+}

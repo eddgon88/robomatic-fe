@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { TopbarComponent } from './components/topbar/topbar.component';
 import { RouterModule } from '@angular/router';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { ModalComponent, NgbdModalInput, NgbdModalCodeEditor, NgbdModalShare } from './components/modal/modal.component';
 import { FormsModule } from '@angular/forms';
@@ -32,12 +31,7 @@ import { HasPermissionDirective } from './directives/has-permission.directive';
     HasPermissionDirective
   ],
   imports: [
-    BrowserAnimationsModule,
-    ToastrModule.forRoot({
-      timeOut: 150000, // 15 seconds
-      closeButton: true,
-      progressBar: true,
-    }),
+    ToastrModule,
     CommonModule,
     RouterModule,
     FormsModule,

@@ -10,6 +10,9 @@
     "websockify": "node tools/websockify-js/websockify/websockify.js"
   },
   "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "@angular/animations": "^17.3.9",
     "@angular/common": "^17.3.9",

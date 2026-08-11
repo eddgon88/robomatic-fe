@@ -10,8 +10,15 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ========================================
@@ -199,7 +206,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ========================================
@@ -471,6 +480,7 @@
   background: rgba(76, 175, 80, 0.15);
   color: #4caf50;
 }
+
 .action-btn.execute:hover:not(:disabled) {
   background: rgba(76, 175, 80, 0.25);
   transform: scale(1.1);
@@ -480,6 +490,7 @@
   background: rgba(244, 67, 54, 0.15);
   color: #f44336;
 }
+
 .action-btn.stop:hover:not(:disabled) {
   background: rgba(244, 67, 54, 0.25);
   transform: scale(1.1);
@@ -489,6 +500,7 @@
   background: rgba(33, 150, 243, 0.15);
   color: #2196f3;
 }
+
 .action-btn.edit:hover:not(:disabled) {
   background: rgba(33, 150, 243, 0.25);
   transform: scale(1.1);
@@ -498,17 +510,40 @@
   background: rgba(156, 39, 176, 0.15);
   color: #ce93d8;
 }
+
 .action-btn.evidence:hover:not(:disabled) {
   background: rgba(156, 39, 176, 0.25);
   transform: scale(1.1);
 }
 
 .action-btn.schedule {
+  background: rgba(150, 150, 150, 0.1);
+  color: rgba(150, 150, 150, 0.5);
+}
+
+.action-btn.schedule:hover:not(:disabled) {
+  background: rgba(255, 152, 0, 0.15);
+  color: #ff9800;
+  transform: scale(1.1);
+}
+
+.action-btn.schedule.schedule-active {
   background: rgba(255, 152, 0, 0.15);
   color: #ff9800;
 }
-.action-btn.schedule:hover:not(:disabled) {
+
+.action-btn.schedule.schedule-active:hover:not(:disabled) {
   background: rgba(255, 152, 0, 0.25);
+  transform: scale(1.1);
+}
+
+.action-btn.limit {
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+}
+
+.action-btn.limit:hover:not(:disabled) {
+  background: rgba(168, 85, 247, 0.25);
   transform: scale(1.1);
 }
 
@@ -516,6 +551,7 @@
   background: rgba(244, 67, 54, 0.1);
   color: #ef5350;
 }
+
 .action-btn.delete:hover:not(:disabled) {
   background: rgba(244, 67, 54, 0.2);
   transform: scale(1.1);
@@ -525,6 +561,7 @@
   background: rgba(0, 221, 235, 0.15);
   color: #00ddeb;
 }
+
 .action-btn.share:hover:not(:disabled) {
   background: rgba(0, 221, 235, 0.25);
   transform: scale(1.1);
@@ -534,6 +571,7 @@
   background: rgba(76, 175, 80, 0.15);
   color: #81c784;
 }
+
 .action-btn.vnc:hover:not(:disabled) {
   background: rgba(76, 175, 80, 0.25);
   transform: scale(1.1);
@@ -580,13 +618,27 @@
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 @keyframes pulseRing {
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(1.5); opacity: 0; }
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
 }
 
 .state-badge.success {
@@ -880,4 +932,3 @@
     height: 34px;
   }
 }
-

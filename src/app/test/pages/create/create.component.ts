@@ -9,6 +9,10 @@ import { CredentialService } from '../../services/credential.service';
 import { CredentialModel, CredentialType, CreateCredentialRequest } from '../../models/credential-model';
 import { Location } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { AiAgentService, AiAgent } from 'src/app/ai/services/ai-agent.service';
+
+import * as XLSX from 'xlsx';
+import * as Papa from 'papaparse';
 
 interface Step {
   title: string;
@@ -117,6 +121,9 @@ export class CreateComponent implements OnInit {
     value: 'column1,column2,expected\nvalue1,value2,result1\n'
   };
 
+  // Grid Data
+  gridData: string[][] = [];
+
   editorOptions = {
     contextmenu: true,
     minimap: {
@@ -127,6 +134,9 @@ export class CreateComponent implements OnInit {
     scrollBeyondLastLine: false,
     automaticLayout: true
   };
+
+  // AI Agents
+  availableAgents: AiAgent[] = [];
 
   // Data
   test = new TestModel();
@@ -141,7 +151,8 @@ export class CreateComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private navigationTestService: NavigationTestService,
-    private location: Location
+    private location: Location,
+    private aiAgentService: AiAgentService
   ) { }
 
   ngOnInit(): void {
@@ -157,6 +168,35 @@ export class CreateComponent implements OnInit {
     if (this.path === 'edit') {
       this.getTest();
     }
+    this.loadAvailableAgents();
+  }
+
+  loadAvailableAgents(): void {
+    this.aiAgentService.getAvailableAgents().subscribe({
+      next: (response) => {
+        this.availableAgents = response;
+      },
+      error: (err) => {
+        console.error('Error loading AI agents:', err);
+      }
+    });
+  }
+
+  toggleAgentSelection(agentId: number): void {
+    if (!this.test.agent_ids) {
+      this.test.agent_ids = [];
+    }
+    
+    const index = this.test.agent_ids.indexOf(agentId);
+    if (index > -1) {
+      this.test.agent_ids.splice(index, 1);
+    } else {
+      this.test.agent_ids.push(agentId);
+    }
+  }
+
+  isAgentSelected(agentId: number): boolean {
+    return this.test.agent_ids ? this.test.agent_ids.includes(agentId) : false;
   }
 
   // ========================================
@@ -258,6 +298,143 @@ export class CreateComponent implements OnInit {
 
   onTestCasesCodeChanged(value: string): void {
     this.test.test_cases = value;
+    this.csvToGrid(value);
+  }
+
+  // ========================================
+  // GRID MANAGEMENT
+  // ========================================
+
+  csvToGrid(csv: string): void {
+    if (!csv) {
+      this.gridData = [['column1'], ['']];
+      return;
+    }
+    const result = Papa.parse(csv, { skipEmptyLines: true });
+    this.gridData = result.data as string[][];
+    
+    // Ensure at least one header and one row
+    if (this.gridData.length === 0) {
+      this.gridData = [['column1'], ['']];
+    } else if (this.gridData.length === 1) {
+      this.gridData.push(new Array(this.gridData[0].length).fill(''));
+    }
+  }
+
+  gridToCsv(): string {
+    if (this.gridData.length === 0) return '';
+    return Papa.unparse(this.gridData);
+  }
+
+  addRow(): void {
+    const numCols = this.gridData[0].length;
+    this.gridData.push(new Array(numCols).fill(''));
+    this.syncGrid();
+  }
+
+  removeRow(index: number): void {
+    if (this.gridData.length > 2) { // Keep header + at least one row
+      this.gridData.splice(index, 1);
+      this.syncGrid();
+    } else if (index > 0) {
+      // Clear the only data row instead of removing it
+      this.gridData[1] = new Array(this.gridData[0].length).fill('');
+      this.syncGrid();
+    }
+  }
+
+  addColumn(): void {
+    const newColName = `column${this.gridData[0].length + 1}`;
+    this.gridData.forEach(row => row.push(''));
+    this.gridData[0][this.gridData[0].length - 1] = newColName;
+    this.syncGrid();
+  }
+
+  removeColumn(index: number): void {
+    if (this.gridData[0].length > 1) {
+      this.gridData.forEach(row => row.splice(index, 1));
+      this.syncGrid();
+    }
+  }
+
+  onCellChange(rowIndex: number, colIndex: number, event: any): void {
+    this.gridData[rowIndex][colIndex] = event.target.value;
+    this.syncGrid();
+  }
+
+  syncGrid(): void {
+    this.test.test_cases = this.gridToCsv();
+    // Update model value if we want to keep the editor (optional)
+    this.casesCodeModel = {
+      ...this.casesCodeModel,
+      value: this.test.test_cases
+    };
+  }
+
+  onImportFile(event: any): void {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const name = file.name.toLowerCase();
+    if (name.endsWith('.csv')) {
+      Papa.parse(file, {
+        complete: (results) => {
+          this.handleImportedData(results.data as string[][]);
+          this.notificationService.showSuccess('CSV imported successfully');
+        },
+        skipEmptyLines: true
+      });
+    } else if (name.endsWith('.xlsx') || name.endsWith('.xls')) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as string[][];
+        
+        if (jsonData.length > 0) {
+          this.handleImportedData(jsonData);
+          this.notificationService.showSuccess('Excel imported successfully');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+    
+    // Reset input
+    event.target.value = '';
+  }
+
+  handleImportedData(data: string[][]): void {
+    if (!data || data.length === 0) return;
+
+    if (this.isExecutorOnly) {
+      // Keep existing headers
+      const existingHeaders = this.gridData[0];
+      const numCols = existingHeaders.length;
+      
+      // Skip the first row of imported data (assumed to be headers)
+      const importedDataRows = data.slice(1);
+      
+      const processedRows = importedDataRows.map(row => {
+        const newRow = new Array(numCols).fill('');
+        for (let i = 0; i < numCols && i < row.length; i++) {
+          newRow[i] = row[i];
+        }
+        return newRow;
+      });
+      
+      this.gridData = [existingHeaders, ...processedRows];
+    } else {
+      // Owners/Editors can override headers
+      this.gridData = data;
+    }
+    
+    this.syncGrid();
+  }
+
+  trackByFn(index: number, item: any): any {
+    return index;
   }
 
   // ========================================
@@ -270,7 +447,7 @@ export class CreateComponent implements OnInit {
       return;
     }
 
-    this.test.test_cases = btoa(this.test.test_cases);
+    this.test.test_cases = btoa(this.gridToCsv());
     this.test.folder_id = this.folder;
     
     this.testService.create(this.test).subscribe({
@@ -297,7 +474,7 @@ export class CreateComponent implements OnInit {
       return;
     }
 
-    this.test.test_cases = btoa(this.test.test_cases);
+    this.test.test_cases = btoa(this.gridToCsv());
     this.test.folder_id = this.folder;
     
     this.testService.update(this.test).subscribe({
@@ -319,6 +496,7 @@ export class CreateComponent implements OnInit {
       next: (response) => {
         this.test = response;
         this.test.test_cases = atob(this.test.test_cases);
+        this.csvToGrid(this.test.test_cases);
         this.updateCasesModelValue(this.test.test_cases);
         this.updateScriptModelValue(this.test.script);
         this.updateAfterScriptModelValue(this.test.after_script);

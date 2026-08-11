@@ -12,4 +12,5 @@ export interface Test {
     last_execution_state: string;
     is_running:           boolean;
     description:          string;
+    agent_ids:            number[];
 }

@@ -1,5 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ModalService } from 'src/app/shared/services/modal.service';
 
@@ -10,13 +12,16 @@ import { FolderService } from '../../services/folder.service';
 import { NavigationTestService } from '../../services/navigation-test.service';
 import { TestService } from '../../services/test.service';
 import { Permission, EXECUTE_PERMISSIONS, EDIT_PERMISSIONS, VIEW_PERMISSIONS } from 'src/app/shared/enums/permission.enum';
+import { ScheduleCreateEditComponent } from 'src/app/scheduler/pages/create-edit/create-edit.component';
+import { ScheduleService } from 'src/app/scheduler/services/schedule.service';
+import { Schedule } from 'src/app/scheduler/interfaces/schedule.interface';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -26,6 +31,8 @@ export class HomeComponent implements OnInit {
     private folderService: FolderService,
     private navigationTestService: NavigationTestService,
     private userService: UserService,
+    private modal: NgbModal,
+    private scheduleService: ScheduleService,
     private cdr: ChangeDetectorRef) { }
 
   // Constantes de permisos para usar en el template
@@ -41,6 +48,10 @@ export class HomeComponent implements OnInit {
   inLoad: boolean = false;
   canCreateTest: boolean = false;
   canSchedule: boolean = false;
+
+  // Map to track which tests have active schedules
+  testSchedules: Map<number, boolean> = new Map();
+  private navigationSub: Subscription | undefined;
 
   // ========================================
   // HELPER METHODS FOR STATS
@@ -71,16 +82,26 @@ export class HomeComponent implements OnInit {
     return name.substring(0, 2).toUpperCase();
   }
 
+  hasActiveSchedule(testId: number): boolean {
+    return this.testSchedules.get(testId) === true;
+  }
+
   ngOnInit(): void {
     this.checkUserRole();
     this.updateDisplayedColumns()
     this.getRecords();
 
-    this.navigationTestService.suscribe(folderId => {
+    this.navigationSub = this.navigationTestService.suscribe(folderId => {
       this.folder = folderId;
       this.getRecords();
     });
 
+  }
+
+  ngOnDestroy(): void {
+    if (this.navigationSub) {
+      this.navigationSub.unsubscribe();
+    }
   }
 
   private checkUserRole(): void {
@@ -89,9 +110,10 @@ export class HomeComponent implements OnInit {
       if (token) {
         const payload = this.decodeToken(token);
         if (payload && payload.role) {
-          this.canCreateTest = payload.role === 'ADMIN' || payload.role === 'ANALYST';
+          const role = (typeof payload.role === 'string' ? payload.role : payload.role.name || '').toUpperCase();
+          this.canCreateTest = role === 'ADMIN' || role === 'ANALYST' || role === 'SUPER_ADMIN' || role === 'SUPER ADMIN';
           // Scheduler disponible para todos excepto VIEWER
-          this.canSchedule = payload.role !== 'VIEWER';
+          this.canSchedule = role !== 'VIEWER';
         }
       }
     } catch (error) {
@@ -129,11 +151,30 @@ export class HomeComponent implements OnInit {
     this.testService.getRecordList(this.folder).subscribe(
       resp => {
         this.dataSource.data = resp;
+        this.loadSchedulesForTests();
       }, (err) => {
         console.log(err)
       }
     )
     this.inLoad = false;
+  }
+
+  private loadSchedulesForTests(): void {
+    // Fetch all schedules and build a map of testId -> hasSchedule
+    this.scheduleService.getAllSchedules().subscribe({
+      next: (response) => {
+        this.testSchedules.clear();
+        response.schedules.forEach(schedule => {
+          if (schedule.status === 'active') {
+            this.testSchedules.set(schedule.test_id, true);
+          }
+        });
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error loading schedules:', err);
+      }
+    });
   }
 
   execute(test: TestRecord): void {
@@ -327,6 +368,49 @@ export class HomeComponent implements OnInit {
       error: (err) => {
         console.error('Error loading users:', err);
         this.notificationService.showError('Error al cargar usuarios');
+      }
+    });
+  }
+
+  openScheduleModal(test: TestRecord): void {
+    // Check if there's an existing schedule for this test
+    this.scheduleService.getScheduleByTestId(test.id).subscribe({
+      next: (existingSchedule) => {
+        // Existing schedule found - open in edit mode
+        this.openScheduleModalWithData(test, existingSchedule);
+      },
+      error: (err) => {
+        // No existing schedule - open in create mode
+        this.openScheduleModalWithData(test, null);
+      }
+    });
+  }
+
+  private openScheduleModalWithData(test: TestRecord, existingSchedule: Schedule | null): void {
+    const modalRef = this.modal.open(ScheduleCreateEditComponent, { size: 'lg', windowClass: 'dark-modal' });
+    modalRef.componentInstance.isModal = true;
+    modalRef.componentInstance.preSelectedTestId = test.id;
+    modalRef.componentInstance.preSelectedTestName = test.name;
+
+    if (existingSchedule) {
+      modalRef.componentInstance.existingSchedule = existingSchedule;
+    }
+
+    modalRef.result.then((result) => {
+      // Reload schedules to update button states
+      this.loadSchedulesForTests();
+    }, (reason) => {
+      // Modal dismissed - still reload in case pause/resume was clicked
+      this.loadSchedulesForTests();
+    });
+  }
+
+  openExecutionLimitModal(test: TestRecord): void {
+    this.modalService.modalExecutionLimit(test.id, test.name).then((result) => {
+      if (result) {
+        this.notificationService.showSuccess("Límite de ejecución actualizado");
+        // We don't necessarily need to reload records as this doesn't affect the list display,
+        // but it's good practice if we want to be 100% sure.
       }
     });
   }

@@ -42,7 +42,18 @@
       </a>
     </div>
 
+    <div class="nav-section" *ngIf="canManageAi">
+      <span class="nav-section-title">AI</span>
+      
+      <a routerLink="/ai/agents" routerLinkActive="active" class="nav-item">
+        <i class="bi bi-robot nav-icon"></i>
+        <span class="nav-text">Agents</span>
+      </a>
+    </div>
+
+
     <div class="nav-section" *ngIf="isAdmin">
+
       <span class="nav-section-title">Settings</span>
       
       <a href="javascript:void(0)" class="nav-item disabled">

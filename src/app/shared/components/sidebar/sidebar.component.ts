@@ -10,6 +10,8 @@ export class SidebarComponent implements OnInit {
   isAdmin: boolean = false;
   canCreateTest: boolean = false;
   canSchedule: boolean = false;
+  canManageAi: boolean = false;
+
 
   constructor() { }
 
@@ -23,11 +25,16 @@ export class SidebarComponent implements OnInit {
       if (token) {
         const payload = this.decodeToken(token);
         if (payload && payload.role) {
-          this.isAdmin = payload.role === 'ADMIN';
-          this.canCreateTest = payload.role === 'ADMIN' || payload.role === 'ANALYST';
+          const role = (typeof payload.role === 'string' ? payload.role : payload.role.name || '').toUpperCase();
+          
+          this.isAdmin = role === 'ADMIN' || role === 'SUPER_ADMIN' || role === 'SUPER ADMIN';
+          this.canCreateTest = role === 'ADMIN' || role === 'ANALYST' || role === 'SUPER_ADMIN' || role === 'SUPER ADMIN' || role === 'analyst'.toUpperCase();
           // Scheduler disponible para todos excepto VIEWER
-          this.canSchedule = payload.role !== 'VIEWER';
+          this.canSchedule = role !== 'VIEWER';
+          // AI disponible para ADMIN, ANALYST y Super Admin
+          this.canManageAi = role === 'ADMIN' || role === 'ANALYST' || role === 'SUPER_ADMIN' || role === 'SUPER ADMIN';
         }
+
       }
     } catch (error) {
       console.error('Error checking user role:', error);

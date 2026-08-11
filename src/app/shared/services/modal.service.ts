@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NgbActiveModal, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-import { NgbdModalConfirm, NgbdModalInput, NgbdModalCodeEditor, NgbdModalWebWatcher, NgbdModalShare, UserForSharing, ShareResult, NgbdGenericConfirm } from '../components/modal/modal.component';
+import { NgbdModalConfirm, NgbdModalInput, NgbdModalCodeEditor, NgbdModalWebWatcher, NgbdModalShare, NgbdGenericConfirm, NgbdModalExecutionLimit, NgbdModalMarkdownViewer } from '../components/modal/modal.component';
+import { UserForSharing, ShareResult } from '../services/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -66,6 +67,12 @@ export class ModalService {
 
   }
 
+  async modalMarkdownViewer(content: string, fileName: string): Promise<any> {
+    const modalRef = this._modalService.open(NgbdModalMarkdownViewer, { size: 'lg', scrollable: true });
+    modalRef.componentInstance.content = content;
+    modalRef.componentInstance.fileName = fileName;
+  }
+
   async modalWebWatcher(host: string, port: string): Promise<any> {
 
     let modalOptions: NgbModalOptions = {
@@ -104,6 +111,22 @@ export class ModalService {
         (reason) => {
           resolve(false);
         },
+      );
+    });
+  }
+
+  async modalExecutionLimit(testId: number, itemName: string): Promise<boolean> {
+    return await new Promise(resolve => {
+      const modalRef = this._modalService.open(NgbdModalExecutionLimit);
+      modalRef.componentInstance.testId = testId;
+      modalRef.componentInstance.itemName = itemName;
+      modalRef.result.then(
+        (result) => {
+          resolve(result === true);
+        },
+        (reason) => {
+          resolve(false);
+        }
       );
     });
   }

@@ -28,8 +28,29 @@ const routes: Routes = [
         loadChildren: () => SchedulerRoutingModule,
         canActivate: [AuthenticationGuard],
         data: { breadcrumb: 'Scheduler' }
+      },
+      {
+        path: 'ai',
+        children: [
+          {
+            path: 'agents',
+            loadComponent: () => import('./ai/pages/home/home.component').then(m => m.AiHomeComponent),
+            data: { breadcrumb: 'Agents' }
+          },
+          {
+            path: 'agents/create',
+            loadComponent: () => import('./ai/pages/create-edit/create-edit.component').then(m => m.AiCreateEditComponent)
+          },
+          {
+            path: 'agents/edit/:id',
+            loadComponent: () => import('./ai/pages/create-edit/create-edit.component').then(m => m.AiCreateEditComponent)
+          }
+        ],
+        canActivate: [AuthenticationGuard]
       }
+
     ]
+
   },
   {
     path: 'login',

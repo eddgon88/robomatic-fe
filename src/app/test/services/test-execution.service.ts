@@ -26,4 +26,27 @@ export class TestExecutionService {
     )
   }
 
+  getFileNames(executionId: string): Observable<FileEvidence[]> {
+    const url = bff.protocol + bff.host + bff.getFileEvidenceNames.replace('{0}', executionId);
+    return this.http.get<FileEvidence[]>(url).pipe(
+      catchError(err => throwError(err))
+    );
+  }
+
+  getFileContent(executionId: string, fileName: string): Observable<FileEvidence> {
+    const url = bff.protocol + bff.host + bff.getFileEvidenceContent
+      .replace('{0}', executionId)
+      .replace('{1}', fileName);
+    return this.http.get<FileEvidence>(url).pipe(
+      catchError(err => throwError(err))
+    );
+  }
+
+  downloadAllEvidences(executionId: string): Observable<Blob> {
+    const url = bff.protocol + bff.host + bff.downloadAllEvidences.replace('{0}', executionId);
+    return this.http.get(url, { responseType: 'blob' }).pipe(
+      catchError(err => throwError(err))
+    );
+  }
+
 }

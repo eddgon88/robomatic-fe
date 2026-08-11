@@ -89,4 +89,28 @@ export class TestService {
     )
   }
 
+  getExecutionCounter(testId: number, year?: number, month?: number): Observable<any> {
+    let url = bff.protocol + bff.host + bff.getExecutionCounter.replace('{0}', testId + '');
+    if (year && month) {
+      url += `?year=${year}&month=${month}`;
+    }
+    return this.http.get<any>(url).pipe(
+      catchError(err => {return throwError(err)})
+    )
+  }
+
+  updateExecutionCounter(testId: number, maxExecutions: number, year?: number, month?: number): Observable<any> {
+    const url = bff.protocol + bff.host + bff.updateExecutionCounter;
+    const body: any = { 
+      test_id: testId, 
+      max_executions: maxExecutions 
+    };
+    if (year) body.year = year;
+    if (month) body.month = month;
+    
+    return this.http.post<any>(url, body).pipe(
+      catchError(err => {return throwError(err)})
+    )
+  }
+
 }

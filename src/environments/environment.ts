@@ -35,6 +35,9 @@ export const bff = {
   getExecutionRecords: '/test-execution/list/{0}',
   /**File List */
   getFileEvidences: '/evidence/{0}',
+  getFileEvidenceNames: '/evidence/names/{0}',
+  getFileEvidenceContent: '/evidence/{0}/file/{1}',
+  downloadAllEvidences: '/evidence/{0}/download-all',
   /**login */
   login: '/auth/login',
   /**sing up */
@@ -84,8 +87,34 @@ export const bff = {
   /**Pause schedule */
   pauseSchedule: '/schedules/{0}/pause',
   /**Resume schedule */
-  resumeSchedule: '/schedules/{0}/resume'
+  resumeSchedule: '/schedules/{0}/resume',
+
+  /** Permissions */
+  getTestPermissions: '/action/permissions/test/{0}',
+  getFolderPermissions: '/action/permissions/folder/{0}',
+  revokePermission: '/action/permission/{0}',
+
+  /** Execution Counters */
+  getExecutionCounter: '/execution-counter/{0}',
+  updateExecutionCounter: '/execution-counter/update',
+
+  /** AI Agents */
+  getAiAgents: '/ai/agent/list/{0}',
+  createAiAgent: '/ai/agent/create',
+  updateAiAgent: '/ai/agent/update',
+  getAiAgent: '/ai/agent/{0}',
+  deleteAiAgent: '/ai/agent/delete/{0}',
+  createAiAgentFolder: '/ai/agent/folder/create',
+  deleteAiAgentFolder: '/ai/agent/folder/delete/{0}',
+  getAiAgentPermissions: '/action/permissions/ai-agent/{0}',
+  getAiAgentFolderPermissions: '/action/permissions/ai-agent-folder/{0}',
+  getUsersForSharingAiAgent: '/user/list/ai-agent/{0}',
+  getUsersForSharingAiAgentFolder: '/user/list/ai-agent-folder/{0}',
+  getAvailableAiAgents: '/ai/agent/available',
+  getAiInteractions: '/ai-interactions/execution/{0}'
 }
+
+
 
 /*
  * For easier debugging in development mode, you can import the following file

@@ -9,7 +9,7 @@
         </h1>
         <p class="header-subtitle">Manage and execute your automated tests</p>
       </div>
-      
+
       <div class="header-actions">
         <button class="btn-secondary" (click)="createFolderModal()">
           <i class="bi bi-folder-plus"></i>
@@ -87,7 +87,7 @@
   <!-- Data Table -->
   <div class="table-container" *ngIf="!inLoad && dataSource.data.length > 0">
     <table mat-table [dataSource]="dataSource" class="data-table">
-      
+
       <!-- Name Column -->
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Name</th>
@@ -160,81 +160,71 @@
             <!-- ========== TEST ACTIONS ========== -->
             <ng-container *ngIf="element.type === 'test'">
               <!-- Execute (visible en mobile) -->
-              <button *hasPermission="executePermissions; for: element; whenRunning: false" 
-                      class="action-btn execute"
-                      (click)="execute(element)"
-                      title="Execute test">
+              <button *hasPermission="executePermissions; for: element; whenRunning: false" class="action-btn execute"
+                (click)="execute(element)" title="Execute test">
                 <i class="bi bi-play-fill"></i>
               </button>
-              
+
               <!-- Stop (visible en mobile) -->
-              <button *hasPermission="executePermissions; for: element; whenRunning: true" 
-                      class="action-btn stop"
-                      (click)="stop(element)"
-                      title="Stop execution">
+              <button *hasPermission="executePermissions; for: element; whenRunning: true" class="action-btn stop"
+                (click)="stop(element)" title="Stop execution">
                 <i class="bi bi-stop-fill"></i>
               </button>
-              
+
               <!-- Edit (oculto en mobile) - Visible para owner, edit y execute -->
-              <button *hasPermission="executePermissions; for: element; whenRunning: false" 
-                      class="action-btn edit hide-mobile"
-                      [routerLink]="'/tests/edit/'+element.id"
-                      title="Edit test">
+              <button *hasPermission="executePermissions; for: element; whenRunning: false"
+                class="action-btn edit hide-mobile" [routerLink]="'/tests/edit/'+element.id" title="Edit test">
                 <i class="bi bi-pencil-fill"></i>
               </button>
-              
+
               <!-- Evidences (oculto en mobile) -->
-              <button *hasPermission="viewPermissions; for: element; whenRunning: false" 
-                      class="action-btn evidence hide-mobile"
-                      [routerLink]="'/tests/evidence/'+element.id"
-                      title="View evidences">
+              <button *hasPermission="viewPermissions; for: element; whenRunning: false"
+                class="action-btn evidence hide-mobile" [routerLink]="'/tests/evidence/'+element.id"
+                title="View evidences">
                 <i class="bi bi-archive-fill"></i>
               </button>
-              
+
               <!-- Schedule (oculto en mobile) -->
-              <button *ngIf="canSchedule"
-                      class="action-btn schedule hide-mobile"
-                      title="Schedule (coming soon)"
-                      disabled>
+              <button *hasPermission="executePermissions; for: element; whenRunning: false" class="action-btn schedule hide-mobile"
+                [ngClass]="{'schedule-active': hasActiveSchedule(element.id)}" (click)="openScheduleModal(element)"
+                title="Schedule">
                 <i class="bi bi-clock-fill"></i>
               </button>
-              
+
+              <!-- Execution Limit (oculto en mobile) -->
+              <button *hasPermission="editPermissions; for: element" class="action-btn limit hide-mobile"
+                (click)="openExecutionLimitModal(element)" title="Execution Limits">
+                <i class="bi bi-shield-lock-fill"></i>
+              </button>
+
               <!-- Delete (oculto en mobile) -->
-              <button *hasPermission="editPermissions; for: element; whenRunning: false" 
-                      class="action-btn delete hide-mobile"
-                      (click)="deleteRecord(element)"
-                      title="Delete test">
+              <button *hasPermission="editPermissions; for: element; whenRunning: false"
+                class="action-btn delete hide-mobile" (click)="deleteRecord(element)" title="Delete test">
                 <i class="bi bi-trash3-fill"></i>
               </button>
-              
+
               <!-- VNC Watcher (Web tests only - visible en mobile) -->
               <ng-container *ngIf="element.web">
-                <button *hasPermission="executePermissions; for: element; whenRunning: true" 
-                        class="action-btn vnc"
-                        (click)="webWatcherModal(element)"
-                        title="Watch live execution">
+                <button *hasPermission="executePermissions; for: element; whenRunning: true" class="action-btn vnc"
+                  (click)="webWatcherModal(element)" title="Watch live execution">
                   <i class="bi bi-eye-fill"></i>
                 </button>
               </ng-container>
             </ng-container>
-            
+
             <!-- ========== FOLDER ACTIONS ========== -->
             <ng-container *ngIf="element.type === 'folder'">
               <!-- Delete (oculto en mobile) -->
-              <button *hasPermission="ownerPermission; for: element" 
-                      class="action-btn delete hide-mobile"
-                      (click)="deleteRecord(element)"
-                      title="Delete folder">
+              <button *hasPermission="ownerPermission; for: element" class="action-btn delete hide-mobile"
+                (click)="deleteRecord(element)" title="Delete folder">
                 <i class="bi bi-trash3-fill"></i>
               </button>
             </ng-container>
-            
+
             <!-- ========== SHARED ACTIONS ========== -->
             <!-- Share (visible en mobile para owners) -->
-            <button *hasPermission="ownerPermission; for: element; whenRunning: false" 
-                    class="action-btn share"
-                    (click)="shareWithPreload(element)"
-                    [title]="element.type === 'folder' ? 'Share folder' : 'Share test'">
+            <button *hasPermission="ownerPermission; for: element; whenRunning: false" class="action-btn share"
+              (click)="shareWithPreload(element)" [title]="element.type === 'folder' ? 'Share folder' : 'Share test'">
               <i class="bi bi-share-fill"></i>
             </button>
           </div>
@@ -250,45 +240,44 @@
             <span *ngIf="element.type === 'folder'" class="state-badge folder" title="Folder">
               <i class="bi bi-folder-fill"></i>
             </span>
-            
+
             <!-- Running -->
             <span *ngIf="element.type === 'test' && element.is_running" class="state-badge running" title="Running">
               <span class="pulse-ring"></span>
               <i class="bi bi-activity"></i>
             </span>
-            
+
             <!-- Success -->
-            <span *ngIf="element.type === 'test' && !element.is_running && element.last_execution_state === 'success'" 
-                  class="state-badge success" title="Passed">
+            <span *ngIf="element.type === 'test' && !element.is_running && element.last_execution_state === 'success'"
+              class="state-badge success" title="Passed">
               <i class="bi bi-check-lg"></i>
             </span>
-            
+
             <!-- Failed -->
-            <span *ngIf="element.type === 'test' && !element.is_running && element.last_execution_state === 'failed'" 
-                  class="state-badge failed" title="Failed">
+            <span *ngIf="element.type === 'test' && !element.is_running && element.last_execution_state === 'failed'"
+              class="state-badge failed" title="Failed">
               <i class="bi bi-x-lg"></i>
             </span>
-            
+
             <!-- Stopped -->
-            <span *ngIf="element.type === 'test' && !element.is_running && element.last_execution_state === 'stopped'" 
-                  class="state-badge stopped" title="Stopped">
+            <span *ngIf="element.type === 'test' && !element.is_running && element.last_execution_state === 'stopped'"
+              class="state-badge stopped" title="Stopped">
               <i class="bi bi-dash-lg"></i>
             </span>
-            
+
             <!-- No execution yet -->
-            <span *ngIf="element.type === 'test' && !element.is_running && !element.last_execution_state" 
-                  class="state-badge pending" title="Not executed yet">
+            <span *ngIf="element.type === 'test' && !element.is_running && !element.last_execution_state"
+              class="state-badge pending" title="Not executed yet">
               <i class="bi bi-circle"></i>
             </span>
           </div>
         </td>
       </ng-container>
-      
+
       <!-- Header & Rows -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns" 
-          [class.running]="row.is_running"
-          [class.folder-row]="row.type === 'folder'"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" [class.running]="row.is_running"
+        [class.folder-row]="row.type === 'folder'"></tr>
     </table>
   </div>
 </div>

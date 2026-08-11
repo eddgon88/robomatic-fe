@@ -1,0 +1,100 @@
+<div class="modal-header execution-limit-header">
+  <div class="header-icon">
+    <i class="bi bi-shield-lock-fill"></i>
+  </div>
+  <h4 class="modal-title">Configuración de Límites</h4>
+  <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="modal.dismiss()"></button>
+</div>
+
+<div class="modal-body execution-limit-body">
+  <div class="test-header-compact">
+    <div class="test-icon">
+      <i class="bi bi-file-earmark-text"></i>
+    </div>
+    <div class="test-info-text">
+      <span class="test-label">Test</span>
+      <span class="test-name">{{ itemName }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Cargando información...</p>
+  </div>
+
+  <div *ngIf="!loading" class="limit-grid">
+    <div class="limit-stat-card current">
+      <div class="stat-icon">
+        <i class="bi bi-play-fill"></i>
+      </div>
+      <div class="stat-data">
+        <span class="stat-label">Ejecuciones este mes</span>
+        <span class="stat-value">{{ counterData?.current_executions || 0 }}</span>
+      </div>
+    </div>
+
+    <div class="limit-stat-card remaining" [ngClass]="{'unlimited-mode': counterData?.max_executions === 0}">
+      <div class="stat-icon">
+        <i class="bi bi-hourglass-split"></i>
+      </div>
+      <div class="stat-data">
+        <span class="stat-label">Capacidad restante</span>
+        <span class="stat-value">
+          {{ counterData?.max_executions === 0 ? 'Ilimitado' : (counterData?.max_executions || 0) - (counterData?.current_executions || 0) }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading" class="config-container">
+    <div class="config-header">
+      <i class="bi bi-calendar-event"></i>
+      <span>Seleccionar Período</span>
+    </div>
+    
+    <div class="month-selector-wrapper">
+      <label class="custom-label">Mes a configurar ({{ selectedYear }})</label>
+      <select class="custom-input" [(ngModel)]="selectedMonth" (change)="onMonthChange()">
+        <option *ngFor="let month of availableMonths" [ngValue]="month.value">
+          {{ month.label }}
+        </option>
+      </select>
+    </div>
+
+    <div class="divider-dashed"></div>
+
+    <div class="config-header">
+      <i class="bi bi-gear-fill"></i>
+      <span>Configuración de cuota</span>
+    </div>
+    
+    <div class="input-wrapper">
+      <label for="maxExecutions" class="custom-label">Número máximo de ejecuciones</label>
+      <div class="custom-input-group">
+        <input 
+          type="number" 
+          id="maxExecutions" 
+          class="custom-input" 
+          [(ngModel)]="newLimit" 
+          min="0"
+          placeholder="Ej: 100">
+        <div class="input-helper">
+          <i class="bi bi-info-circle"></i> 
+          <span>Indica 0 para permitir ejecuciones sin límite.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer execution-limit-footer">
+  <button type="button" class="btn-cancel" (click)="modal.dismiss()">Cancelar</button>
+  <button 
+    type="button" 
+    class="btn-save" 
+    (click)="save()" 
+    [disabled]="saving || loading">
+    <span *ngIf="!saving">Guardar Cambios</span>
+    <span *ngIf="saving" class="spinner-small"></span>
+  </button>
+</div>

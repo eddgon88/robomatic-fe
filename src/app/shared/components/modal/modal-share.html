@@ -13,29 +13,25 @@
       <span><strong>{{ itemName }}</strong></span>
     </div>
   </div>
-  
+
   <!-- User selector -->
   <div class="mb-3">
     <label for="userSelect" class="form-label">Select User</label>
-    
+
     <!-- Loading state -->
     <div *ngIf="loadingUsers" class="loading-users">
       <span class="spinner-border spinner-border-sm"></span>
       <span>Loading users...</span>
     </div>
-    
+
     <!-- Select -->
-    <select 
-      *ngIf="!loadingUsers"
-      class="form-select" 
-      id="userSelect" 
-      [(ngModel)]="selectedUserId">
+    <select *ngIf="!loadingUsers" class="form-select" id="userSelect" [(ngModel)]="selectedUserId">
       <option [ngValue]="null" disabled>Choose a user...</option>
       <option *ngFor="let user of users" [ngValue]="user.id">
         {{ user.full_name }} ({{ user.email }})
       </option>
     </select>
-    
+
     <!-- No users message -->
     <div *ngIf="users.length === 0 && !loadingUsers" class="alert alert-warning mt-2 mb-0">
       <i class="bi bi-exclamation-triangle me-1"></i>
@@ -65,17 +61,60 @@
     <i class="bi bi-info-circle me-1"></i>
     <small>The user will have <strong>Viewer</strong> access to this folder and its contents.</small>
   </div>
+
+  <!-- Loading permissions -->
+  <div *ngIf="loadingPermissions" class="text-center mt-3">
+    <div class="spinner-border spinner-border-sm text-secondary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <small class="text-muted ms-2">Loading permissions...</small>
+  </div>
+
+  <!-- Existing permissions -->
+  <div *ngIf="!loadingPermissions && permissions.length > 0" class="mt-4">
+    <h6 class="border-bottom pb-2 mb-3 text-white-50 text-uppercase"
+      style="font-size: 0.75rem; letter-spacing: 0.5px; border-color: rgba(255,255,255,0.1) !important;">Users with
+      access</h6>
+    <div class="list-group list-group-flush">
+      <div *ngFor="let perm of permissions"
+        class="list-group-item px-3 py-2 d-flex justify-content-between align-items-center mb-2"
+        style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 8px;">
+        <div class="d-flex align-items-center gap-3">
+          <div class="user-avatar-small"
+            style="width: 36px; height: 36px; font-size: 0.9rem; background: rgba(0, 221, 235, 0.1); color: #00ddeb; border: 1px solid rgba(0, 221, 235, 0.2);">
+            {{ perm.user_full_name.charAt(0).toUpperCase() }}
+          </div>
+          <div>
+            <div class="fw-bold text-light" style="font-size: 0.9rem;">{{ perm.user_full_name }}</div>
+            <small class="text-white-50" style="font-size: 0.8rem;">{{ perm.user_email }}</small>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <span class="badge" [ngClass]="{
+                  'bg-info-subtle text-info': perm.permission === 'view',
+                  'bg-warning-subtle text-warning': perm.permission === 'execute',
+                  'bg-success-subtle text-success': perm.permission === 'edit'
+                }"
+            style="font-weight: 500; letter-spacing: 0.3px; padding: 0.4em 0.8em; border: 1px solid rgba(255,255,255,0.1);">
+            {{ perm.permission | titlecase }}
+          </span>
+          <button class="btn btn-icon btn-sm text-danger p-0 opacity-75 hover-opacity-100 transition-all"
+            (click)="revoke(perm)" title="Revoke access"
+            style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: rgba(231, 77, 77, 0.1); border-radius: 6px; transition: all 0.2s;">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel')">
     <i class="bi bi-x-lg"></i>
     Cancel
   </button>
-  <button 
-    type="button" 
-    class="btn btn-primary" 
-    [disabled]="!selectedUserId || (!isFolder && !selectedPermission) || sharing"
-    (click)="share()">
+  <button type="button" class="btn btn-primary"
+    [disabled]="!selectedUserId || (!isFolder && !selectedPermission) || sharing" (click)="share()">
     <span *ngIf="sharing" class="spinner-border spinner-border-sm"></span>
     <i *ngIf="!sharing" class="bi bi-send"></i>
     {{ sharing ? 'Sharing...' : 'Share' }}

@@ -1,0 +1,33 @@
+.tab-content {
+    background: transparent;
+}
+
+.evidence-tabs {
+    background: rgba(30, 39, 70, 0.4);
+    border-radius: 12px;
+    padding: 10px;
+}
+
+.mat-mdc-tab-group {
+    --mdc-tab-indicator-active-indicator-color: #00ddeb;
+    --mat-tab-header-active-label-text-color: #00ddeb;
+}
+
+.badge {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.75rem;
+}
+
+.bg-success {
+    background-color: rgba(76, 175, 80, 0.2) !important;
+    color: #4caf50;
+    border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.bg-danger {
+    background-color: rgba(244, 67, 54, 0.15) !important;
+    color: #ef5350;
+    border: 1px solid rgba(244, 67, 54, 0.3);
+}

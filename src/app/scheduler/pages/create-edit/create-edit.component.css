@@ -76,7 +76,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ============================================
@@ -475,10 +477,59 @@ textarea.form-input {
     flex-direction: column;
   }
 
-  .btn-cancel, .btn-save {
+  .btn-cancel,
+  .btn-save {
     width: 100%;
     justify-content: center;
   }
 }
 
+/* ============================================
+   PAUSE/RESUME BUTTONS
+   ============================================ */
+.schedule-status-actions {
+  display: flex;
+  gap: 8px;
+  margin-right: auto;
+}
 
+.btn-pause,
+.btn-resume {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-pause {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #fff;
+}
+
+.btn-pause:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+}
+
+.btn-resume {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #fff;
+}
+
+.btn-resume:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.btn-pause:disabled,
+.btn-resume:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}

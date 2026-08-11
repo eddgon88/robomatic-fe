@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { HomeComponent } from './pages/home/home.component';
 import { CreateComponent } from './pages/create/create.component';
@@ -30,6 +31,7 @@ import { MatMenuModule } from '@angular/material/menu';
   imports: [
     CommonModule,
     MatTableModule,
+    MatTabsModule,
     SharedModule,
     TestRoutingModule,
     RouterModule,

@@ -1,0 +1,111 @@
+<div class="create-container">
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="header-left">
+      <button class="btn-back" (click)="goBack()" title="Go back">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+      <div class="header-info">
+        <h1>{{ isEdit ? 'Edit Agent' : 'Create New Agent' }}</h1>
+        <p>{{ isEdit ? 'Modify your agent configuration' : 'Define a new autonomous AI agent' }}</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="step-content">
+    <div class="step-panel">
+      <div class="panel-header">
+        <div class="panel-icon info" [ngClass]="{'is-edit': isEdit}">
+          <i class="bi" [ngClass]="isEdit ? 'bi-pencil-square' : 'bi-robot'"></i>
+        </div>
+        <div class="panel-title">
+          <h2>Agent Configuration</h2>
+          <p>Set the personality and technical parameters for your agent</p>
+        </div>
+      </div>
+
+      <form [formGroup]="agentForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <!-- Name -->
+          <div class="form-group full-width">
+            <label for="name"><i class="bi bi-tag"></i> Agent Name <span class="required">*</span></label>
+            <input type="text" id="name" formControlName="name" class="form-input" placeholder="e.g. researcher_agent">
+            <span class="form-hint">Unique identifier for this agent. Use letters, numbers, spaces, underscores and hyphens.</span>
+          </div>
+
+          <!-- Role -->
+          <div class="form-group full-width">
+            <label for="role"><i class="bi bi-briefcase"></i> Role <span class="required">*</span></label>
+            <input type="text" id="role" formControlName="role" class="form-input" placeholder="e.g. Senior Software Architect">
+            <span class="form-hint">The professional identity of the agent.</span>
+          </div>
+
+          <!-- Goal -->
+          <div class="form-group full-width">
+            <label for="goal"><i class="bi bi-target"></i> Goal <span class="required">*</span></label>
+            <textarea id="goal" formControlName="goal" class="form-input" placeholder="e.g. Analyze code quality and suggest improvements based on SOLID principles"></textarea>
+            <span class="form-hint">What the agent is trying to achieve.</span>
+          </div>
+
+          <!-- Backstory -->
+          <div class="form-group full-width">
+            <label for="backstory"><i class="bi bi-book"></i> Backstory <span class="required">*</span></label>
+            <textarea id="backstory" formControlName="backstory" class="form-input" placeholder="e.g. You are a developer with 20 years of experience in enterprise systems..."></textarea>
+            <span class="form-hint">Personality and background context for the agent's behavior.</span>
+          </div>
+
+          <!-- LLM Provider -->
+          <div class="form-group">
+            <label for="company"><i class="bi bi-building"></i> LLM Provider <span class="required">*</span></label>
+            <select id="company" formControlName="company" class="form-input">
+              <option *ngFor="let p of llmProviders" [value]="p.name">{{ p.name }}</option>
+            </select>
+          </div>
+
+          <!-- LLM Model -->
+          <div class="form-group">
+            <label for="llm"><i class="bi bi-cpu"></i> Model <span class="required">*</span></label>
+            <select id="llm" formControlName="llm" class="form-input">
+              <option *ngFor="let m of selectedProvider.models" [value]="m">{{ m }}</option>
+            </select>
+          </div>
+
+          <!-- Max Iterations -->
+          <div class="form-group">
+            <label for="max_iterations"><i class="bi bi-arrow-repeat"></i> Max Iterations <span class="required">*</span></label>
+            <input type="number" id="max_iterations" formControlName="max_iterations" class="form-input">
+            <span class="form-hint">Maximum number of thought cycles.</span>
+          </div>
+
+          <!-- Temperature -->
+          <div class="form-group">
+            <label for="temperature"><i class="bi bi-thermometer-half"></i> Temperature <span class="required">*</span></label>
+            <input type="number" id="temperature" formControlName="temperature" class="form-input" step="0.1" min="0" max="2">
+            <span class="form-hint">Creativity level (0.0 to 1.0 recommended).</span>
+          </div>
+
+          <!-- Verbose -->
+          <div class="form-group full-width">
+            <div class="form-check form-switch d-flex align-items-center gap-2">
+              <input class="form-check-input" type="checkbox" id="verbose" formControlName="verbose">
+              <label class="form-check-label mb-0" for="verbose">Enable Verbose Logging</label>
+            </div>
+            <span class="form-hint">Internal thoughts will be visible in the agent's output.</span>
+          </div>
+        </div>
+
+        <div class="step-footer">
+          <div class="footer-left">
+            <button type="button" class="btn-secondary" (click)="goBack()">Cancel</button>
+          </div>
+          <div class="footer-right">
+            <button type="submit" class="btn-primary" [disabled]="agentForm.invalid">
+              <i class="bi bi-save"></i>
+              {{ isEdit ? 'Update Agent' : 'Create Agent' }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

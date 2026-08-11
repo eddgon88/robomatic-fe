@@ -10,7 +10,7 @@ export class SupportComponent implements OnInit {
 
   email: string = 'contacto@robomatic.cloud';
   instagramUrl: string = 'https://www.instagram.com/robomatic.bot';
-  whatsappUrl: string = 'https://wa.me/56929827325';
+  whatsappUrl: string = 'https://wa.me/56983244500';
   facebookUrl: string = 'https://www.facebook.com/profile.php?id=61575280474592';
   linkedinUrl: string = 'https://www.linkedin.com/company/robomatic-rpa/';
 

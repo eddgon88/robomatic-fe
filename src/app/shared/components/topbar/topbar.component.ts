@@ -33,7 +33,8 @@ export class TopbarComponent implements OnInit {
         if (payload) {
           this.userName = payload.fullName || payload.name || 'User';
           this.userEmail = payload.email || payload.sub || 'user@example.com';
-          this.userRole = payload.role || 'User';
+          const role = (typeof payload.role === 'string' ? payload.role : payload.role.name || 'User');
+          this.userRole = role.replace('_', ' ').split(' ').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
         }
       }
     } catch (error) {

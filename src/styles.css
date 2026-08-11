@@ -354,3 +354,25 @@ button i {
 .bi {
   vertical-align: -0.125em;
 }
+/* ============================================
+   DARK MODAL OVERRIDE
+   ============================================ */
+.dark-modal .modal-content {
+  background-color: #0d1117;
+  border: 1px solid #30363d;
+  color: #fff;
+}
+
+.dark-modal .modal-header {
+  border-bottom: 1px solid #30363d;
+}
+
+.dark-modal .modal-header .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.dark-modal .modal-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #fff;
+}

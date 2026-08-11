@@ -1,25 +1,11 @@
+// ANTIGRAVITY-FIX-V1
 import { Component, Input, OnInit, OnDestroy, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CodeModel } from '@ngstack/code-editor';
 import RFB from "@novnc/novnc/core/rfb";
+import { UserService, PermissionModel, UserForSharing, ShareResult } from '../../services/user.service';
+import { TestService } from '../../../test/services/test.service';
 
-/**
- * Interface para usuario en lista de compartir
- */
-export interface UserForSharing {
-	id: number;
-	full_name: string;
-	email: string;
-}
-
-/**
- * Interface para request de compartir
- */
-export interface ShareResult {
-	userId: number;
-	permission: string;
-	isFolder: boolean;
-}
 
 @Component({
 	selector: 'ngbd-modal-confirm',
@@ -104,6 +90,25 @@ export class NgbdModalCodeEditor implements OnInit {
 }
 
 @Component({
+	selector: 'ngbd-modal-markdown-viewer',
+	templateUrl: 'modal-markdown-viewer.html',
+	styleUrls: ['./modal.component.css'],
+	encapsulation: ViewEncapsulation.None
+})
+export class NgbdModalMarkdownViewer implements OnInit {
+	@Input() public content: any;
+	@Input() public fileName: string = 'Reporte';
+	renderedContent: any;
+
+	constructor(public modal: NgbActiveModal) { }
+
+	async ngOnInit(): Promise<void> {
+		const { marked } = await import('marked');
+		this.renderedContent = await marked.parse(this.content);
+	}
+}
+
+@Component({
 	selector: 'ngbd-modal-web-watcher',
 	//standalone: true,
 	templateUrl: 'modal-web-watcher.html',
@@ -132,15 +137,15 @@ export class NgbdModalWebWatcher implements AfterViewInit, OnDestroy {
 				let url = '';
 				if (window.location.protocol === 'https:') {
 					// Use Nginx proxy for HTTPS (WSS)
-					// Format: wss://domain/vnc/port/websockify
-					url = `wss://${this.host}/vnc/${this.port}/websockify`;
+					// Format: wss://domain/vnc/port
+					url = `wss://${this.host}/vnc/${this.port}`;
 				} else {
 					// Direct connection for HTTP (WS)
-					url = `ws://${this.host}:${this.port}/websockify`;
+					url = `ws://${this.host}:${this.port}`;
 				}
 
 				this.rfb = new RFB(element as HTMLElement, url);
-				this.rfb.scaleViewport = false; // Disable scaling to avoid 0px width on large images
+				this.rfb.scaleViewport = true; // Enable scaling to fit the modal
 				this.rfb.background = "#000000";
 			} catch (error) {
 				console.error('Error connecting to VNC:', error);
@@ -196,7 +201,7 @@ export class NgbdGenericConfirm {
 	encapsulation: ViewEncapsulation.None
 })
 export class NgbdModalShare implements OnInit {
-	constructor(public modal: NgbActiveModal) { }
+	constructor(public modal: NgbActiveModal, private userService: UserService) { }
 
 	@Input() public itemId!: number;
 	@Input() public itemName: string = '';
@@ -208,10 +213,65 @@ export class NgbdModalShare implements OnInit {
 	selectedPermission: string | null = null;
 	sharing: boolean = false;
 
+	permissions: PermissionModel[] = [];
+	loadingPermissions: boolean = false;
+
 	ngOnInit(): void {
 		// Para folders, el permiso es siempre 'view' por defecto
 		if (this.isFolder) {
 			this.selectedPermission = 'view';
+		}
+		this.loadPermissions();
+	}
+
+	loadPermissions(): void {
+		this.loadingPermissions = true;
+		if (this.isFolder) {
+			this.userService.getFolderPermissions(this.itemId).subscribe({
+				next: (perms) => {
+					this.permissions = perms;
+					this.loadingPermissions = false;
+				},
+				error: (err) => {
+					console.error('Error loading permissions', err);
+					this.loadingPermissions = false;
+				}
+			});
+		} else {
+			this.userService.getTestPermissions(this.itemId).subscribe({
+				next: (perms) => {
+					console.log('Received permissions:', perms);
+					this.permissions = perms;
+					this.loadingPermissions = false;
+				},
+				error: (err) => {
+					console.error('Error loading permissions', err);
+					this.loadingPermissions = false;
+				}
+			});
+		}
+	}
+
+	revoke(permission: PermissionModel): void {
+		if (confirm(`Are you sure you want to remove access for ${permission.user_full_name}?`)) {
+			// Optimistic update
+			const index = this.permissions.indexOf(permission);
+			if (index > -1) {
+				const originalPermissions = [...this.permissions];
+				this.permissions.splice(index, 1);
+
+				this.userService.revokePermission(permission.id).subscribe({
+					next: () => {
+						// Success
+					},
+					error: (err) => {
+						console.error('Error revoking permission', err);
+						// Revert
+						this.permissions = originalPermissions;
+						alert('Failed to revoke permission.');
+					}
+				});
+			}
 		}
 	}
 
@@ -231,6 +291,85 @@ export class NgbdModalShare implements OnInit {
 	}
 }
 
+@Component({
+	selector: 'ngbd-modal-execution-limit',
+	templateUrl: 'modal-execution-limit.html',
+	styleUrls: ['./modal.component.css'],
+	encapsulation: ViewEncapsulation.None
+})
+export class NgbdModalExecutionLimit implements OnInit {
+	@Input() public testId!: number;
+	@Input() public itemName: string = '';
+
+	loading: boolean = true;
+	saving: boolean = false;
+	counterData: any = null;
+	newLimit: number = 0;
+
+	selectedMonth!: number;
+	selectedYear!: number;
+	availableMonths: { value: number, label: string }[] = [];
+	
+	private monthNames = [
+		'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+		'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+	];
+
+	constructor(public modal: NgbActiveModal, private testService: TestService) { }
+
+	ngOnInit(): void {
+		const now = new Date();
+		this.selectedMonth = now.getMonth() + 1;
+		this.selectedYear = now.getFullYear();
+		this.initAvailableMonths();
+		this.loadData();
+	}
+
+	initAvailableMonths(): void {
+		const currentMonth = new Date().getMonth(); // 0-indexed
+		for (let i = currentMonth; i < 12; i++) {
+			this.availableMonths.push({
+				value: i + 1,
+				label: this.monthNames[i]
+			});
+		}
+	}
+
+	onMonthChange(): void {
+		this.loadData();
+	}
+
+	loadData(): void {
+		this.loading = true;
+		this.testService.getExecutionCounter(this.testId, this.selectedYear, this.selectedMonth).subscribe({
+			next: (data) => {
+				this.counterData = data;
+				this.newLimit = data.max_executions;
+				this.loading = false;
+			},
+			error: (err) => {
+				console.error('Error loading counter data', err);
+				this.loading = false;
+			}
+		});
+	}
+
+	save(): void {
+		this.saving = true;
+		this.testService.updateExecutionCounter(this.testId, this.newLimit, this.selectedYear, this.selectedMonth).subscribe({
+			next: () => {
+				this.saving = false;
+				this.modal.close(true);
+			},
+			error: (err) => {
+				console.error('Error updating counter limit', err);
+				this.saving = false;
+				alert('Error al guardar los cambios.');
+			}
+		});
+	}
+}
+
 const MODALS: { [name: string]: any } = {
 	confirm: NgbdModalConfirm,
 	ok: NgbdModalOk,
@@ -239,7 +378,9 @@ const MODALS: { [name: string]: any } = {
 	editor: NgbdModalCodeEditor,
 	vnc: NgbdModalWebWatcher,
 	share: NgbdModalShare,
-	genericConfirm: NgbdGenericConfirm
+	genericConfirm: NgbdGenericConfirm,
+	limit: NgbdModalExecutionLimit,
+	markdown: NgbdModalMarkdownViewer
 };
 
 @Component({

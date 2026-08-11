@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Optional } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ScheduleService } from '../../services/schedule.service';
-import { 
-  Schedule, 
-  CreateScheduleRequest, 
+import {
+  Schedule,
+  CreateScheduleRequest,
   UpdateScheduleRequest,
   CronExpression,
   IntervalExpression,
@@ -25,6 +26,12 @@ export class ScheduleCreateEditComponent implements OnInit {
   loading = false;
   loadingTests = true;
   saving = false;
+
+  // Modal inputs
+  @Input() isModal = false;
+  @Input() preSelectedTestId: number | null = null;
+  @Input() preSelectedTestName: string = '';
+  @Input() existingSchedule: Schedule | null = null;
 
   // Form fields
   name = '';
@@ -49,6 +56,9 @@ export class ScheduleCreateEditComponent implements OnInit {
   // Available tests
   availableTests: TestRecord[] = [];
 
+  // Status for pause/resume
+  currentStatus: string = 'active';
+
   // Days of week options
   daysOfWeek = [
     { value: 'mon', label: 'Mon' },
@@ -65,7 +75,8 @@ export class ScheduleCreateEditComponent implements OnInit {
     private testService: TestService,
     private router: Router,
     private route: ActivatedRoute,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    @Optional() public activeModal: NgbActiveModal
   ) { }
 
   ngOnInit(): void {
@@ -76,8 +87,16 @@ export class ScheduleCreateEditComponent implements OnInit {
 
     if (this.isEditMode && this.scheduleId) {
       this.loadSchedule(this.scheduleId);
+    } else if (this.isModal && this.existingSchedule) {
+      this.isEditMode = true;
+      this.scheduleId = this.existingSchedule.schedule_id;
+      this.populateForm(this.existingSchedule);
+      this.currentStatus = this.existingSchedule.status;
     } else {
       this.setDefaultRunDate();
+      if (this.isModal && this.preSelectedTestId) {
+        this.selectedTestId = this.preSelectedTestId;
+      }
     }
   }
 
@@ -87,7 +106,16 @@ export class ScheduleCreateEditComponent implements OnInit {
     this.testService.getSchedulableTests().subscribe({
       next: (records) => {
         this.availableTests = records;
+        this.availableTests = records;
         this.loadingTests = false;
+        if (this.isModal && this.preSelectedTestId) {
+          const exist = this.availableTests.find(t => t.id === this.preSelectedTestId);
+          if (!exist) {
+            // Add dummy record if not found (though backend should return it if we have permission)
+            this.availableTests.push({ id: this.preSelectedTestId, name: this.preSelectedTestName } as TestRecord);
+          }
+          this.selectedTestId = this.preSelectedTestId;
+        }
       },
       error: (err) => {
         console.error('Error loading tests:', err);
@@ -227,7 +255,11 @@ export class ScheduleCreateEditComponent implements OnInit {
       next: (schedule) => {
         this.notificationService.showSuccess('Schedule created successfully');
         this.saving = false;
-        this.router.navigate(['/scheduler']);
+        if (this.isModal && this.activeModal) {
+          this.activeModal.close(true);
+        } else {
+          this.router.navigate(['/scheduler']);
+        }
       },
       error: (err) => {
         console.error('Error creating schedule:', err);
@@ -250,7 +282,11 @@ export class ScheduleCreateEditComponent implements OnInit {
       next: (schedule) => {
         this.notificationService.showSuccess('Schedule updated successfully');
         this.saving = false;
-        this.router.navigate(['/scheduler']);
+        if (this.isModal && this.activeModal) {
+          this.activeModal.close(true);
+        } else {
+          this.router.navigate(['/scheduler']);
+        }
       },
       error: (err) => {
         console.error('Error updating schedule:', err);
@@ -262,7 +298,11 @@ export class ScheduleCreateEditComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/scheduler']);
+    if (this.isModal && this.activeModal) {
+      this.activeModal.dismiss();
+    } else {
+      this.router.navigate(['/scheduler']);
+    }
   }
 
   getSchedulePreview(): string {
@@ -285,6 +325,40 @@ export class ScheduleCreateEditComponent implements OnInit {
       }
       return 'Select date and time';
     }
+  }
+
+  pauseSchedule(): void {
+    if (!this.scheduleId) return;
+    this.saving = true;
+    this.scheduleService.pauseSchedule(this.scheduleId).subscribe({
+      next: (schedule) => {
+        this.currentStatus = schedule.status;
+        this.notificationService.showSuccess('Schedule paused');
+        this.saving = false;
+      },
+      error: (err) => {
+        console.error('Error pausing schedule:', err);
+        this.notificationService.showError('Error pausing schedule');
+        this.saving = false;
+      }
+    });
+  }
+
+  resumeSchedule(): void {
+    if (!this.scheduleId) return;
+    this.saving = true;
+    this.scheduleService.resumeSchedule(this.scheduleId).subscribe({
+      next: (schedule) => {
+        this.currentStatus = schedule.status;
+        this.notificationService.showSuccess('Schedule resumed');
+        this.saving = false;
+      },
+      error: (err) => {
+        console.error('Error resuming schedule:', err);
+        this.notificationService.showError('Error resuming schedule');
+        this.saving = false;
+      }
+    });
   }
 }
 

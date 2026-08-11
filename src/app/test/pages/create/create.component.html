@@ -129,6 +129,38 @@
                     [disabled]="isExecutorOnly"
                     [class.readonly]="isExecutorOnly"></textarea>
         </div>
+
+        <!-- AI Agents Selection -->
+        <div class="mb-4 mt-4">
+          <label class="form-label d-flex align-items-center mb-2">
+            <i class="bi bi-robot me-2 text-primary"></i>
+            AI Agents
+          </label>
+          <p class="text-muted small mb-3">Select the agents that will be available for this test via <code>askAI()</code>.</p>
+          
+          <div class="agent-selection-grid" *ngIf="availableAgents.length > 0">
+            <div *ngFor="let agent of availableAgents" 
+                 class="agent-card" 
+                 [class.selected]="isAgentSelected(agent.id!)"
+                 (click)="toggleAgentSelection(agent.id!)">
+              <div class="agent-card-icon">
+                <i class="bi bi-person-badge"></i>
+              </div>
+              <div class="agent-card-info">
+                <div class="agent-name">{{agent.name}}</div>
+                <div class="agent-role text-truncate small">{{agent.role}}</div>
+              </div>
+              <div class="agent-check">
+                <i class="bi" [class.bi-check-circle-fill]="isAgentSelected(agent.id!)" [class.bi-circle]="!isAgentSelected(agent.id!)"></i>
+              </div>
+            </div>
+          </div>
+          
+          <div *ngIf="availableAgents.length === 0" class="text-center py-4 rounded border border-dashed" style="background: rgba(0,0,0,0.2); border-color: rgba(255,255,255,0.1)">
+            <i class="bi bi-robot fs-2 text-muted mb-2 d-inline-block"></i>
+            <p class="text-muted mb-0 small">No AI agents available. Go to AI -> Agents to create one.</p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -390,29 +422,75 @@
         </div>
         <div class="panel-title">
           <h2>Test Cases</h2>
-          <p>Define your test data in CSV format (first row = headers)</p>
+          <p>Define your test data in a grid (first row = headers)</p>
+        </div>
+        <div class="panel-actions">
+          <input type="file" #fileInput (change)="onImportFile($event)" accept=".csv,.xlsx,.xls" style="display: none">
+          <button class="btn-import" (click)="fileInput.click()">
+            <i class="bi bi-cloud-arrow-up"></i>
+            Import CSV/Excel
+          </button>
         </div>
       </div>
 
-      <div class="code-editor-wrapper">
-        <div class="editor-header">
-          <div class="editor-file">
-            <i class="bi bi-filetype-csv"></i>
-            <span>test_cases.csv</span>
-          </div>
-          <div class="editor-lang">CSV</div>
+      <div class="grid-container">
+        <div class="grid-actions-top">
+          <button class="btn-grid-action" (click)="addRow()">
+            <i class="bi bi-plus-lg"></i> Add Row
+          </button>
+          <button class="btn-grid-action" (click)="addColumn()" *ngIf="!isExecutorOnly">
+            <i class="bi bi-plus-lg"></i> Add Column
+          </button>
         </div>
-        <ngs-code-editor 
-          [theme]="theme" 
-          [codeModel]="casesCodeModel" 
-          [options]="editorOptions"
-          (valueChanged)="onTestCasesCodeChanged($event)">
-        </ngs-code-editor>
+        
+        <div class="grid-scroll-wrapper">
+          <table class="test-cases-table">
+            <thead>
+              <tr>
+                <th class="row-number-col">#</th>
+                <th *ngFor="let col of gridData[0]; let colIndex = index; trackBy: trackByFn">
+                  <div class="header-cell">
+                    <input type="text" 
+                           [value]="col" 
+                           (input)="onCellChange(0, colIndex, $event)"
+                           [disabled]="isExecutorOnly"
+                           class="header-input"
+                           [placeholder]="'Header ' + (colIndex + 1)">
+                    <button class="btn-remove-col" 
+                            (click)="removeColumn(colIndex)" 
+                            *ngIf="!isExecutorOnly && gridData[0].length > 1"
+                            title="Remove Column">
+                      <i class="bi bi-x"></i>
+                    </button>
+                  </div>
+                </th>
+                <th class="actions-col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of gridData.slice(1); let rowIndex = index; trackBy: trackByFn">
+                <td class="row-number-col">{{ rowIndex + 1 }}</td>
+                <td *ngFor="let cell of row; let colIndex = index; trackBy: trackByFn">
+                  <input type="text" 
+                         [value]="cell" 
+                         (input)="onCellChange(rowIndex + 1, colIndex, $event)"
+                         class="cell-input"
+                         placeholder="...">
+                </td>
+                <td class="actions-col">
+                  <button class="btn-remove-row" (click)="removeRow(rowIndex + 1)" title="Remove Row">
+                    <i class="bi bi-trash3"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       
       <div class="code-hint">
         <i class="bi bi-lightbulb"></i>
-        <span>Example: <code>username,password,expected</code> on first line, then <code>user1,pass123,success</code> on following lines.</span>
+        <span>Headers define variables accessible in your script via <code>caseData.header_name</code>.</span>
       </div>
     </div>
   </div>

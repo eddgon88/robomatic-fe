@@ -67,7 +67,7 @@ export class PricingComponent implements OnInit {
         ],
         highlighted: false,
         ctaText: 'Contactar Ventas',
-        ctaLink: 'https://wa.me/56929827325'
+        ctaLink: 'https://wa.me/56983244500'
       }
     ];
   }

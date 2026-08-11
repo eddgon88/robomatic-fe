@@ -8,7 +8,7 @@ import { Location } from '@angular/common';
 })
 export class TermsConditionsComponent implements OnInit {
 
-  lastUpdated: string = '14 de Diciembre de 2025';
+  lastUpdated: string = 'Julio 2026';
 
   constructor(private location: Location) {}
 

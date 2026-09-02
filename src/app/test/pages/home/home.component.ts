@@ -15,8 +15,10 @@ import { Permission, EXECUTE_PERMISSIONS, EDIT_PERMISSIONS, VIEW_PERMISSIONS } f
 import { ScheduleCreateEditComponent } from 'src/app/scheduler/pages/create-edit/create-edit.component';
 import { ScheduleService } from 'src/app/scheduler/services/schedule.service';
 import { Schedule } from 'src/app/scheduler/interfaces/schedule.interface';
+import { environment } from 'src/environments/environment';
 
 @Component({
+
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
@@ -274,8 +276,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   webWatcherModal(test: TestRecord): void {
     this.testService.getExecutionPorts(test.id).subscribe(
       resp => {
-        console.log("resp:" + resp);
-        this.modalService.modalWebWatcher("robomatic.cloud", resp.vnc_port).then(value => {
+        const host = environment.browserlessHost || "robomatic-browserless-80770840815.southamerica-west1.run.app";
+        const port = (resp && resp.vnc_port) ? String(resp.vnc_port) : '443';
+        const sessionId = resp ? resp.session_id : undefined;
+        this.modalService.modalWebWatcher(host, port, sessionId).then(value => {
           console.log("resp:" + value);
         });
       }, (err) => {
@@ -284,6 +288,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     )
   }
+
+
 
   viewRecord(record: TestRecord): void {
     if (record.type === "folder") {

@@ -4,7 +4,7 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { TopbarComponent } from './components/topbar/topbar.component';
 import { RouterModule } from '@angular/router';
 import { ToastrModule } from 'ngx-toastr';
-import { ModalComponent, NgbdModalInput, NgbdModalCodeEditor, NgbdModalShare, NgbdModalExecutionLimit, NgbdModalMarkdownViewer } from './components/modal/modal.component';
+import { ModalComponent, NgbdModalInput, NgbdModalCodeEditor, NgbdModalWebWatcher, NgbdModalShare, NgbdModalExecutionLimit, NgbdModalMarkdownViewer } from './components/modal/modal.component';
 import { FormsModule } from '@angular/forms';
 import { CodeEditorModule } from '@ngstack/code-editor';
 import { MatMenuModule } from '@angular/material/menu';
@@ -22,12 +22,14 @@ import { HasPermissionDirective } from './directives/has-permission.directive';
     ModalComponent,
     NgbdModalInput,
     NgbdModalCodeEditor,
+    NgbdModalWebWatcher,
     NgbdModalShare,
     NgbdModalExecutionLimit,
     NgbdModalMarkdownViewer,
     BreadcrumbComponent,
     HasPermissionDirective
   ],
+
   exports: [
     SidebarComponent,
     TopbarComponent,

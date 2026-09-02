@@ -1,12 +1,61 @@
-<div class="modal-header">
-  <h4 class="modal-title">
-    <i class="bi bi-display"></i>
-    Live Execution View
-  </h4>
-  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('close')"></button>
-</div>
-<div class="modal-body p-0">
-  <div id="webView">
-    <!-- VNC remote screen will appear here -->
+<div class="modal-header d-flex align-items-center justify-content-between">
+  <div class="d-flex align-items-center gap-3">
+    <h4 class="modal-title mb-0">
+      <i class="bi bi-display"></i>
+      Live Execution View
+    </h4>
+    <div *ngIf="sessionId" class="d-flex align-items-center gap-1 px-2 py-1 rounded" style="background: rgba(0, 221, 235, 0.12); border: 1px solid rgba(0, 221, 235, 0.3); font-size: 0.8rem;">
+      <span class="text-muted" style="font-family: monospace; font-size: 0.75rem;">SESSION:</span>
+      <span class="text-primary fw-bold" style="font-family: monospace; letter-spacing: 0.05em;" [title]="sessionId">{{ sessionId.length > 16 ? sessionId.substring(0, 16) + '...' : sessionId }}</span>
+      <button type="button" class="btn btn-sm p-0 ms-1 text-primary" (click)="copySessionId()" [title]="copied ? 'Copied!' : 'Copy full Session ID'" style="border: none; background: transparent; cursor: pointer;">
+        <i class="bi" [ngClass]="copied ? 'bi-check-lg text-success' : 'bi-clipboard'"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="d-flex align-items-center gap-2">
+    <!-- Switch view mode buttons (Solo visible para Admin y Analista) -->
+    <div *ngIf="isCloudViewer && sessionId && canAccessGridConsole" class="btn-group btn-group-sm" role="group">
+      <button type="button" class="btn" [ngClass]="viewMode === 'direct' ? 'btn-primary' : 'btn-outline-secondary'" (click)="setViewMode('direct')" title="Live Browser Stream">
+        <i class="bi bi-camera-video me-1"></i> Direct View
+      </button>
+      <button type="button" class="btn" [ngClass]="viewMode === 'grid' ? 'btn-primary' : 'btn-outline-secondary'" (click)="setViewMode('grid')" title="Selenium Grid Console">
+        <i class="bi bi-grid-3x3-gap me-1"></i> Grid Console
+      </button>
+    </div>
+
+    <!-- Open in Tab (Solo visible para Admin y Analista) -->
+    <button *ngIf="isCloudViewer && canAccessGridConsole" type="button" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1" (click)="openInNewTab()" title="Open Grid Sessions in new tab" style="font-size: 0.8rem; padding: 0.3rem 0.6rem;">
+      <i class="bi bi-box-arrow-up-right"></i>
+      <span class="d-none d-md-inline">Open in Tab</span>
+    </button>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('close')"></button>
   </div>
 </div>
+<div class="modal-body p-0 position-relative" style="min-height: 75vh; background-color: #1a1a1a;">
+  <!-- Direct VNC Canvas Container -->
+  <div [style.display]="viewMode === 'direct' ? 'block' : 'none'" id="webView" style="width: 100%; height: 75vh; overflow: hidden;">
+    <!-- VNC remote screen will appear here -->
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="viewMode === 'direct' && isConnecting" class="position-absolute top-50 start-50 translate-middle text-center text-muted" style="z-index: 10;">
+    <div class="spinner-border text-info mb-2" role="status"></div>
+    <div style="font-size: 0.9rem; color: #00ddeb;">Connecting to remote browser session...</div>
+  </div>
+
+  <!-- Connection Error message / Switch to Grid banner -->
+  <div *ngIf="viewMode === 'direct' && connectionError && !isConnecting" class="position-absolute top-50 start-50 translate-middle text-center" style="max-width: 400px; z-index: 10;">
+    <i class="bi bi-info-circle text-warning fs-1 mb-2"></i>
+    <p class="text-light mb-3">{{ connectionError }}</p>
+    <button *ngIf="isCloudViewer && canAccessGridConsole" class="btn btn-sm btn-outline-info" (click)="setViewMode('grid')">
+      <i class="bi bi-grid-3x3-gap me-1"></i> Open Grid Console Instead
+    </button>
+  </div>
+
+  <!-- Grid Console Iframe -->
+  <div *ngIf="viewMode === 'grid' && iframeUrl" style="width: 100%; height: 75vh;">
+    <iframe [src]="iframeUrl" style="width: 100%; height: 100%; border: none;" allow="autoplay; camera; microphone; fullscreen; clipboard-read; clipboard-write"></iframe>
+  </div>
+</div>
+

@@ -1,6 +1,7 @@
-// ANTIGRAVITY-FIX-V1
 import { Component, Input, OnInit, OnDestroy, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 import { CodeModel } from '@ngstack/code-editor';
 import RFB from "@novnc/novnc/core/rfb";
 import { UserService, PermissionModel, UserForSharing, ShareResult } from '../../services/user.service';
@@ -110,48 +111,152 @@ export class NgbdModalMarkdownViewer implements OnInit {
 
 @Component({
 	selector: 'ngbd-modal-web-watcher',
-	//standalone: true,
 	templateUrl: 'modal-web-watcher.html',
 	styleUrls: ['./modal.component.css'],
 	encapsulation: ViewEncapsulation.None
 })
-export class NgbdModalWebWatcher implements AfterViewInit, OnDestroy {
-	constructor(public modal: NgbActiveModal) { }
+export class NgbdModalWebWatcher implements OnInit, AfterViewInit, OnDestroy {
+	constructor(public modal: NgbActiveModal, private sanitizer: DomSanitizer) { }
 	@Input() public host: any;
 	@Input() public port: any;
+	@Input() public sessionId?: string;
+	public iframeUrl: SafeResourceUrl | null = null;
+	public isCloudViewer: boolean = false;
+	public viewMode: 'direct' | 'grid' = 'direct';
+	public isConnecting: boolean = true;
+	public connectionError: string | null = null;
+	public copied: boolean = false;
+	public canAccessGridConsole: boolean = false;
 	private rfb: RFB | null = null;
+
+	ngOnInit(): void {
+		this.checkUserPermissions();
+	}
+
+	private checkUserPermissions(): void {
+		try {
+			const token = sessionStorage.getItem('token');
+			if (token) {
+				const parts = token.split('.');
+				if (parts.length === 3) {
+					const payload = JSON.parse(atob(parts[1]));
+					if (payload && payload.role) {
+						const role = (typeof payload.role === 'string' ? payload.role : payload.role.name || '').toUpperCase();
+						this.canAccessGridConsole = role === 'ADMIN' || role === 'ANALYST' || role === 'SUPER_ADMIN' || role === 'SUPER ADMIN';
+					}
+				}
+			}
+		} catch (error) {
+			console.error('Error checking user role for grid console:', error);
+		}
+	}
 
 	ngAfterViewInit(): void {
 		// Wait for animation and DOM paint
 		setTimeout(() => {
-			this.initVNC();
+			this.initViewer();
 		}, 200);
 	}
 
-	private initVNC(): void {
+	public copySessionId(): void {
+		if (this.sessionId) {
+			navigator.clipboard.writeText(this.sessionId);
+			this.copied = true;
+			setTimeout(() => {
+				this.copied = false;
+			}, 2000);
+		}
+	}
+
+	public openInNewTab(): void {
+		const cleanHost = (this.host || "robomatic-browserless-80770840815.southamerica-west1.run.app").replace(/^https?:\/\//, '').replace(/\/+$/, '');
+		window.open(`https://${cleanHost}/ui/#/sessions`, '_blank');
+	}
+
+	public setViewMode(mode: 'direct' | 'grid'): void {
+		this.viewMode = mode;
+		if (mode === 'direct' && !this.rfb) {
+			const cleanHost = (this.host || "robomatic-browserless-80770840815.southamerica-west1.run.app").replace(/^https?:\/\//, '').replace(/\/+$/, '');
+			this.connectDirectVnc(cleanHost, this.isCloudViewer);
+		}
+	}
+
+	private initViewer(): void {
+		if (!this.host) {
+			this.host = "robomatic-browserless-80770840815.southamerica-west1.run.app";
+		}
+
+		const cleanHost = this.host.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+		const gridSessionsUrl = `https://${cleanHost}/ui/#/sessions`;
+		this.iframeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(gridSessionsUrl);
+
+		const isCloud = this.host.includes('.run.app') || this.host.includes('browserless') || this.host.includes('grid');
+		this.isCloudViewer = isCloud;
+
+		this.connectDirectVnc(cleanHost, isCloud);
+	}
+
+	private connectDirectVnc(cleanHost: string, isCloud: boolean): void {
+		this.isConnecting = true;
+		this.connectionError = null;
+
 		const element = document.getElementById('webView');
-		if (element) {
-			try {
-				element.innerHTML = ''; // Clean previous content
-
-				let url = '';
-				if (window.location.protocol === 'https:') {
-					// Use Nginx proxy for HTTPS (WSS)
-					// Format: wss://domain/vnc/port
-					url = `wss://${this.host}/vnc/${this.port}`;
-				} else {
-					// Direct connection for HTTP (WS)
-					url = `ws://${this.host}:${this.port}`;
-				}
-
-				this.rfb = new RFB(element as HTMLElement, url);
-				this.rfb.scaleViewport = true; // Enable scaling to fit the modal
-				this.rfb.background = "#000000";
-			} catch (error) {
-				console.error('Error connecting to VNC:', error);
-			}
-		} else {
+		if (!element) {
 			console.error('webView element not found');
+			return;
+		}
+
+		element.innerHTML = ''; // Clean previous content
+
+		let wsUrl = '';
+		if (isCloud && this.sessionId) {
+			// Selenium 4 Standalone expone el WebSocket VNC de la sesión en /session/{sessionId}/se/vnc
+			wsUrl = `wss://${cleanHost}/session/${this.sessionId}/se/vnc`;
+		} else if (isCloud) {
+			// Si no hay sessionId específico, fallback a la consola Grid
+			this.viewMode = 'grid';
+			this.isConnecting = false;
+			return;
+		} else {
+			// Entorno Docker local
+			if (window.location.protocol === 'https:') {
+				wsUrl = `wss://${this.host}/vnc/${this.port}`;
+			} else {
+				wsUrl = `ws://${this.host}:${this.port}`;
+			}
+		}
+
+		try {
+			console.log('Connecting RFB to:', wsUrl);
+			this.rfb = new RFB(element as HTMLElement, wsUrl, {
+				credentials: { password: 'secret' }
+			});
+			this.rfb.scaleViewport = true;
+			this.rfb.background = "#1a1a1a";
+
+			this.rfb.addEventListener('connect', () => {
+				console.log('RFB Connected successfully');
+				this.isConnecting = false;
+				this.connectionError = null;
+			});
+
+			this.rfb.addEventListener('credentialsrequired', () => {
+				if (this.rfb) {
+					this.rfb.sendCredentials({ password: 'secret' });
+				}
+			});
+
+			this.rfb.addEventListener('disconnect', (e: any) => {
+				console.log('RFB Disconnected:', e);
+				this.isConnecting = false;
+				if (e && e.detail && e.detail.clean === false) {
+					this.connectionError = 'Conexión directa cerrada o sesión finalizada.';
+				}
+			});
+		} catch (error) {
+			console.error('Error connecting to direct VNC:', error);
+			this.isConnecting = false;
+			this.connectionError = 'No se pudo conectar directamente al stream VNC.';
 		}
 	}
 
@@ -166,6 +271,7 @@ export class NgbdModalWebWatcher implements AfterViewInit, OnDestroy {
 		}
 	}
 }
+
 
 @Component({
 	selector: 'ngbd-generic-confirm',

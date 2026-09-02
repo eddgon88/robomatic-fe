@@ -73,7 +73,7 @@ export class ModalService {
     modalRef.componentInstance.fileName = fileName;
   }
 
-  async modalWebWatcher(host: string, port: string): Promise<any> {
+  async modalWebWatcher(host: string, port: string | number, sessionId?: string): Promise<any> {
 
     let modalOptions: NgbModalOptions = {
       size: 'xl',
@@ -84,8 +84,10 @@ export class ModalService {
     const modalRef = this._modalService.open(NgbdModalWebWatcher, modalOptions);
     modalRef.componentInstance.host = host;
     modalRef.componentInstance.port = port;
+    modalRef.componentInstance.sessionId = sessionId;
 
   }
+
 
   /**
    * Abre el modal para compartir un test o folder

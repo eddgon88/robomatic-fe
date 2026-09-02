@@ -3,4 +3,5 @@ export interface ExecutionPorts {
     execution_id:         string;
     selenium_port:        string;
     vnc_port:             string;
+    session_id?:          string;
 }

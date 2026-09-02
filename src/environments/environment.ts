@@ -4,14 +4,16 @@
 
 export const environment = {
   version: require('../../package.json').version,
-  production: false
+  production: false,
+  browserlessHost: 'robomatic-browserless-80770840815.southamerica-west1.run.app'
 };
 
+
 export const bff = {
-  protocol: '',
-  host: '/core/v1',
-  //protocol: 'http://',
-  //host: 'localhost:8080/core/v1',
+  //protocol: '',
+  //host: '/core/v1',
+  protocol: 'http://',
+  host: 'localhost:8080/core/v1',
 
   /**Record List */
   getRecords: '/test/list/{0}',
